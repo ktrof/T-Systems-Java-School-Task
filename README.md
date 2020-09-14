@@ -1,11 +1,13 @@
 # T-Systems-Java-School-Task
 A passenger train service application for Deutsche Telekom IT Solutions Java school 
 
-Start app script 
+Start train service script 
 -------
 
 First, you need to install docker-compose with these commands (on Ubuntu):
+
 $ sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
 $ sudo chmod +x /usr/local/bin/docker-compose
 
 Test the installation:
