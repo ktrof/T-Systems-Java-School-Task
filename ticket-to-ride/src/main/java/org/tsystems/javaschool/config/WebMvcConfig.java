@@ -1,4 +1,4 @@
-package org.deutsche_telekom_it_solutions.java_school.config;
+package org.tsystems.javaschool.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -20,7 +20,7 @@ import java.util.List;
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
-    MappingJackson2HttpMessageConverter messageConverter;
+    private MappingJackson2HttpMessageConverter messageConverter;
 
     @Bean
     public ViewResolver internalResourceViewResolver() {

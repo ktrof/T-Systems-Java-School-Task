@@ -1,4 +1,4 @@
-package org.deutsche_telekom_it_solutions.java_school.config;
+package org.tsystems.javaschool.config;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

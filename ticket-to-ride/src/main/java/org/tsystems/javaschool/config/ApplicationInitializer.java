@@ -1,4 +1,4 @@
-package org.deutsche_telekom_it_solutions.java_school.config;
+package org.tsystems.javaschool.config;
 
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
@@ -17,7 +17,7 @@ public class ApplicationInitializer implements WebApplicationInitializer {
         AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
 
         webApplicationContext.setServletContext(servletContext);
-        webApplicationContext.scan("org/deutsche_telekom_it_solutions/java_school/config");
+        webApplicationContext.scan("org/tsystems/javaschool/config");
         servletContext.addListener(new ContextLoaderListener(webApplicationContext));
 
         ServletRegistration.Dynamic appServlet = servletContext
