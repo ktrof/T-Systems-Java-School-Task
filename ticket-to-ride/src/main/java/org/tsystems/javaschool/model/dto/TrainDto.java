@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 
 @Data
 @Builder
@@ -18,12 +19,17 @@ public class TrainDto {
     private int id;
 
     @NotBlank
+    private String symbolCode;
+
+    @NotBlank
     private String name;
 
     @NotBlank
-    private int tonnage;
+    private int avgSpeed;
 
     @NotBlank
-    private int technicalSpeed;
+    private int numberOfSeats;
+
+    private List<TrainStationDto> stations;
 
 }

@@ -1,18 +1,17 @@
 package org.tsystems.javaschool.model.entity;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "train")
-@Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class TrainEntity {
 
     @Id
@@ -20,13 +19,19 @@ public class TrainEntity {
     @Column(name = "id")
     private int id;
 
+    @Column(name = "symbol_code", unique = true)
+    private String symbolCode;
+
     @Column(name = "name")
     private String name;
 
-    @Column(name = "tonnage")
-    private int tonnage;
+    @Column(name = "avg_speed")
+    private int avgSpeed;
 
-    @Column(name = "technical_speed")
-    private int technicalSpeed;
+    @Column(name = "number_of_seats")
+    private int numberOfSeats;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainEntity")
+    List<TrainStationEntity> trainStationEntities;
 
 }

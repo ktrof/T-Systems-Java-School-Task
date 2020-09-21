@@ -2,21 +2,21 @@ package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.exception.RepositoryException;
 import org.tsystems.javaschool.mapper.TrainMapper;
+import org.tsystems.javaschool.mapper.TrainStationMapper;
 import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.TrainStationDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
+import org.tsystems.javaschool.model.entity.TrainStationEntity;
 import org.tsystems.javaschool.repository.ITrainRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,22 +30,23 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
     private EntityManager entityManager;
 
     @Autowired
-    private TrainMapper mapper;
+    private TrainMapper trainMapper;
 
+    @Autowired
+    private TrainStationMapper trainStationMapper;
+
+    @Transactional
     @Override
     public List<TrainDto> findAll() {
 
-        entityManager.getTransaction().begin();
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TrainEntity> trainEntityCriteriaQuery = criteriaBuilder.createQuery(TrainEntity.class);
         Root<TrainEntity> trainEntityRoot = trainEntityCriteriaQuery.from(TrainEntity.class);
         CriteriaQuery<TrainEntity> selectAll = trainEntityCriteriaQuery.select(trainEntityRoot);
         TypedQuery<TrainEntity> selectAllQuery = entityManager.createQuery(selectAll);
         List<TrainEntity> trainEntityList = selectAllQuery.getResultList();
-        entityManager.getTransaction().commit();
-
         return trainEntityList.stream()
-                .map(trainEntity -> mapper.toDto(trainEntity))
+                .map(trainEntity -> trainMapper.toDto(trainEntity))
                 .collect(Collectors.toList());
 
     }
@@ -54,13 +55,12 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
      * @param id train id
      * @return trainDto object
      */
+    @Transactional
     @Override
     public TrainDto findById(@NotNull int id) {
 
-        entityManager.getTransaction().begin();
         TrainEntity trainEntity = entityManager.find(TrainEntity.class, id);
-        entityManager.getTransaction().commit();
-        return mapper.toDto(trainEntity);
+        return trainMapper.toDto(trainEntity);
 
     }
 
@@ -69,9 +69,9 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
      * @return created train id
      */
     @Override
-    public int createTrain(@NotNull TrainDto trainDto) {
+    public int createTrain(TrainDto trainDto) {
 
-        TrainEntity trainEntity = mapper.toEntity(trainDto);
+        TrainEntity trainEntity = trainMapper.toEntity(trainDto);
 
         entityManager.getTransaction().begin();
         entityManager.persist(trainEntity);
@@ -85,7 +85,7 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
      * @return modified train id
      */
     @Override
-    public int modifyTrain(@NotNull TrainDto trainDto) throws RepositoryException{
+    public int modifyTrain(TrainDto trainDto) throws RepositoryException{
 
         TrainEntity trainEntity = entityManager.find(TrainEntity.class, trainDto.getId());
 
@@ -93,8 +93,9 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
             entityManager.getTransaction().begin();
             entityManager.detach(trainEntity);
             trainEntity.setName(trainDto.getName());
-            trainEntity.setTonnage(trainDto.getTonnage());
-            trainEntity.setTechnicalSpeed(trainDto.getTechnicalSpeed());
+            trainEntity.setAvgSpeed(trainDto.getAvgSpeed());
+            trainEntity.setNumberOfSeats(trainDto.getNumberOfSeats());
+            trainEntity.setSymbolCode(trainDto.getSymbolCode());
             int trainId = entityManager.merge(trainEntity).getId();
             entityManager.getTransaction().commit();
             return trainId;
@@ -107,7 +108,7 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
      * @return removed train id
      */
     @Override
-    public int removeTrainById(@NotNull int id) throws RepositoryException {
+    public int removeTrainById(int id) throws RepositoryException {
 
         entityManager.getTransaction().begin();
         TrainEntity trainEntity = entityManager.find(TrainEntity.class, id);
@@ -117,6 +118,24 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
             return trainEntity.getId();
         } else throw new RepositoryException("No train found by given entity");
 
+    }
+
+    @Transactional
+    @Override
+    public List<TrainStationDto> findAllStationsByTrainId(int id) {
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrainStationEntity> selectAllStationsQuery = criteriaBuilder.createQuery(TrainStationEntity.class);
+        Root<TrainStationEntity> root = selectAllStationsQuery.from(TrainStationEntity.class);
+        selectAllStationsQuery
+                .select(root)
+                .where(criteriaBuilder.equal(root.get("trainEntity.id"), id));
+        TypedQuery<TrainStationEntity> selectAllStations = entityManager.createQuery(selectAllStationsQuery);
+        List<TrainStationEntity> trainStationEntityList = selectAllStations.getResultList();
+
+        return trainStationEntityList.stream()
+                .map(trainStationEntity -> trainStationMapper.toDto(trainStationEntity))
+                .collect(Collectors.toList());
     }
 
 }
