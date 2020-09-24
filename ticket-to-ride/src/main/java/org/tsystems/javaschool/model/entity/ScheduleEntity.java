@@ -5,34 +5,30 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Duration;
 import java.time.Instant;
 
 @Entity
-@Table(name = "train_station")
+@Table(name = "schedule")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class TrainStationEntity {
+public class ScheduleEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "train_id")
     private TrainEntity trainEntity;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "station_id")
-    private StationEntity stationEntity;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "section_id")
+    private SectionEntity sectionEntity;
 
     @Column(name = "arrival")
     private Instant arrival;
-
-    @Column(name = "waiting_time")
-    private Duration waitingTime;
 
     @Column(name = "departure")
     private Instant departure;

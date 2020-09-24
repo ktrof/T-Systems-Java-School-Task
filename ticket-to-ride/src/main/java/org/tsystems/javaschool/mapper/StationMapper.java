@@ -14,8 +14,7 @@ public interface StationMapper {
             @Mapping(target = "name", source = "stationEntity.name"),
             @Mapping(target = "latitude", source = "stationEntity.latitude"),
             @Mapping(target = "longitude", source = "stationEntity.longitude"),
-            @Mapping(target = "timezone", source = "stationEntity.timezone"),
-            @Mapping(target = "trains", source = "stationEntity.trainStationEntities")
+            @Mapping(target = "timezone", source = "stationEntity.timezone")
     })
     StationDto toDto(StationEntity stationEntity);
 
@@ -25,7 +24,7 @@ public interface StationMapper {
             @Mapping(target = "latitude", source = "stationDto.latitude"),
             @Mapping(target = "longitude", source = "stationDto.longitude"),
             @Mapping(target = "timezone", source = "stationDto.timezone"),
-            @Mapping(target = "trainStationEntities", source = "stationDto.trains")
+            @Mapping(target = "sectionEntityList", ignore = true)
     })
     StationEntity toEntity(StationDto stationDto);
 }

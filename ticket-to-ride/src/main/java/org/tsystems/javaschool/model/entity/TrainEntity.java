@@ -31,7 +31,13 @@ public class TrainEntity {
     @Column(name = "number_of_seats")
     private int numberOfSeats;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "trainEntity")
-    List<TrainStationEntity> trainStationEntities;
+    @Column(name = "type")
+    private String type;
+
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL)
+    List<CalendarEntity> calendarEntityList;
+
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL)
+    List<ScheduleEntity> scheduleEntityList;
 
 }

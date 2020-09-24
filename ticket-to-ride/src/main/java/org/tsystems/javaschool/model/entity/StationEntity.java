@@ -32,7 +32,7 @@ public class StationEntity {
     @Column(name = "timezone")
     private ZoneId timezone;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "stationEntity")
-    List<TrainStationEntity> trainStationEntities;
+    @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL)
+    List<SectionEntity> sectionEntityList;
 
 }

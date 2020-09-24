@@ -5,17 +5,16 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.exception.RepositoryException;
 import org.tsystems.javaschool.mapper.TrainMapper;
-import org.tsystems.javaschool.mapper.TrainStationMapper;
 import org.tsystems.javaschool.model.dto.TrainDto;
-import org.tsystems.javaschool.model.dto.TrainStationDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
-import org.tsystems.javaschool.model.entity.TrainStationEntity;
 import org.tsystems.javaschool.repository.ITrainRepository;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Root;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,9 +30,6 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
 
     @Autowired
     private TrainMapper trainMapper;
-
-    @Autowired
-    private TrainStationMapper trainStationMapper;
 
     @Transactional
     @Override
@@ -120,22 +116,5 @@ public class TrainRepositoryJPAImpl implements ITrainRepository {
 
     }
 
-    @Transactional
-    @Override
-    public List<TrainStationDto> findAllStationsByTrainId(int id) {
-
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrainStationEntity> selectAllStationsQuery = criteriaBuilder.createQuery(TrainStationEntity.class);
-        Root<TrainStationEntity> root = selectAllStationsQuery.from(TrainStationEntity.class);
-        selectAllStationsQuery
-                .select(root)
-                .where(criteriaBuilder.equal(root.get("trainEntity.id"), id));
-        TypedQuery<TrainStationEntity> selectAllStations = entityManager.createQuery(selectAllStationsQuery);
-        List<TrainStationEntity> trainStationEntityList = selectAllStations.getResultList();
-
-        return trainStationEntityList.stream()
-                .map(trainStationEntity -> trainStationMapper.toDto(trainStationEntity))
-                .collect(Collectors.toList());
-    }
 
 }
