@@ -27,6 +27,7 @@
         <hibernate.version>5.4.21.Final</hibernate.version>
         <servlet.version>3.1.0</servlet.version>
         <liquibase.version>4.0.0</liquibase.version>
+        <beanutils.version>1.9.4</beanutils.version>
     </properties>
 
     <dependencyManagement>
@@ -98,6 +99,11 @@
                 <artifactId>javaee-api</artifactId>
                 <version>${javaee.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-beanutils</groupId>
+                <artifactId>commons-beanutils</artifactId>
+                <version>${beanutils.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.postgresql</groupId>

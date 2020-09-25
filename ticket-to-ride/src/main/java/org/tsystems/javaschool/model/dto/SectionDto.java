@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tsystems.javaschool.constraint.ValidateFields;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
@@ -14,6 +15,12 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidateFields(
+        equality = false,
+        first = "stationDtoFrom",
+        second = "stationDtoTo",
+        message = "Departure and destination stations must not match"
+)
 public class SectionDto implements Serializable {
 
     private int id;
@@ -21,7 +28,7 @@ public class SectionDto implements Serializable {
     @NotNull(message = "Set departure station")
     private StationDto stationDtoFrom;
 
-    @NotNull(message = "Set arrival station")
+    @NotNull(message = "Set destination station")
     private StationDto stationDtoTo;
 
     @Min(value = 0, message = "Amount of tickets left can not be negative")

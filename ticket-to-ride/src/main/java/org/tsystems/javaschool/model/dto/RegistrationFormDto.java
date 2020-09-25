@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tsystems.javaschool.constraint.ValidateFields;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
@@ -13,6 +14,11 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@ValidateFields(
+        first = "password",
+        second = "confirmPassword",
+        message = "Passwords must match"
+)
 public class RegistrationFormDto implements Serializable {
 
     private int id;
