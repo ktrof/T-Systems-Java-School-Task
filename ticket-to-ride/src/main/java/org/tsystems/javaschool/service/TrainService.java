@@ -4,7 +4,7 @@ import org.tsystems.javaschool.model.dto.TrainDto;
 
 import java.util.List;
 
-public interface ITrainService {
+public interface TrainService {
 
     List<TrainDto> findAll();
     TrainDto findById(int id);

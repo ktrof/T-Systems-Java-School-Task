@@ -6,12 +6,23 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.TicketDto;
 import org.tsystems.javaschool.model.entity.TicketEntity;
 
-@Mapper(componentModel = "spring")
+/**
+ * The interface Ticket mapper.
+ *
+ * @author Trofim Kremen
+ */
+@Mapper
 public interface TicketMapper {
 
+    /**
+     * To dto ticket dto.
+     *
+     * @param ticketEntity the ticket entity
+     * @return the ticket dto
+     */
     @Mappings({
             @Mapping(target = "passengerDto", source = "ticketEntity.passengerEntity"),
-            @Mapping(target = "sectionDtoList", source = "ticketEntity.sectionEntitySet")
+            @Mapping(target = "scheduleSectionDtoList", source = "ticketEntity.scheduleSectionEntitySet")
     })
     TicketDto toDto(TicketEntity ticketEntity);
 

@@ -13,6 +13,18 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@NamedEntityGraph(
+        name = "ticket-entity-graph",
+        attributeNodes = @NamedAttributeNode(
+                value = "scheduleSectionEntitySet",
+                subgraph = "schedule-entity-subgraph"),
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "schedule-entity-subgraph",
+                        attributeNodes = @NamedAttributeNode(value = "trainEntity")
+                )
+        }
+)
 public class TicketEntity {
 
     @Id
@@ -30,10 +42,10 @@ public class TicketEntity {
     @ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
-            name = "ticket_section",
+            name = "ticket_schedule",
             joinColumns = @JoinColumn(name = "ticket_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "section_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "schedule_id", referencedColumnName = "id")
     )
-    private Set<SectionEntity> sectionEntitySet;
+    private Set<ScheduleSectionEntity> scheduleSectionEntitySet;
 
 }

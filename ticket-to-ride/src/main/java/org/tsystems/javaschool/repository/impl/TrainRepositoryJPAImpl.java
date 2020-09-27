@@ -1,120 +1,101 @@
 package org.tsystems.javaschool.repository.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.exception.RepositoryException;
-import org.tsystems.javaschool.mapper.TrainMapper;
-import org.tsystems.javaschool.model.dto.TrainDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
-import org.tsystems.javaschool.repository.ITrainRepository;
+import org.tsystems.javaschool.model.entity.TrainEntity_;
+import org.tsystems.javaschool.repository.TrainRepository;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 /**
+ * The type Train repository jpa.
+ *
  * @author Trofim Kremen
  */
 @Repository
-public class TrainRepositoryJPAImpl implements ITrainRepository {
+public class TrainRepositoryJPAImpl implements TrainRepository {
 
     @PersistenceContext
     private EntityManager entityManager;
 
-    @Autowired
-    private TrainMapper trainMapper;
-
-    @Transactional
     @Override
-    public List<TrainDto> findAll() {
-
+    public List<TrainEntity> findAll() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrainEntity> trainEntityCriteriaQuery = criteriaBuilder.createQuery(TrainEntity.class);
-        Root<TrainEntity> trainEntityRoot = trainEntityCriteriaQuery.from(TrainEntity.class);
-        CriteriaQuery<TrainEntity> selectAll = trainEntityCriteriaQuery.select(trainEntityRoot);
-        TypedQuery<TrainEntity> selectAllQuery = entityManager.createQuery(selectAll);
-        List<TrainEntity> trainEntityList = selectAllQuery.getResultList();
-        return trainEntityList.stream()
-                .map(trainEntity -> trainMapper.toDto(trainEntity))
-                .collect(Collectors.toList());
+        CriteriaQuery<TrainEntity> selectAllTrains = criteriaBuilder.createQuery(TrainEntity.class);
+        Root<TrainEntity> trainEntityRoot = selectAllTrains.from(TrainEntity.class);
+        selectAllTrains.select(trainEntityRoot);
+        TypedQuery<TrainEntity> selectAllQuery = entityManager.createQuery(selectAllTrains);
 
+        return selectAllQuery.getResultList();
     }
 
-    /**
-     * @param id train id
-     * @return trainDto object
-     */
-    @Transactional
     @Override
-    public TrainDto findById(@NotNull int id) {
-
-        TrainEntity trainEntity = entityManager.find(TrainEntity.class, id);
-        return trainMapper.toDto(trainEntity);
-
-    }
-
-    /**
-     * @param trainDto trainDto object
-     * @return created train id
-     */
-    @Override
-    public int createTrain(TrainDto trainDto) {
-
-        TrainEntity trainEntity = trainMapper.toEntity(trainDto);
-
-        entityManager.getTransaction().begin();
-        entityManager.persist(trainEntity);
-        entityManager.getTransaction().commit();
-        return trainEntity.getId();
-
-    }
-
-    /**
-     * @param trainDto trainDto object
-     * @return modified train id
-     */
-    @Override
-    public int modifyTrain(TrainDto trainDto) throws RepositoryException{
-
-        TrainEntity trainEntity = entityManager.find(TrainEntity.class, trainDto.getId());
+    public TrainEntity findById(int id) throws RepositoryException {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("train-entity-graph");
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put("javax.persistence.fetchgraph", entityGraph);
+        TrainEntity trainEntity = entityManager.find(TrainEntity.class, id, propertyMap);
 
         if (trainEntity != null) {
-            entityManager.getTransaction().begin();
-            entityManager.detach(trainEntity);
-            trainEntity.setName(trainDto.getName());
-            trainEntity.setAvgSpeed(trainDto.getAvgSpeed());
-            trainEntity.setNumberOfSeats(trainDto.getNumberOfSeats());
-            trainEntity.setSymbolCode(trainDto.getSymbolCode());
-            int trainId = entityManager.merge(trainEntity).getId();
-            entityManager.getTransaction().commit();
-            return trainId;
-        } else throw new RepositoryException("No train found by given entity");
-
+            return trainEntity;
+        } else throw new RepositoryException("No train found by given id");
     }
 
-    /**
-     * @param id train id
-     * @return removed train id
-     */
     @Override
-    public int removeTrainById(int id) throws RepositoryException {
+    public TrainEntity findBySymbolCode(String symbolCode) throws RepositoryException {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<TrainEntity> criteriaQuery = criteriaBuilder.createQuery(TrainEntity.class);
+        Root<TrainEntity> root = criteriaQuery.from(TrainEntity.class);
+        criteriaQuery
+                .select(root)
+                .where(criteriaBuilder.equal(root.get(TrainEntity_.symbolCode), symbolCode));
+        TypedQuery<TrainEntity> selectBySymbolCode = entityManager.createQuery(criteriaQuery);
 
-        entityManager.getTransaction().begin();
-        TrainEntity trainEntity = entityManager.find(TrainEntity.class, id);
+        TrainEntity trainEntity = selectBySymbolCode.getSingleResult();
+        if (trainEntity != null) {
+            return trainEntity;
+        } else throw new RepositoryException("No train found by given symbol code");
+    }
+
+    @Override
+    public TrainEntity add(TrainEntity trainEntity) throws RepositoryException {
+        if (trainEntity != null) {
+            entityManager.persist(trainEntity);
+            return trainEntity;
+        } else throw new RepositoryException("Train entity can not be null");
+    }
+
+    @Override
+    public TrainEntity updateAvgSpeed(int speed, TrainEntity trainEntity) throws RepositoryException{
+        if (speed != 0 || trainEntity != null) {
+            trainEntity.setAvgSpeed(speed);
+            return entityManager.merge(trainEntity);
+        } else throw new RepositoryException("Train entity and speed can not be null");
+    }
+
+    @Override
+    public TrainEntity updateNumberOfSeats(int numberOfSeats, TrainEntity trainEntity) throws RepositoryException{
+        if (numberOfSeats != 0 || trainEntity != null) {
+            trainEntity.setNumberOfSeats(numberOfSeats);
+            return entityManager.merge(trainEntity);
+        } else throw new RepositoryException("Train entity can not be null");
+    }
+
+    @Override
+    public void remove(TrainEntity trainEntity) throws RepositoryException {
         if (trainEntity != null) {
             entityManager.remove(trainEntity);
-            entityManager.getTransaction().commit();
-            return trainEntity.getId();
-        } else throw new RepositoryException("No train found by given entity");
-
+        } else throw new RepositoryException("Train entity and number of seats can not be null");
     }
-
 
 }

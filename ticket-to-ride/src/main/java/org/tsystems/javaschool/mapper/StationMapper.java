@@ -6,24 +6,29 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.StationDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
-@Mapper(componentModel = "spring")
+/**
+ * The interface Station mapper.
+ *
+ * @author Trofim Kremen
+ */
+@Mapper
 public interface StationMapper {
 
-    @Mappings({
-            @Mapping(target = "id", source = "stationEntity.id"),
-            @Mapping(target = "name", source = "stationEntity.name"),
-            @Mapping(target = "latitude", source = "stationEntity.latitude"),
-            @Mapping(target = "longitude", source = "stationEntity.longitude"),
-            @Mapping(target = "timezone", source = "stationEntity.timezone")
-    })
+    /**
+     * To dto station dto.
+     *
+     * @param stationEntity the station entity
+     * @return the station dto
+     */
     StationDto toDto(StationEntity stationEntity);
 
+    /**
+     * To entity station entity.
+     *
+     * @param stationDto the station dto
+     * @return the station entity
+     */
     @Mappings({
-            @Mapping(target = "id", source = "stationDto.id"),
-            @Mapping(target = "name", source = "stationDto.name"),
-            @Mapping(target = "latitude", source = "stationDto.latitude"),
-            @Mapping(target = "longitude", source = "stationDto.longitude"),
-            @Mapping(target = "timezone", source = "stationDto.timezone"),
             @Mapping(target = "sectionEntityList", ignore = true)
     })
     StationEntity toEntity(StationDto stationDto);

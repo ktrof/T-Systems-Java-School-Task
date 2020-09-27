@@ -7,19 +7,29 @@ import org.tsystems.javaschool.model.dto.RegistrationFormDto;
 import org.tsystems.javaschool.model.dto.UserDto;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
-@Mapper(componentModel = "spring")
+/**
+ * The interface User mapper.
+ *
+ * @author Trofim Kremen
+ */
+@Mapper
 public interface UserMapper {
 
-    @Mappings({
-            @Mapping(target = "id", source = "userEntity.id"),
-            @Mapping(target = "login", source = "userEntity.login")
-    })
+    /**
+     * To dto user dto.
+     *
+     * @param userEntity the user entity
+     * @return the user dto
+     */
     UserDto toDto(UserEntity userEntity);
 
+    /**
+     * To entity user entity.
+     *
+     * @param registrationFormDto the registration form dto
+     * @return the user entity
+     */
     @Mappings({
-            @Mapping(target = "id", source = "registrationFormDto.id"),
-            @Mapping(target = "login", source = "registrationFormDto.login"),
-            @Mapping(target = "password", source = "registrationFormDto.password"),
             @Mapping(target = "passengerEntityList", ignore = true),
             @Mapping(target = "role", ignore = true)
     })

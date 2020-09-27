@@ -12,6 +12,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@NamedEntityGraph(
+        name = "train-entity-graph",
+        attributeNodes = @NamedAttributeNode(
+                value = "scheduleSectionEntityList",
+                subgraph = "schedule-section-entity-subgraph"),
+        subgraphs = @NamedSubgraph(
+                name = "schedule-section-entity-subgraph",
+                attributeNodes = @NamedAttributeNode(value = "ticketEntitySet")
+        )
+)
 public class TrainEntity {
 
     @Id
@@ -38,6 +48,6 @@ public class TrainEntity {
     List<CalendarEntity> calendarEntityList;
 
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL)
-    List<ScheduleEntity> scheduleEntityList;
+    List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

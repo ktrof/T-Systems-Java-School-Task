@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Set;
+import java.util.List;
 
 @Entity
 @Table(name = "section")
@@ -27,14 +27,13 @@ public class SectionEntity {
     @JoinColumn(name = "station_id_to")
     private StationEntity stationEntityTo;
 
-    @Column(name = "tickets_available")
-    private int ticketsAvailable;
-
     @Column(name = "price")
     private int price;
 
-    @ManyToMany(mappedBy = "sectionEntitySet", fetch = FetchType.LAZY)
-    @OrderBy(value = "id")
-    private Set<TicketEntity> ticketEntitySet;
+    @Column(name = "length")
+    private int length;
+
+    @OneToMany(mappedBy = "sectionEntity", cascade = CascadeType.ALL)
+    List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

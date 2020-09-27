@@ -6,13 +6,18 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.Instant;
+import java.util.Set;
 
 @Entity
-@Table(name = "schedule")
+@Table(name = "schedule_section")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class ScheduleEntity {
+@NamedEntityGraph(
+        name = "schedule-entity-graph",
+        attributeNodes = @NamedAttributeNode(value = "ticketEntitySet")
+)
+public class ScheduleSectionEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -27,10 +32,20 @@ public class ScheduleEntity {
     @JoinColumn(name = "section_id")
     private SectionEntity sectionEntity;
 
+    @Column(name = "index_within_train_route")
+    private int indexWithinTrainRoute;
+
+    @Column(name = "tickets_available")
+    private int ticketsAvailable;
+
     @Column(name = "arrival")
     private Instant arrival;
 
     @Column(name = "departure")
     private Instant departure;
+
+    @ManyToMany(mappedBy = "scheduleSectionEntitySet", fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    Set<TicketEntity> ticketEntitySet;
 
 }

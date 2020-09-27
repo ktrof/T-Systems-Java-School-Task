@@ -20,6 +20,6 @@ public class TicketDto implements Serializable {
 
     private int totalPrice;
 
-    private List<SectionDto> sectionDtoList;
+    private List<ScheduleSectionDto> scheduleSectionDtoList;
 
 }
