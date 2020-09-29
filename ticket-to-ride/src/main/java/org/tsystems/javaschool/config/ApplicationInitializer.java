@@ -1,29 +1,33 @@
 package org.tsystems.javaschool.config;
 
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.ContextLoaderListener;
-import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
-import org.springframework.web.servlet.DispatcherServlet;
+import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.Filter;
 
-public class ApplicationInitializer implements WebApplicationInitializer {
+public class ApplicationInitializer extends AbstractAnnotationConfigDispatcherServletInitializer {
 
     @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
+    protected Class<?>[] getRootConfigClasses() {
+        return new Class[] {};
+    }
 
-        AnnotationConfigWebApplicationContext webApplicationContext = new AnnotationConfigWebApplicationContext();
+    @Override
+    protected Class<?>[] getServletConfigClasses() {
+        return new Class[] {WebMvcConfig.class};
+    }
 
-        webApplicationContext.setServletContext(servletContext);
-        webApplicationContext.scan("org/tsystems/javaschool/config");
-        servletContext.addListener(new ContextLoaderListener(webApplicationContext));
+    @Override
+    protected String[] getServletMappings() {
+        return new String[] {"/"};
+    }
 
-        ServletRegistration.Dynamic appServlet = servletContext
-                .addServlet("mvc", new DispatcherServlet(webApplicationContext));
-        appServlet.setLoadOnStartup(1);
-        appServlet.addMapping("/");
+    @Override
+    protected Filter[] getServletFilters() {
+        CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
+        characterEncodingFilter.setEncoding("UTF-8");
+        characterEncodingFilter.setForceEncoding(true);
+        return new Filter[]{characterEncodingFilter};
     }
 
 }

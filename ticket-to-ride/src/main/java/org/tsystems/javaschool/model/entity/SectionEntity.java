@@ -27,9 +27,6 @@ public class SectionEntity {
     @JoinColumn(name = "station_id_to")
     private StationEntity stationEntityTo;
 
-    @Column(name = "price")
-    private int price;
-
     @Column(name = "length")
     private int length;
 

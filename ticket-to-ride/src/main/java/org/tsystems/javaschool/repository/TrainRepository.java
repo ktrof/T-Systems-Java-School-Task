@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.util.List;
@@ -24,54 +24,34 @@ public interface TrainRepository {
      *
      * @param id the id
      * @return the train entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    TrainEntity findById(int id) throws RepositoryException;
-
-    /**
-     * Find by symbol code train entity.
-     *
-     * @param symbolCode the symbol code
-     * @return the train entity
-     * @throws RepositoryException the repository exception
-     */
-    TrainEntity findBySymbolCode(String symbolCode) throws RepositoryException;
+    TrainEntity findById(String id) throws SBBException;
 
     /**
      * Add train entity.
      *
      * @param trainEntity the train entity
      * @return the train entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    TrainEntity add(TrainEntity trainEntity) throws RepositoryException;
+    TrainEntity add(TrainEntity trainEntity) throws SBBException;
 
     /**
      * Update avg speed train entity.
      *
-     * @param speed       the speed
      * @param trainEntity the train entity
      * @return the train entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    TrainEntity updateAvgSpeed(int speed, TrainEntity trainEntity) throws RepositoryException;
-
-    /**
-     * Update number of seats train entity.
-     *
-     * @param numberOfSeats the number of seats
-     * @param trainEntity   the train entity
-     * @return the train entity
-     * @throws RepositoryException the repository exception
-     */
-    TrainEntity updateNumberOfSeats(int numberOfSeats, TrainEntity trainEntity) throws RepositoryException;
+    TrainEntity update(TrainEntity trainEntity) throws SBBException;
 
     /**
      * Remove.
      *
      * @param trainEntity the train entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    void remove(TrainEntity trainEntity) throws RepositoryException;
+    void remove(TrainEntity trainEntity) throws SBBException;
 
 }

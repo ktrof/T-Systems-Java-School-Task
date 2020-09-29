@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity_;
 import org.tsystems.javaschool.model.entity.TrainEntity;
@@ -43,7 +43,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
     }
 
     @Override
-    public List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) throws RepositoryException {
+    public List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) throws SBBException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
@@ -56,11 +56,11 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
         List<ScheduleSectionEntity> scheduleSectionEntityList = selectByTrain.getResultList();
         if (scheduleSectionEntityList.size() != 0) {
             return scheduleSectionEntityList;
-        } else throw new RepositoryException("No schedule sections found by given train entity");
+        } else throw new SBBException("No schedule sections found by given train entity");
     }
 
     @Override
-    public ScheduleSectionEntity findById(int id) throws RepositoryException {
+    public ScheduleSectionEntity findById(int id) throws SBBException {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-entity-graph");
         Map<String, Object> propertyMap = new HashMap<>();
         propertyMap.put("javax.persistence.fetchgraph", entityGraph);
@@ -68,14 +68,14 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
         if (scheduleSectionEntity != null) {
             return scheduleSectionEntity;
-        } else throw new RepositoryException("No schedule section found by given id");
+        } else throw new SBBException("No schedule section found by given id");
     }
 
     @Override
-    public ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) throws RepositoryException {
+    public ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) throws SBBException {
         if (scheduleSectionEntity != null) {
             entityManager.persist(scheduleSectionEntity);
             return scheduleSectionEntity;
-        } else throw new RepositoryException("Schedule section entity can not be null");
+        } else throw new SBBException("Schedule section entity can not be null");
     }
 }

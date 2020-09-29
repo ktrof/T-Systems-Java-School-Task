@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
 import java.util.List;
@@ -24,44 +24,43 @@ public interface StationRepository {
      *
      * @param id the id
      * @return the station entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    StationEntity findById(int id) throws RepositoryException;
+    StationEntity findById(int id) throws SBBException;
 
     /**
      * Find by name station entity.
      *
      * @param name the name
      * @return the station entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    StationEntity findByName(String name) throws RepositoryException;
+    StationEntity findByName(String name) throws SBBException;
 
     /**
      * Add station entity.
      *
      * @param stationEntity the station entity
      * @return the station entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    StationEntity add(StationEntity stationEntity) throws RepositoryException;
+    StationEntity add(StationEntity stationEntity) throws SBBException;
 
     /**
      * Update name station entity.
      *
-     * @param name          the name
      * @param stationEntity the station entity
      * @return the station entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    StationEntity updateName(String name, StationEntity stationEntity) throws RepositoryException;
+    StationEntity update(StationEntity stationEntity) throws SBBException;
 
     /**
      * Remove.
      *
      * @param stationEntity the station entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    void remove(StationEntity stationEntity) throws RepositoryException;
+    void remove(StationEntity stationEntity) throws SBBException;
 
 }

@@ -25,12 +25,8 @@ import java.util.List;
 public class TrainEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
-    private int id;
-
-    @Column(name = "symbol_code", unique = true)
-    private String symbolCode;
+    private String id;
 
     @Column(name = "name")
     private String name;
@@ -44,10 +40,10 @@ public class TrainEntity {
     @Column(name = "type")
     private String type;
 
-    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<CalendarEntity> calendarEntityList;
 
-    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
@@ -25,18 +25,18 @@ public interface SectionRepository {
      *
      * @param id the id
      * @return the section entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    SectionEntity findById(int id) throws RepositoryException;
+    SectionEntity findById(int id) throws SBBException;
 
     /**
      * Add section entity.
      *
      * @param sectionEntity the section entity
      * @return the section entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    SectionEntity add(SectionEntity sectionEntity) throws RepositoryException;
+    SectionEntity add(SectionEntity sectionEntity) throws SBBException;
 
     /**
      * Update stations section entity.
@@ -45,16 +45,16 @@ public interface SectionRepository {
      * @param stationTo     the station to
      * @param sectionEntity the section entity
      * @return the section entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) throws RepositoryException;
+    SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) throws SBBException;
 
     /**
      * Remove.
      *
      * @param sectionEntity the section entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    void remove(SectionEntity sectionEntity) throws RepositoryException;
+    void remove(SectionEntity sectionEntity) throws SBBException;
 
 }

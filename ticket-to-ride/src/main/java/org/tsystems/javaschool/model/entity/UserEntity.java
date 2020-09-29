@@ -22,8 +22,9 @@ public class UserEntity {
     @Column(name = "login", unique = true)
     private String login;
 
-    @Column(name = "role")
-    private String role;
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinColumn(name = "role")
+    private RoleEntity roleEntity;
 
     @Column(name = "password")
     private String password;

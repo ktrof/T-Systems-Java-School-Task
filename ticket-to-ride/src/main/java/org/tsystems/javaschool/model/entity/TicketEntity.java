@@ -44,7 +44,7 @@ public class TicketEntity {
     @JoinTable(
             name = "ticket_schedule",
             joinColumns = @JoinColumn(name = "ticket_id", referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name = "schedule_id", referencedColumnName = "id")
+            inverseJoinColumns = @JoinColumn(name = "schedule_section_id", referencedColumnName = "id")
     )
     private Set<ScheduleSectionEntity> scheduleSectionEntitySet;
 

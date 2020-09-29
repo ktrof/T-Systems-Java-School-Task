@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
@@ -25,26 +25,26 @@ public interface ScheduleSectionRepository {
      *
      * @param trainEntity the train entity
      * @return the list
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) throws RepositoryException;
+    List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) throws SBBException;
 
     /**
      * Find by id schedule section entity.
      *
      * @param id the id
      * @return the schedule section entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    ScheduleSectionEntity findById(int id) throws RepositoryException;
+    ScheduleSectionEntity findById(int id) throws SBBException;
 
     /**
      * Add schedule section entity.
      *
      * @param scheduleSectionEntity the schedule section entity
      * @return the schedule section entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) throws RepositoryException;
+    ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) throws SBBException;
 
 }

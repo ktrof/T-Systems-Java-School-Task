@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity_;
 import org.tsystems.javaschool.repository.TrainRepository;
@@ -40,7 +40,7 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     }
 
     @Override
-    public TrainEntity findById(int id) throws RepositoryException {
+    public TrainEntity findById(String id) throws SBBException {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("train-entity-graph");
         Map<String, Object> propertyMap = new HashMap<>();
         propertyMap.put("javax.persistence.fetchgraph", entityGraph);
@@ -48,54 +48,29 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
 
         if (trainEntity != null) {
             return trainEntity;
-        } else throw new RepositoryException("No train found by given id");
+        } else throw new SBBException("No train found by given id");
     }
 
     @Override
-    public TrainEntity findBySymbolCode(String symbolCode) throws RepositoryException {
-        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrainEntity> criteriaQuery = criteriaBuilder.createQuery(TrainEntity.class);
-        Root<TrainEntity> root = criteriaQuery.from(TrainEntity.class);
-        criteriaQuery
-                .select(root)
-                .where(criteriaBuilder.equal(root.get(TrainEntity_.symbolCode), symbolCode));
-        TypedQuery<TrainEntity> selectBySymbolCode = entityManager.createQuery(criteriaQuery);
-
-        TrainEntity trainEntity = selectBySymbolCode.getSingleResult();
-        if (trainEntity != null) {
-            return trainEntity;
-        } else throw new RepositoryException("No train found by given symbol code");
-    }
-
-    @Override
-    public TrainEntity add(TrainEntity trainEntity) throws RepositoryException {
+    public TrainEntity add(TrainEntity trainEntity) throws SBBException {
         if (trainEntity != null) {
             entityManager.persist(trainEntity);
             return trainEntity;
-        } else throw new RepositoryException("Train entity can not be null");
+        } else throw new SBBException("Train entity can not be null");
     }
 
     @Override
-    public TrainEntity updateAvgSpeed(int speed, TrainEntity trainEntity) throws RepositoryException{
-        if (speed != 0 || trainEntity != null) {
-            trainEntity.setAvgSpeed(speed);
+    public TrainEntity update(TrainEntity trainEntity) throws SBBException {
+        if (trainEntity != null) {
             return entityManager.merge(trainEntity);
-        } else throw new RepositoryException("Train entity and speed can not be null");
+        } else throw new SBBException("Train entity can not be null");
     }
 
     @Override
-    public TrainEntity updateNumberOfSeats(int numberOfSeats, TrainEntity trainEntity) throws RepositoryException{
-        if (numberOfSeats != 0 || trainEntity != null) {
-            trainEntity.setNumberOfSeats(numberOfSeats);
-            return entityManager.merge(trainEntity);
-        } else throw new RepositoryException("Train entity can not be null");
-    }
-
-    @Override
-    public void remove(TrainEntity trainEntity) throws RepositoryException {
+    public void remove(TrainEntity trainEntity) throws SBBException {
         if (trainEntity != null) {
             entityManager.remove(trainEntity);
-        } else throw new RepositoryException("Train entity and number of seats can not be null");
+        } else throw new SBBException("Train entity and number of seats can not be null");
     }
 
 }

@@ -17,11 +17,9 @@ import java.io.Serializable;
 @AllArgsConstructor
 public class TrainDto implements Serializable {
 
-    private int id;
-
     @NotBlank(message = "Symbol code must not be blank")
     @Pattern(regexp = "^\\d{3}[A-Z]$", message = "Three digits and one capital letter are allowed")
-    private String symbolCode;
+    private String id;
 
     @NotBlank(message = "Train name must not be blank")
     @Pattern(regexp = "^[a-zA-Z-]+$",message = "Latin letters and dashes are allowed")

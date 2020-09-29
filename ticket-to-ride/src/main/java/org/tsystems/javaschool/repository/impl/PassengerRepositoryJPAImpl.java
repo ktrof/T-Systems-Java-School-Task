@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.PassengerEntity_;
 import org.tsystems.javaschool.model.entity.UserEntity;
@@ -40,7 +40,7 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
     }
 
     @Override
-    public List<PassengerEntity> findAllByUser(UserEntity userEntity) throws RepositoryException {
+    public List<PassengerEntity> findAllByUser(UserEntity userEntity) throws SBBException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
         Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
@@ -52,11 +52,11 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
 
         if (passengerEntityList.size() != 0) {
             return passengerEntityList;
-        } else throw new RepositoryException("No passengers found by given user entity");
+        } else throw new SBBException("No passengers found by given user entity");
     }
 
     @Override
-    public List<PassengerEntity> findByName(String firstName, String secondName) throws RepositoryException {
+    public List<PassengerEntity> findByName(String firstName, String secondName) throws SBBException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
         Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
@@ -70,15 +70,15 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
 
         if (passengerEntityList.size() != 0) {
             return passengerEntityList;
-        } else throw new RepositoryException("No passenger found by given name");
+        } else throw new SBBException("No passenger found by given name");
     }
 
     @Override
-    public PassengerEntity findById(int id) throws RepositoryException {
+    public PassengerEntity findById(int id) throws SBBException {
         PassengerEntity passengerEntity = entityManager.find(PassengerEntity.class, id);
         if (passengerEntity != null) {
             return passengerEntity;
-        } else throw new RepositoryException("No passenger found by given id");
+        } else throw new SBBException("No passenger found by given id");
     }
 
     @Override
@@ -86,38 +86,38 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
         if (passengerEntity != null) {
             entityManager.persist(passengerEntity);
             return passengerEntity;
-        } else throw new RepositoryException("Passenger entity can not be null");
+        } else throw new SBBException("Passenger entity can not be null");
     }
 
     @Override
-    public PassengerEntity updateName(String firstName, String secondName, PassengerEntity passengerEntity) throws RepositoryException {
+    public PassengerEntity updateName(String firstName, String secondName, PassengerEntity passengerEntity) throws SBBException {
         if (firstName != null || secondName != null || passengerEntity != null) {
             passengerEntity.setFirstName(firstName);
             passengerEntity.setSecondName(secondName);
             return entityManager.merge(passengerEntity);
-        } else throw new RepositoryException("Passenger entity and name can not be null");
+        } else throw new SBBException("Passenger entity and name can not be null");
     }
 
     @Override
-    public PassengerEntity updateMobileNumber(String mobile, PassengerEntity passengerEntity) throws RepositoryException {
+    public PassengerEntity updateMobileNumber(String mobile, PassengerEntity passengerEntity) throws SBBException {
         if (mobile != null || passengerEntity != null) {
             passengerEntity.setMobileNumber(mobile);
             return entityManager.merge(passengerEntity);
-        } else throw new RepositoryException("Passenger entity and mobile number can not be null");
+        } else throw new SBBException("Passenger entity and mobile number can not be null");
     }
 
     @Override
-    public PassengerEntity updateEmail(String email, PassengerEntity passengerEntity) throws RepositoryException {
+    public PassengerEntity updateEmail(String email, PassengerEntity passengerEntity) throws SBBException {
         if (email != null || passengerEntity != null) {
             passengerEntity.setEmail(email);
             return entityManager.merge(passengerEntity);
-        } else throw new RepositoryException("Passenger entity and email can not be null");
+        } else throw new SBBException("Passenger entity and email can not be null");
     }
 
     @Override
-    public void remove(PassengerEntity passengerEntity) throws RepositoryException {
+    public void remove(PassengerEntity passengerEntity) throws SBBException {
         if (passengerEntity != null) {
             entityManager.remove(passengerEntity);
-        } else throw new RepositoryException("Passenger entity can not be null");
+        } else throw new SBBException("Passenger entity can not be null");
     }
 }

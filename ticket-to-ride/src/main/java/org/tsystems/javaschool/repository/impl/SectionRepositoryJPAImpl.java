@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.repository.SectionRepository;
@@ -39,35 +39,35 @@ public class SectionRepositoryJPAImpl implements SectionRepository {
     }
 
     @Override
-    public SectionEntity findById(int id) throws RepositoryException {
+    public SectionEntity findById(int id) throws SBBException {
         SectionEntity sectionEntity = entityManager.find(SectionEntity.class, id);
         if (sectionEntity != null) {
             return sectionEntity;
-        } else throw new RepositoryException("No section found by given id");
+        } else throw new SBBException("No section found by given id");
     }
 
     @Override
-    public SectionEntity add(SectionEntity sectionEntity) throws RepositoryException {
+    public SectionEntity add(SectionEntity sectionEntity) throws SBBException {
         if (sectionEntity != null) {
             entityManager.persist(entityManager);
             return sectionEntity;
-        } else throw new RepositoryException("Section entity can not be null");
+        } else throw new SBBException("Section entity can not be null");
     }
 
     @Override
-    public SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) throws RepositoryException {
+    public SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) throws SBBException {
         if (stationFrom != null || stationTo != null || sectionEntity != null) {
             sectionEntity.setStationEntityFrom(stationFrom);
             sectionEntity.setStationEntityTo(stationTo);
             return entityManager.merge(sectionEntity);
-        } else throw new RepositoryException("Section entity and station entities can not be null");
+        } else throw new SBBException("Section entity and station entities can not be null");
     }
 
     @Override
-    public void remove(SectionEntity sectionEntity) throws RepositoryException {
+    public void remove(SectionEntity sectionEntity) throws SBBException {
         if (sectionEntity != null) {
             entityManager.remove(sectionEntity);
-        } else throw new RepositoryException("Section entity can not be null");
+        } else throw new SBBException("Section entity can not be null");
     }
 
 }

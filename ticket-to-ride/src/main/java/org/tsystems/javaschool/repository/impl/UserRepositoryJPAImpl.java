@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.model.entity.UserEntity_;
 import org.tsystems.javaschool.repository.UserRepository;
@@ -38,15 +38,15 @@ public class UserRepositoryJPAImpl implements UserRepository {
     }
 
     @Override
-    public UserEntity findById(int id) throws RepositoryException {
+    public UserEntity findById(int id) throws SBBException {
         UserEntity userEntity = entityManager.find(UserEntity.class, id);
         if (userEntity != null) {
             return userEntity;
-        } else throw new RepositoryException("No user found by given id");
+        } else throw new SBBException("No user found by given id");
     }
 
     @Override
-    public UserEntity findByLogin(String login) throws RepositoryException {
+    public UserEntity findByLogin(String login) throws SBBException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
@@ -58,23 +58,23 @@ public class UserRepositoryJPAImpl implements UserRepository {
         UserEntity userEntity = selectByLogin.getSingleResult();
         if (userEntity != null) {
             return userEntity;
-        } else throw new RepositoryException("No user found bu given login");
+        } else throw new SBBException("No user found bu given login");
     }
 
     @Override
-    public UserEntity add(UserEntity userEntity) throws RepositoryException {
+    public UserEntity add(UserEntity userEntity) throws SBBException {
         if (userEntity != null) {
             entityManager.persist(userEntity);
             return userEntity;
-        } else throw new RepositoryException("User entity can not be null");
+        } else throw new SBBException("User entity can not be null");
     }
 
     @Override
-    public UserEntity updateLogin(String login, UserEntity userEntity) throws RepositoryException {
+    public UserEntity updateLogin(String login, UserEntity userEntity) throws SBBException {
         if (login != null || userEntity != null) {
             userEntity.setLogin(login);
             return entityManager.merge(userEntity);
-        } else throw new RepositoryException("User entity and login can not be null");
+        } else throw new SBBException("User entity and login can not be null");
     }
 
     @Override
@@ -82,14 +82,14 @@ public class UserRepositoryJPAImpl implements UserRepository {
         if (password != null || userEntity != null) {
             userEntity.setPassword(password);
             return entityManager.merge(userEntity);
-        } else throw new RepositoryException("User entity and password can not be null");
+        } else throw new SBBException("User entity and password can not be null");
     }
 
     @Override
-    public void remove(UserEntity userEntity) throws RepositoryException {
+    public void remove(UserEntity userEntity) throws SBBException {
         if (userEntity != null) {
             entityManager.remove(userEntity);
-        } else throw new RepositoryException("User entity can not be null");
+        } else throw new SBBException("User entity can not be null");
     }
 
 }

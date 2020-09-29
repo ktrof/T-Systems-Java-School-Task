@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.model.entity.StationEntity_;
 import org.tsystems.javaschool.repository.StationRepository;
@@ -38,15 +38,15 @@ public class StationRepositoryJPAImpl implements StationRepository {
     }
 
     @Override
-    public StationEntity findById(int id) throws RepositoryException {
+    public StationEntity findById(int id) throws SBBException {
         StationEntity stationEntity = entityManager.find(StationEntity.class, id);
         if (stationEntity != null) {
             return stationEntity;
-        } else throw new RepositoryException("No station found by given id");
+        } else throw new SBBException("No station found by given id");
     }
 
     @Override
-    public StationEntity findByName(String name) throws RepositoryException {
+    public StationEntity findByName(String name) throws SBBException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<StationEntity> criteriaQuery = criteriaBuilder.createQuery(StationEntity.class);
         Root<StationEntity> root = criteriaQuery.from(StationEntity.class);
@@ -58,29 +58,28 @@ public class StationRepositoryJPAImpl implements StationRepository {
         StationEntity stationEntity = selectByName.getSingleResult();
         if (stationEntity != null) {
             return stationEntity;
-        } else throw new RepositoryException("No station found by given name");
+        } else throw new SBBException("No station found by given name");
     }
 
     @Override
-    public StationEntity add(StationEntity stationEntity) throws RepositoryException {
+    public StationEntity add(StationEntity stationEntity) throws SBBException {
         if (stationEntity != null) {
             entityManager.persist(stationEntity);
             return stationEntity;
-        } else throw new RepositoryException("Station entity can not be null");
+        } else throw new SBBException("Station entity can not be null");
     }
 
     @Override
-    public StationEntity updateName(String name, StationEntity stationEntity) throws RepositoryException {
-        if (name != null || stationEntity != null) {
-            stationEntity.setName(name);
+    public StationEntity update(StationEntity stationEntity) throws SBBException {
+        if (stationEntity != null) {
             return entityManager.merge(stationEntity);
-        } else throw new RepositoryException("Station entity and name can not be null");
+        } else throw new SBBException("Station entity can not be null");
     }
 
     @Override
-    public void remove(StationEntity stationEntity) throws RepositoryException {
+    public void remove(StationEntity stationEntity) throws SBBException {
         if (stationEntity != null) {
             entityManager.remove(stationEntity);
-        } else throw new RepositoryException("Station entity can not be null");
+        } else throw new SBBException("Station entity can not be null");
     }
 }

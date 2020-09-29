@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
@@ -25,9 +25,9 @@ public interface PassengerRepository {
      *
      * @param userEntity the user entity
      * @return the list
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    List<PassengerEntity> findAllByUser(UserEntity userEntity) throws RepositoryException;
+    List<PassengerEntity> findAllByUser(UserEntity userEntity) throws SBBException;
 
     /**
      * Find by name list.
@@ -35,18 +35,18 @@ public interface PassengerRepository {
      * @param firstName  the first name
      * @param secondName the second name
      * @return the list
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    List<PassengerEntity> findByName(String firstName, String secondName) throws RepositoryException;
+    List<PassengerEntity> findByName(String firstName, String secondName) throws SBBException;
 
     /**
      * Find by id passenger entity.
      *
      * @param id the id
      * @return the passenger entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    PassengerEntity findById(int id) throws RepositoryException;
+    PassengerEntity findById(int id) throws SBBException;
 
     /**
      * Add passenger entity.
@@ -63,9 +63,9 @@ public interface PassengerRepository {
      * @param secondName      the second name
      * @param passengerEntity the passenger entity
      * @return the passenger entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    PassengerEntity updateName(String firstName, String secondName, PassengerEntity passengerEntity) throws RepositoryException;
+    PassengerEntity updateName(String firstName, String secondName, PassengerEntity passengerEntity) throws SBBException;
 
     /**
      * Update mobile number passenger entity.
@@ -73,9 +73,9 @@ public interface PassengerRepository {
      * @param mobile          the mobile
      * @param passengerEntity the passenger entity
      * @return the passenger entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    PassengerEntity updateMobileNumber(String mobile, PassengerEntity passengerEntity) throws RepositoryException;
+    PassengerEntity updateMobileNumber(String mobile, PassengerEntity passengerEntity) throws SBBException;
 
     /**
      * Update email passenger entity.
@@ -83,16 +83,16 @@ public interface PassengerRepository {
      * @param email           the email
      * @param passengerEntity the passenger entity
      * @return the passenger entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    PassengerEntity updateEmail(String email, PassengerEntity passengerEntity) throws RepositoryException;
+    PassengerEntity updateEmail(String email, PassengerEntity passengerEntity) throws SBBException;
 
     /**
      * Remove.
      *
      * @param passengerEntity the passenger entity
-     * @throws RepositoryException the repository exception
+     * @throws SBBException the repository exception
      */
-    void remove(PassengerEntity passengerEntity) throws RepositoryException;
+    void remove(PassengerEntity passengerEntity) throws SBBException;
 
 }

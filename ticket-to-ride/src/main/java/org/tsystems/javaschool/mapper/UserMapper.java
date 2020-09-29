@@ -31,7 +31,7 @@ public interface UserMapper {
      */
     @Mappings({
             @Mapping(target = "passengerEntityList", ignore = true),
-            @Mapping(target = "role", ignore = true)
+            @Mapping(target = "roleEntity", ignore = true)
     })
     UserEntity toEntity(RegistrationFormDto registrationFormDto);
 }

@@ -6,6 +6,8 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.TrainDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
+import java.util.List;
+
 /**
  * The interface Train mapper.
  *
@@ -33,5 +35,7 @@ public interface TrainMapper {
             @Mapping(target = "scheduleSectionEntityList", ignore = true)
     })
     TrainEntity toEntity(TrainDto trainDto);
+
+    List<TrainDto> toDtoList(List<TrainEntity> trainEntityList);
 
 }

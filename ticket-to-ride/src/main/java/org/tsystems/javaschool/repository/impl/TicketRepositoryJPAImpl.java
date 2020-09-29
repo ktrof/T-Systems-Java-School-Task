@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.RepositoryException;
+import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.TicketEntity;
 import org.tsystems.javaschool.model.entity.TicketEntity_;
@@ -42,7 +42,7 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
     }
 
     @Override
-    public List<TicketEntity> findByPassenger(PassengerEntity passengerEntity) throws RepositoryException {
+    public List<TicketEntity> findByPassenger(PassengerEntity passengerEntity) throws SBBException {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketEntity> criteriaQuery = criteriaBuilder.createQuery(TicketEntity.class);
         Root<TicketEntity> root = criteriaQuery.from(TicketEntity.class);
@@ -54,11 +54,11 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
 
         if(ticketEntityList.size() != 0) {
             return ticketEntityList;
-        } else throw new RepositoryException("No ticket found by given passenger");
+        } else throw new SBBException("No ticket found by given passenger");
     }
 
     @Override
-    public List<TicketEntity> findByPassengerNameAndMobile(String firstName, String secondName, String mobileNumber) throws RepositoryException {
+    public List<TicketEntity> findByPassengerNameAndMobile(String firstName, String secondName, String mobileNumber) throws SBBException {
         TypedQuery<TicketEntity> selectAllByPassengerNameAndMobile = entityManager
                 .createQuery("SELECT t FROM TicketEntity t " +
                         "WHERE t.passengerEntity.firstName = :firstName " +
@@ -71,11 +71,11 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
 
         if (ticketEntityList.size() != 0) {
             return ticketEntityList;
-        } else throw new RepositoryException("No ticket found by given name and mobile number");
+        } else throw new SBBException("No ticket found by given name and mobile number");
     }
 
     @Override
-    public TicketEntity findById(int id) throws RepositoryException {
+    public TicketEntity findById(int id) throws SBBException {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("ticket-entity-graph");
         Map<String, Object> propertyMap = new HashMap<>();
         propertyMap.put("javax.persistence.fetchgraph", entityGraph);
@@ -83,21 +83,21 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
 
         if (ticketEntity != null) {
             return ticketEntity;
-        } else throw new RepositoryException("No ticket found by given id");
+        } else throw new SBBException("No ticket found by given id");
     }
 
     @Override
-    public TicketEntity add(TicketEntity ticketEntity) throws RepositoryException {
+    public TicketEntity add(TicketEntity ticketEntity) throws SBBException {
         if (ticketEntity != null) {
             entityManager.persist(ticketEntity);
             return ticketEntity;
-        } else throw new RepositoryException("Ticket entity can not be null");
+        } else throw new SBBException("Ticket entity can not be null");
     }
 
     @Override
-    public void remove(TicketEntity ticketEntity) throws RepositoryException {
+    public void remove(TicketEntity ticketEntity) throws SBBException {
         if (ticketEntity != null) {
             entityManager.remove(ticketEntity);
-        } else throw new RepositoryException("Ticket entity can not be null");
+        } else throw new SBBException("Ticket entity can not be null");
     }
 }

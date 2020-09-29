@@ -2,6 +2,7 @@ package org.tsystems.javaschool.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
@@ -17,6 +18,7 @@ import java.util.List;
 
 @Configuration
 @EnableWebMvc
+@ComponentScan(basePackages = {"org.tsystems.javaschool"})
 public class WebMvcConfig implements WebMvcConfigurer {
 
     @Autowired
@@ -26,7 +28,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
     public ViewResolver internalResourceViewResolver() {
         InternalResourceViewResolver bean = new InternalResourceViewResolver();
         bean.setViewClass(JstlView.class);
-        bean.setPrefix("/WEB-INF/view/jsp");
+        bean.setPrefix("WEB-INF/view/jsp/");
         bean.setSuffix(".jsp");
         return bean;
     }
