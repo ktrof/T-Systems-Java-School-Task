@@ -36,6 +36,20 @@ public interface TrainMapper {
     })
     TrainEntity toEntity(TrainDto trainDto);
 
+    /**
+     * To dto list list.
+     *
+     * @param trainEntityList the train entity list
+     * @return the list
+     */
     List<TrainDto> toDtoList(List<TrainEntity> trainEntityList);
+
+    /**
+     * To entity list list.
+     *
+     * @param trainDtoList the train dto list
+     * @return the list
+     */
+    List<TrainEntity> toEntityList(List<TrainDto> trainDtoList);
 
 }

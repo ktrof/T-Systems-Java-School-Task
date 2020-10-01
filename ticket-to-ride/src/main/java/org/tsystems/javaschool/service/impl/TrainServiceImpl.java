@@ -30,11 +30,10 @@ public class TrainServiceImpl implements TrainService {
     @Override
     public List<TrainDto> getAll() {
         List<TrainDto> trainDtoList  = null;
-        trainDtoList = trainMapper.toDtoList(trainRepository.findAll());
         try {
-
+            trainDtoList = trainMapper.toDtoList(trainRepository.findAll());
         } catch (Exception e) {
-            log.error("Error getting all the trains");
+            log.error("Error getting all the trains", e);
         }
         return trainDtoList;
     }
@@ -45,7 +44,7 @@ public class TrainServiceImpl implements TrainService {
         try {
             trainDto = trainMapper.toDto(trainRepository.findById(id));
         } catch (Exception e) {
-            log.error("Error getting train by id");
+            log.error("Error getting train by id", e);
         }
         return trainDto;
     }
@@ -59,7 +58,7 @@ public class TrainServiceImpl implements TrainService {
             }
             trainRepository.add(trainMapper.toEntity(trainDto));
         } catch (Exception e) {
-            log.error("Error creating a train");
+            log.error("Error creating a train", e);
         }
         return trainDto;
     }
@@ -69,7 +68,7 @@ public class TrainServiceImpl implements TrainService {
         try {
             trainRepository.update(trainMapper.toEntity(trainDto));
         } catch (Exception e) {
-            log.error("Error modifying the train");
+            log.error("Error modifying the train", e);
         }
         return trainDto;
     }

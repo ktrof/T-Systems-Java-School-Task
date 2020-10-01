@@ -3,6 +3,7 @@ package org.tsystems.javaschool.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tsystems.javaschool.mapper.ZoneIdConverter;
 
 import javax.persistence.*;
 import java.time.ZoneId;
@@ -30,9 +31,10 @@ public class StationEntity {
     private float longitude;
 
     @Column(name = "timezone")
+    @Convert(converter = ZoneIdConverter.class)
     private ZoneId timezone;
 
-    @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<SectionEntity> sectionEntityList;
 
 }

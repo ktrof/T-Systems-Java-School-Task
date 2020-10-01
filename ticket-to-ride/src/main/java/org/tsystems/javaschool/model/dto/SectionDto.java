@@ -31,10 +31,6 @@ public class SectionDto implements Serializable {
     @NotNull(message = "Set destination station")
     private StationDto stationDtoTo;
 
-    @Min(value = 0, message = "Price can not be negative")
-    @NotBlank
-    private int price;
-
     @Min(value = 1, message = "Distance between two stations can not less then 1")
     private int length;
 

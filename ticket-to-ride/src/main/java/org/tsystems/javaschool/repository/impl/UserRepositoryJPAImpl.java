@@ -2,6 +2,7 @@ package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import org.tsystems.javaschool.exception.SBBException;
+import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.model.entity.UserEntity_;
 import org.tsystems.javaschool.repository.UserRepository;
@@ -13,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The type User repository jpa.
@@ -62,27 +64,19 @@ public class UserRepositoryJPAImpl implements UserRepository {
     }
 
     @Override
-    public UserEntity add(UserEntity userEntity) throws SBBException {
+    public UserEntity add(UserEntity userEntity, Set<RoleEntity> roleEntityCollection) throws SBBException {
         if (userEntity != null) {
+            userEntity.setRoleEntitySet(roleEntityCollection);
             entityManager.persist(userEntity);
             return userEntity;
         } else throw new SBBException("User entity can not be null");
     }
 
     @Override
-    public UserEntity updateLogin(String login, UserEntity userEntity) throws SBBException {
-        if (login != null || userEntity != null) {
-            userEntity.setLogin(login);
+    public UserEntity update(UserEntity userEntity) throws SBBException {
+        if (userEntity != null) {
             return entityManager.merge(userEntity);
         } else throw new SBBException("User entity and login can not be null");
-    }
-
-    @Override
-    public UserEntity updatePassword(String password, UserEntity userEntity) {
-        if (password != null || userEntity != null) {
-            userEntity.setPassword(password);
-            return entityManager.merge(userEntity);
-        } else throw new SBBException("User entity and password can not be null");
     }
 
     @Override

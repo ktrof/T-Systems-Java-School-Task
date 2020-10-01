@@ -6,6 +6,8 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.StationDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
+import java.util.List;
+
 /**
  * The interface Station mapper.
  *
@@ -32,4 +34,21 @@ public interface StationMapper {
             @Mapping(target = "sectionEntityList", ignore = true)
     })
     StationEntity toEntity(StationDto stationDto);
+
+    /**
+     * To dto list list.
+     *
+     * @param stationEntityList the station entity list
+     * @return the list
+     */
+    List<StationDto> toDtoList(List<StationEntity> stationEntityList);
+
+    /**
+     * To entity list list.
+     *
+     * @param stationDtoList the station dto list
+     * @return the list
+     */
+    List<StationEntity> toEntityList(List<StationDto> stationDtoList);
+
 }

@@ -6,6 +6,8 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.PassengerDto;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 
+import java.util.List;
+
 /**
  * The interface Passenger mapper.
  *
@@ -37,4 +39,19 @@ public interface PassengerMapper {
     })
     PassengerEntity toEntity(PassengerDto passengerDto);
 
+    /**
+     * To dto list list.
+     *
+     * @param passengerEntityList the passenger entity list
+     * @return the list
+     */
+    List<PassengerDto> toDtoList(List<PassengerEntity> passengerEntityList);
+
+    /**
+     * To entity list list.
+     *
+     * @param passengerDtoList the passenger dto list
+     * @return the list
+     */
+    List<PassengerEntity> toEntityList(List<PassengerDto> passengerDtoList);
 }

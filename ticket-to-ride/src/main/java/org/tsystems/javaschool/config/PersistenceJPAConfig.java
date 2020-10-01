@@ -30,6 +30,16 @@ public class PersistenceJPAConfig {
     private Environment environment;
 
     @Bean
+    public DataSource dataSource() {
+        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
+        dataSource.setDriverClassName(environment.getRequiredProperty("postgres.driver"));
+        dataSource.setUrl(environment.getRequiredProperty("postgres.url"));
+        dataSource.setUsername(environment.getRequiredProperty("postgres.username"));
+        dataSource.setPassword(environment.getRequiredProperty("postgres.password"));
+        return dataSource;
+    }
+
+    @Bean
     public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
         em.setDataSource(dataSource());
@@ -40,16 +50,6 @@ public class PersistenceJPAConfig {
         em.setJpaProperties(additionalProperties());
 
         return em;
-    }
-
-    @Bean
-    public DataSource dataSource() {
-        final DriverManagerDataSource dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName(environment.getRequiredProperty("postgres.driver"));
-        dataSource.setUrl(environment.getRequiredProperty("postgres.url"));
-        dataSource.setUsername(environment.getRequiredProperty("postgres.username"));
-        dataSource.setPassword(environment.getRequiredProperty("postgres.password"));
-        return dataSource;
     }
 
     @Bean

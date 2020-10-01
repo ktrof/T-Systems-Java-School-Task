@@ -6,6 +6,8 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 
+import java.util.List;
+
 /**
  * The interface Schedule section mapper.
  *
@@ -40,4 +42,19 @@ public interface ScheduleSectionMapper {
     })
     ScheduleSectionEntity toEntity(ScheduleSectionDto scheduleSectionDto);
 
+    /**
+     * To dto list list.
+     *
+     * @param scheduleSectionEntityList the schedule section entity list
+     * @return the list
+     */
+    List<ScheduleSectionDto> toDtoList(List<ScheduleSectionEntity> scheduleSectionEntityList);
+
+    /**
+     * To entity list list.
+     *
+     * @param scheduleSectionDtoList the schedule section dto list
+     * @return the list
+     */
+    List<ScheduleSectionEntity> toEntityList(List<ScheduleSectionDto> scheduleSectionDtoList);
 }

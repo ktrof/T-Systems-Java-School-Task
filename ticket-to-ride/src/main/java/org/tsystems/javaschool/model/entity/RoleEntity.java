@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author Trofim Kremen
@@ -22,9 +22,9 @@ public class RoleEntity {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "role")
-    private String role;
+    @Column(name = "name")
+    private String name;
 
-    @OneToMany(mappedBy = "roleEntity", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    List<UserEntity> userEntityList;
+    @ManyToMany(mappedBy = "roleEntitySet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    Set<UserEntity> userEntitySet;
 }

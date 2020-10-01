@@ -1,9 +1,11 @@
 package org.tsystems.javaschool.repository;
 
 import org.tsystems.javaschool.exception.SBBException;
+import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * The interface User repository.
@@ -38,30 +40,21 @@ public interface UserRepository {
     /**
      * Add user entity.
      *
-     * @param userEntity the user entity
+     * @param userEntity           the user entity
+     * @param roleEntityCollection the role entity collection
      * @return the user entity
      * @throws SBBException the repository exception
      */
-    UserEntity add(UserEntity userEntity) throws SBBException;
+    UserEntity add(UserEntity userEntity, Set<RoleEntity> roleEntityCollection) throws SBBException;
 
     /**
      * Update login user entity.
      *
-     * @param login      the login
      * @param userEntity the user entity
      * @return the user entity
      * @throws SBBException the repository exception
      */
-    UserEntity updateLogin(String login, UserEntity userEntity) throws SBBException;
-
-    /**
-     * Update password user entity.
-     *
-     * @param password   the password
-     * @param userEntity the user entity
-     * @return the user entity
-     */
-    UserEntity updatePassword(String password, UserEntity userEntity);
+    UserEntity update(UserEntity userEntity) throws SBBException;
 
     /**
      * Remove.

@@ -31,14 +31,11 @@ public class StationServiceImpl implements StationService {
 
 
     @Override
-    @Transactional
     public List<StationDto> getAll() {
-        List<StationDto> stationDtoList = new ArrayList<>();
+        List<StationDto> stationDtoList = null;
         try {
             List<StationEntity> stationEntityList = stationRepository.findAll();
-            for (StationEntity stationEntity : stationEntityList) {
-                stationDtoList.add(stationMapper.toDto(stationEntity));
-            }
+            stationDtoList = stationMapper.toDtoList(stationEntityList);
         } catch (Exception e) {
             log.error("Error getting all the stations", e);
         }
@@ -47,7 +44,13 @@ public class StationServiceImpl implements StationService {
 
     @Override
     public StationDto getById(int id) {
-        return null;
+        StationDto stationDto = null;
+        try {
+            stationDto = stationMapper.toDto(stationRepository.findById(id));
+        } catch (Exception e) {
+            log.error("Error getting the station by id", e);
+        }
+        return stationDto;
     }
 
     @Override
