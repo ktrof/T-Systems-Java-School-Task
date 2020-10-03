@@ -38,14 +38,22 @@ public interface UserRepository {
     UserEntity findByLogin(String login) throws SBBException;
 
     /**
+     * Find by email user entity.
+     *
+     * @param email the email
+     * @return the user entity
+     * @throws SBBException the sbb exception
+     */
+    UserEntity findByEmail(String email) throws SBBException;
+
+    /**
      * Add user entity.
      *
-     * @param userEntity           the user entity
-     * @param roleEntityCollection the role entity collection
+     * @param userEntity the user entity
      * @return the user entity
      * @throws SBBException the repository exception
      */
-    UserEntity add(UserEntity userEntity, Set<RoleEntity> roleEntityCollection) throws SBBException;
+    UserEntity add(UserEntity userEntity) throws SBBException;
 
     /**
      * Update login user entity.

@@ -1,9 +1,11 @@
 package org.tsystems.javaschool.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.UserMapper;
 import org.tsystems.javaschool.model.dto.RegistrationFormDto;
 import org.tsystems.javaschool.model.dto.UserDto;
@@ -22,19 +24,16 @@ import java.util.stream.Stream;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private RoleRepository roleRepository;
+    private final RoleRepository roleRepository;
 
-    @Autowired
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<UserDto> getAll() {
@@ -59,6 +58,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto getByEmail(String email) {
+        UserDto userDto = null;
+        try {
+            userDto = userMapper.toDto(userRepository.findByEmail(email));
+        } catch (Exception e) {
+            log.error("Error getting a user by email");
+        }
+        return userDto;
+    }
+
+    @Override
     public UserDto getById(int id) {
         UserDto userDto = null;
         try {
@@ -70,13 +80,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public RegistrationFormDto registerUser(RegistrationFormDto registrationFormDto) {
         UserEntity userEntity = new UserEntity();
         userEntity.setLogin(registrationFormDto.getLogin());
         userEntity.setEmail(registrationFormDto.getEmail());
         userEntity.setPassword(passwordEncoder.encode(registrationFormDto.getPassword()));
-        Set<RoleEntity> roleEntityCollection = Collections.singleton(roleRepository.findByName("ROLE_USER"));
-        userRepository.add(userEntity, roleEntityCollection);
+        userEntity.setRoleEntitySet(Collections.singleton(roleRepository.findByName("ROLE_USER")));
+        userRepository.add(userEntity);
         return registrationFormDto;
     }
 

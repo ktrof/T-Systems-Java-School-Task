@@ -1,8 +1,6 @@
 package org.tsystems.javaschool.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -24,6 +22,8 @@ public class UserEntity {
     @Column(name = "login", unique = true)
     private String login;
 
+    @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     @ManyToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST})
     @JoinTable(
             name = "user_role",
@@ -48,7 +48,7 @@ public class UserEntity {
     @Column(name = "birth_date")
     private LocalDate birthDate;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "mobile_number")

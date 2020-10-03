@@ -64,9 +64,25 @@ public class UserRepositoryJPAImpl implements UserRepository {
     }
 
     @Override
-    public UserEntity add(UserEntity userEntity, Set<RoleEntity> roleEntityCollection) throws SBBException {
+    public UserEntity findByEmail(String email) throws SBBException {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
+        Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
+        criteriaQuery
+                .select(root)
+                .where(criteriaBuilder.equal(root.get(UserEntity_.email), email));
+        TypedQuery<UserEntity> selectByEmail = entityManager.createQuery(criteriaQuery);
+
+        UserEntity userEntity = selectByEmail.getSingleResult();
         if (userEntity != null) {
-            userEntity.setRoleEntitySet(roleEntityCollection);
+            return userEntity;
+        } else throw new SBBException("No user found by given email");
+    }
+
+
+    @Override
+    public UserEntity add(UserEntity userEntity) throws SBBException {
+        if (userEntity != null) {
             entityManager.persist(userEntity);
             return userEntity;
         } else throw new SBBException("User entity can not be null");

@@ -28,6 +28,14 @@ public interface UserService {
     UserDto getByLogin(String login);
 
     /**
+     * Gets by email.
+     *
+     * @param email the email
+     * @return the by email
+     */
+    UserDto getByEmail(String email);
+
+    /**
      * Gets by id.
      *
      * @param id the id
