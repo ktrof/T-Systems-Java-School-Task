@@ -1,6 +1,5 @@
 package org.tsystems.javaschool.service.impl;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.repository.RoleRepository;
@@ -32,6 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private RoleRepository roleRepository;
 
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
         UserEntity userEntity = userRepository.findByLogin(login);
         if (userEntity.getLogin() == null) {

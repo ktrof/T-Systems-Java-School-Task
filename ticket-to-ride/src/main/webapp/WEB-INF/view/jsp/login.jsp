@@ -69,24 +69,24 @@
                     </div>
                 </c:if>
                 <h1>Log In</h1>
-                <form:form action="/login" method="post">
+                <form action="<c:url value="/login"/>" method="post">
                     <div class="form-group">
                         <label for="login" class="control-label">Login
-                            <input id="login" type="text" placeholder="Enter login">
+                            <input id="login" type="text" placeholder="Enter login" name="username"/>
                         </label>
                     </div>
                     <div class="form-group">
                         <label for="password" class="control-label">Password
-                            <input id="password" type="password" placeholder="Enter password">
+                            <input id="password" type="password" placeholder="Enter password" name="password"/>
                         </label>
                     </div>
                     <div class="form-group">
-                        <input type="submit" class="form-control btn btn-info" value="Log in!"/>
+                        <input type="submit" class="btn-lg btn-success btn-block" value="Log in!"/>
                     </div>
                     <div class="form-group">
                         <span>New user? <a href="<c:url value="/registration"/>">Register here</a></span>
                     </div>
-                </form:form>
+                </form>
             </div>
         </div>
     </div>
