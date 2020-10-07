@@ -55,7 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
-                    .antMatchers("/resources/**","/WEB-INF/view/jsp/**").permitAll()
                 .and().formLogin()
                     .loginPage("/login")
                     .permitAll()

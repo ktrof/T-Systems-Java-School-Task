@@ -1,5 +1,7 @@
 package org.tsystems.javaschool.service;
 
+import org.tsystems.javaschool.model.dto.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.SectionDto;
 import org.tsystems.javaschool.model.dto.StationDto;
 
 import java.util.List;
@@ -27,12 +29,20 @@ public interface StationService {
     StationDto getById(int id);
 
     /**
+     * Gets by name.
+     *
+     * @param name the name
+     * @return the by name
+     */
+    StationDto getByName(String name);
+
+    /**
      * Create station station dto.
      *
-     * @param stationDto the station dto
+     * @param stationFormDto the station form dto
      * @return the station dto
      */
-    StationDto save(StationDto stationDto);
+    AddStationFormDto save(AddStationFormDto stationFormDto);
 
     /**
      * Change station name station dto.

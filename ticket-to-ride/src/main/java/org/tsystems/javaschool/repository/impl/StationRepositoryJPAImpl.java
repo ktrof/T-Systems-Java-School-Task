@@ -38,15 +38,12 @@ public class StationRepositoryJPAImpl implements StationRepository {
     }
 
     @Override
-    public StationEntity findById(int id) throws SBBException {
-        StationEntity stationEntity = entityManager.find(StationEntity.class, id);
-        if (stationEntity != null) {
-            return stationEntity;
-        } else throw new SBBException("No station found by given id");
+    public StationEntity findById(int id) {
+        return entityManager.find(StationEntity.class, id);
     }
 
     @Override
-    public StationEntity findByName(String name) throws SBBException {
+    public StationEntity findByName(String name) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<StationEntity> criteriaQuery = criteriaBuilder.createQuery(StationEntity.class);
         Root<StationEntity> root = criteriaQuery.from(StationEntity.class);
@@ -55,31 +52,22 @@ public class StationRepositoryJPAImpl implements StationRepository {
                 .where(criteriaBuilder.equal(root.get(StationEntity_.name), name));
         TypedQuery<StationEntity> selectByName = entityManager.createQuery(criteriaQuery);
 
-        StationEntity stationEntity = selectByName.getSingleResult();
-        if (stationEntity != null) {
-            return stationEntity;
-        } else throw new SBBException("No station found by given name");
+        return selectByName.getSingleResult();
     }
 
     @Override
-    public StationEntity add(StationEntity stationEntity) throws SBBException {
-        if (stationEntity != null) {
-            entityManager.persist(stationEntity);
-            return stationEntity;
-        } else throw new SBBException("Station entity can not be null");
+    public StationEntity add(StationEntity stationEntity) {
+        entityManager.persist(stationEntity);
+        return stationEntity;
     }
 
     @Override
-    public StationEntity update(StationEntity stationEntity) throws SBBException {
-        if (stationEntity != null) {
-            return entityManager.merge(stationEntity);
-        } else throw new SBBException("Station entity can not be null");
+    public StationEntity update(StationEntity stationEntity) {
+        return entityManager.merge(stationEntity);
     }
 
     @Override
-    public void remove(StationEntity stationEntity) throws SBBException {
-        if (stationEntity != null) {
-            entityManager.remove(stationEntity);
-        } else throw new SBBException("Station entity can not be null");
+    public void remove(StationEntity stationEntity) {
+        entityManager.remove(stationEntity);
     }
 }

@@ -30,7 +30,7 @@ public class RoleRepositoryJPAImpl implements RoleRepository {
     private EntityManager entityManager;
 
     @Override
-    public Collection<RoleEntity> findRolesByUserLogin(String userLogin) throws SBBException {
+    public Collection<RoleEntity> findRolesByUserLogin(String userLogin) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<RoleEntity> criteriaQuery = criteriaBuilder.createQuery(RoleEntity.class);
         Root<RoleEntity> root = criteriaQuery.from(RoleEntity.class);
@@ -40,14 +40,11 @@ public class RoleRepositoryJPAImpl implements RoleRepository {
                 .where(criteriaBuilder.equal(userEntityJoin.get(UserEntity_.login), userLogin));
         TypedQuery<RoleEntity> selectByUserLogin = entityManager.createQuery(criteriaQuery);
 
-        Collection<RoleEntity> roleEntityCollection = selectByUserLogin.getResultStream().collect(Collectors.toSet());
-        if (roleEntityCollection.size() != 0) {
-            return roleEntityCollection;
-        } else throw new SBBException("No roles found by given user login");
+        return selectByUserLogin.getResultStream().collect(Collectors.toSet());
     }
 
     @Override
-    public RoleEntity findByName(String name) throws SBBException {
+    public RoleEntity findByName(String name) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<RoleEntity> criteriaQuery = criteriaBuilder.createQuery(RoleEntity.class);
         Root<RoleEntity> root = criteriaQuery.from(RoleEntity.class);
@@ -56,10 +53,7 @@ public class RoleRepositoryJPAImpl implements RoleRepository {
                 .where(criteriaBuilder.equal(root.get(RoleEntity_.name), name));
         TypedQuery<RoleEntity> selectByName = entityManager.createQuery(criteriaQuery);
 
-        RoleEntity roleEntity = selectByName.getSingleResult();
-        if (roleEntity != null) {
-            return roleEntity;
-        } else throw new SBBException("No role found by given name");
+        return selectByName.getSingleResult();
     }
 
 }

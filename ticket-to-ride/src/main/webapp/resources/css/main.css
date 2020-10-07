@@ -1,0 +1,11 @@
+h1 {
+    color: #d52b00;
+}
+
+.error-message {
+    color: #c02700;
+}
+
+.error-message:first-letter {
+    text-transform: capitalize;
+}

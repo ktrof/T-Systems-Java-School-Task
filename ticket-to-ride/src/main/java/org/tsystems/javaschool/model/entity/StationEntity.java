@@ -21,14 +21,14 @@ public class StationEntity {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "name")
+    @Column(name = "name", unique = true)
     private String name;
 
     @Column(name = "latitude")
-    private float latitude;
+    private double latitude;
 
     @Column(name = "longitude")
-    private float longitude;
+    private double longitude;
 
     @Column(name = "timezone")
     @Convert(converter = ZoneIdConverter.class)

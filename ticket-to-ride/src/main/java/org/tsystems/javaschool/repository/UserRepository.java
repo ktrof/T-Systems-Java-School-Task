@@ -9,6 +9,8 @@ import java.util.Set;
 
 /**
  * The interface User repository.
+ *
+ * @Author Trofim Kremen
  */
 public interface UserRepository {
 
@@ -24,51 +26,46 @@ public interface UserRepository {
      *
      * @param id the id
      * @return the user entity
-     * @throws SBBException the repository exception
      */
-    UserEntity findById(int id) throws SBBException;
+    UserEntity findById(int id);
 
     /**
      * Find by login user entity.
      *
      * @param login the login
      * @return the user entity
-     * @throws SBBException the repository exception
      */
-    UserEntity findByLogin(String login) throws SBBException;
+    UserEntity findByLogin(String login);
 
     /**
      * Find by email user entity.
      *
      * @param email the email
      * @return the user entity
-     * @throws SBBException the sbb exception
      */
-    UserEntity findByEmail(String email) throws SBBException;
+    UserEntity findByEmail(String email);
 
     /**
      * Add user entity.
      *
      * @param userEntity the user entity
      * @return the user entity
-     * @throws SBBException the repository exception
      */
-    UserEntity add(UserEntity userEntity) throws SBBException;
+    UserEntity add(UserEntity userEntity);
 
     /**
-     * Update login user entity.
+     * Update user entity.
      *
      * @param userEntity the user entity
      * @return the user entity
-     * @throws SBBException the repository exception
      */
-    UserEntity update(UserEntity userEntity) throws SBBException;
+    UserEntity update(UserEntity userEntity);
 
     /**
      * Remove.
      *
      * @param userEntity the user entity
-     * @throws SBBException the repository exception
+     * @throws SBBException the sbb exception
      */
     void remove(UserEntity userEntity) throws SBBException;
 }

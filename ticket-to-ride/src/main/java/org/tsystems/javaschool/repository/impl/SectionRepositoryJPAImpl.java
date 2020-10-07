@@ -12,6 +12,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,35 +40,34 @@ public class SectionRepositoryJPAImpl implements SectionRepository {
     }
 
     @Override
-    public SectionEntity findById(int id) throws SBBException {
-        SectionEntity sectionEntity = entityManager.find(SectionEntity.class, id);
-        if (sectionEntity != null) {
-            return sectionEntity;
-        } else throw new SBBException("No section found by given id");
+    public SectionEntity findById(int id) {
+        return entityManager.find(SectionEntity.class, id);
     }
 
     @Override
-    public SectionEntity add(SectionEntity sectionEntity) throws SBBException {
-        if (sectionEntity != null) {
-            entityManager.persist(entityManager);
-            return sectionEntity;
-        } else throw new SBBException("Section entity can not be null");
+    public SectionEntity add(SectionEntity sectionEntity) {
+        entityManager.persist(entityManager);
+        return sectionEntity;
     }
 
     @Override
-    public SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) throws SBBException {
-        if (stationFrom != null || stationTo != null || sectionEntity != null) {
-            sectionEntity.setStationEntityFrom(stationFrom);
-            sectionEntity.setStationEntityTo(stationTo);
-            return entityManager.merge(sectionEntity);
-        } else throw new SBBException("Section entity and station entities can not be null");
+    public Iterable<SectionEntity> add(Collection<SectionEntity> sectionEntityCollection) {
+        for (SectionEntity sectionEntity : sectionEntityCollection) {
+            entityManager.persist(sectionEntity);
+        }
+        return sectionEntityCollection;
     }
 
     @Override
-    public void remove(SectionEntity sectionEntity) throws SBBException {
-        if (sectionEntity != null) {
-            entityManager.remove(sectionEntity);
-        } else throw new SBBException("Section entity can not be null");
+    public SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) {
+        sectionEntity.setStationEntityFrom(stationFrom);
+        sectionEntity.setStationEntityTo(stationTo);
+        return entityManager.merge(sectionEntity);
+    }
+
+    @Override
+    public void remove(SectionEntity sectionEntity) {
+        entityManager.remove(sectionEntity);
     }
 
 }

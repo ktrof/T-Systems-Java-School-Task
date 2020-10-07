@@ -40,15 +40,13 @@ public class UserRepositoryJPAImpl implements UserRepository {
     }
 
     @Override
-    public UserEntity findById(int id) throws SBBException {
+    public UserEntity findById(int id) {
         UserEntity userEntity = entityManager.find(UserEntity.class, id);
-        if (userEntity != null) {
-            return userEntity;
-        } else throw new SBBException("No user found by given id");
+        return userEntity;
     }
 
     @Override
-    public UserEntity findByLogin(String login) throws SBBException {
+    public UserEntity findByLogin(String login) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
@@ -57,14 +55,11 @@ public class UserRepositoryJPAImpl implements UserRepository {
                 .where(criteriaBuilder.equal(root.get(UserEntity_.login), login));
         TypedQuery<UserEntity> selectByLogin = entityManager.createQuery(criteriaQuery);
 
-        UserEntity userEntity = selectByLogin.getSingleResult();
-        if (userEntity != null) {
-            return userEntity;
-        } else throw new SBBException("No user found bu given login");
+        return selectByLogin.getSingleResult();
     }
 
     @Override
-    public UserEntity findByEmail(String email) throws SBBException {
+    public UserEntity findByEmail(String email) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
@@ -73,33 +68,24 @@ public class UserRepositoryJPAImpl implements UserRepository {
                 .where(criteriaBuilder.equal(root.get(UserEntity_.email), email));
         TypedQuery<UserEntity> selectByEmail = entityManager.createQuery(criteriaQuery);
 
-        UserEntity userEntity = selectByEmail.getSingleResult();
-        if (userEntity != null) {
-            return userEntity;
-        } else throw new SBBException("No user found by given email");
+        return selectByEmail.getSingleResult();
     }
 
 
     @Override
-    public UserEntity add(UserEntity userEntity) throws SBBException {
-        if (userEntity != null) {
-            entityManager.persist(userEntity);
-            return userEntity;
-        } else throw new SBBException("User entity can not be null");
+    public UserEntity add(UserEntity userEntity) {
+        entityManager.persist(userEntity);
+        return userEntity;
     }
 
     @Override
-    public UserEntity update(UserEntity userEntity) throws SBBException {
-        if (userEntity != null) {
-            return entityManager.merge(userEntity);
-        } else throw new SBBException("User entity and login can not be null");
+    public UserEntity update(UserEntity userEntity) {
+        return entityManager.merge(userEntity);
     }
 
     @Override
-    public void remove(UserEntity userEntity) throws SBBException {
-        if (userEntity != null) {
-            entityManager.remove(userEntity);
-        } else throw new SBBException("User entity can not be null");
+    public void remove(UserEntity userEntity) {
+        entityManager.remove(userEntity);
     }
 
 }

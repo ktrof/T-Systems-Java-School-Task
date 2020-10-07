@@ -28,7 +28,7 @@ public class SectionEntity {
     private StationEntity stationEntityTo;
 
     @Column(name = "length")
-    private int length;
+    private double length;
 
     @OneToMany(mappedBy = "sectionEntity", cascade = CascadeType.ALL)
     List<ScheduleSectionEntity> scheduleSectionEntityList;

@@ -1,13 +1,16 @@
 package org.tsystems.javaschool.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.mapper.StationMapper;
+import org.tsystems.javaschool.model.dto.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.SectionDto;
 import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
+import org.tsystems.javaschool.repository.SectionRepository;
 import org.tsystems.javaschool.repository.StationRepository;
 import org.tsystems.javaschool.service.StationService;
 
@@ -21,14 +24,12 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class StationServiceImpl implements StationService {
 
-    @Autowired
-    private StationRepository stationRepository;
-
-    @Autowired
-    private StationMapper stationMapper;
-
+    private final StationRepository stationRepository;
+    private final SectionRepository sectionRepository;
+    private final StationMapper stationMapper;
 
     @Override
     public List<StationDto> getAll() {
@@ -54,17 +55,65 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public StationDto save(StationDto stationDto) {
+    @Transactional
+    public StationDto getByName(String name) {
+        StationDto stationDto = null;
         try {
-            StationEntity existingStationEntity = stationRepository.findByName(stationDto.getName());
-            if (existingStationEntity != null) {
-                throw new SBBException("Station with given name already exists");
+            stationDto = stationMapper.toDto(stationRepository.findByName(name));
+        } catch (Exception e) {
+            log.error("Error getting station by name");
+        }
+        return stationDto;
+    }
+
+    @Override
+    @Transactional
+    public AddStationFormDto save(AddStationFormDto stationFormDto) {
+        try {
+            StationEntity newStationEntity = stationMapper.toEntity(stationFormDto);
+            stationRepository.add(newStationEntity);
+
+            if (stationFormDto.getCorrespondingSectionList().length != 0) {
+                try {
+                    List<SectionEntity> sectionEntityList = new ArrayList<>();
+                    for (SectionDto sectionDto : stationFormDto.getCorrespondingSectionList()) {
+
+                        StationEntity stationEntityFrom = stationRepository.findByName(sectionDto.getStationDtoFrom());
+                        StationEntity stationEntityTo = stationRepository.findByName(sectionDto.getStationDtoTo());
+
+                        SectionEntity sectionEntity = new SectionEntity();
+                        sectionEntity.setStationEntityFrom(stationEntityFrom);
+                        sectionEntity.setStationEntityTo(stationEntityTo);
+                        sectionEntity.setLength(calculateDistance(stationEntityFrom, stationEntityTo));
+
+                        sectionEntityList.add(sectionEntity);
+                    }
+                    sectionRepository.add(sectionEntityList);
+                } catch (Exception e) {
+                    log.error("Error creating sections", e);
+                }
             }
-            stationRepository.add(stationMapper.toEntity(stationDto));
         } catch (Exception e) {
             log.error("Error creating new station", e);
         }
-        return stationDto;
+        return stationFormDto;
+    }
+
+    private double calculateDistance(StationEntity stationEntityFrom, StationEntity stationEntityTo) {
+        double latFrom = Math.toRadians(stationEntityFrom.getLatitude());
+        double lonFrom = Math.toRadians(stationEntityFrom.getLongitude());
+        double latTo = Math.toRadians(stationEntityTo.getLatitude());
+        double lonTo = Math.toRadians(stationEntityTo.getLongitude());
+
+        // Haversine formula
+        double deltaLat = latTo - latFrom;
+        double deltaLon = lonTo - lonFrom;
+        double radiusKm = 6371;
+        double haversine = Math.pow(Math.sin(deltaLat / 2), 2)
+                + Math.cos(latFrom) * Math.cos(latTo)
+                * Math.pow(Math.sin(deltaLon / 2),2);
+
+        return 2 * radiusKm * Math.asin(Math.sqrt(haversine));
     }
 
     @Override

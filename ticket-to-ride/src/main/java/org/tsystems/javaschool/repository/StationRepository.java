@@ -1,6 +1,5 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
 import java.util.List;
@@ -24,43 +23,38 @@ public interface StationRepository {
      *
      * @param id the id
      * @return the station entity
-     * @throws SBBException the repository exception
      */
-    StationEntity findById(int id) throws SBBException;
+    StationEntity findById(int id);
 
     /**
      * Find by name station entity.
      *
      * @param name the name
      * @return the station entity
-     * @throws SBBException the repository exception
      */
-    StationEntity findByName(String name) throws SBBException;
+    StationEntity findByName(String name);
 
     /**
      * Add station entity.
      *
      * @param stationEntity the station entity
      * @return the station entity
-     * @throws SBBException the repository exception
      */
-    StationEntity add(StationEntity stationEntity) throws SBBException;
+    StationEntity add(StationEntity stationEntity);
 
     /**
      * Update name station entity.
      *
      * @param stationEntity the station entity
      * @return the station entity
-     * @throws SBBException the repository exception
      */
-    StationEntity update(StationEntity stationEntity) throws SBBException;
+    StationEntity update(StationEntity stationEntity);
 
     /**
      * Remove.
      *
      * @param stationEntity the station entity
-     * @throws SBBException the repository exception
      */
-    void remove(StationEntity stationEntity) throws SBBException;
+    void remove(StationEntity stationEntity);
 
 }

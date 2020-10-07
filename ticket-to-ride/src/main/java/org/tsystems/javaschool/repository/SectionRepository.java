@@ -4,6 +4,7 @@ import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,18 +26,24 @@ public interface SectionRepository {
      *
      * @param id the id
      * @return the section entity
-     * @throws SBBException the repository exception
      */
-    SectionEntity findById(int id) throws SBBException;
+    SectionEntity findById(int id);
 
     /**
      * Add section entity.
      *
      * @param sectionEntity the section entity
      * @return the section entity
-     * @throws SBBException the repository exception
      */
-    SectionEntity add(SectionEntity sectionEntity) throws SBBException;
+    SectionEntity add(SectionEntity sectionEntity);
+
+    /**
+     * Add iterable.
+     *
+     * @param sectionEntityCollection the section entity collection
+     * @return the iterable
+     */
+    Iterable<SectionEntity> add(Collection<SectionEntity> sectionEntityCollection);
 
     /**
      * Update stations section entity.
@@ -45,16 +52,14 @@ public interface SectionRepository {
      * @param stationTo     the station to
      * @param sectionEntity the section entity
      * @return the section entity
-     * @throws SBBException the repository exception
      */
-    SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) throws SBBException;
+    SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity);
 
     /**
      * Remove.
      *
      * @param sectionEntity the section entity
-     * @throws SBBException the repository exception
      */
-    void remove(SectionEntity sectionEntity) throws SBBException;
+    void remove(SectionEntity sectionEntity);
 
 }

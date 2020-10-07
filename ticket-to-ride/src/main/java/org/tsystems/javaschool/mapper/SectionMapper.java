@@ -23,23 +23,10 @@ public interface SectionMapper {
      * @return the section dto
      */
     @Mappings({
-            @Mapping(target = "stationDtoFrom", source = "sectionEntity.stationEntityFrom"),
-            @Mapping(target = "stationDtoTo", source = "sectionEntity.stationEntityTo"),
+            @Mapping(target = "stationDtoFrom", source = "sectionEntity.stationEntityFrom.name"),
+            @Mapping(target = "stationDtoTo", source = "sectionEntity.stationEntityTo.name"),
     })
     SectionDto toDto(SectionEntity sectionEntity);
-
-    /**
-     * To entity section entity.
-     *
-     * @param sectionDto the section dto
-     * @return the section entity
-     */
-    @Mappings({
-            @Mapping(target = "stationEntityFrom", source = "sectionDto.stationDtoFrom"),
-            @Mapping(target = "stationEntityTo", source = "sectionDto.stationDtoTo"),
-            @Mapping(target = "scheduleSectionEntityList", ignore = true)
-    })
-    SectionEntity toEntity(SectionDto sectionDto);
 
     /**
      * To dto list list.
@@ -49,11 +36,4 @@ public interface SectionMapper {
      */
     List<SectionDto> toDtoList(List<SectionEntity> sectionEntityList);
 
-    /**
-     * To entity list list.
-     *
-     * @param sectionDtoList the section dto list
-     * @return the list
-     */
-    List<SectionEntity> toEntityList(List<SectionDto> sectionDtoList);
 }

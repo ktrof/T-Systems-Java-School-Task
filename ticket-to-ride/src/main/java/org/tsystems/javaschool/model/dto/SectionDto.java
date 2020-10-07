@@ -17,8 +17,8 @@ import java.io.Serializable;
 @AllArgsConstructor
 @ValidateFields(
         equality = false,
-        first = "stationDtoFrom",
-        second = "stationDtoTo",
+        first = "stationDtoTo",
+        second = "stationDtoFrom",
         message = "Departure and destination stations must not match"
 )
 public class SectionDto implements Serializable {
@@ -26,13 +26,11 @@ public class SectionDto implements Serializable {
     private int id;
 
     @NotNull(message = "Set departure station")
-    private StationDto stationDtoFrom;
+    private String stationDtoFrom;
 
-    @NotNull(message = "Set destination station")
-    private StationDto stationDtoTo;
+    private String stationDtoTo;
 
     @Min(value = 1, message = "Distance between two stations can not less then 1")
-    private int length;
-
+    private double length;
 
 }

@@ -5,10 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.*;
 import java.io.Serializable;
 import java.time.ZoneId;
 
@@ -19,22 +16,9 @@ import java.time.ZoneId;
 public class StationDto implements Serializable {
 
     private int id;
-
-    @NotBlank(message = "Station name must not be blank")
-    @Pattern(regexp = "^[a-zA-Z-]+$",message = "Latin letters and dashes are allowed")
     private String name;
-
-    @Min(value = -90, message = "Min latitude value is -90°")
-    @Max(value = 90, message = "Max latitude value is 90°")
-    @NotBlank
-    private float latitude;
-
-    @Min(value = -180, message = "Min longitude value is -180°")
-    @Max(value = 180, message = "Max longitude value is 180°")
-    @NotBlank
-    private float longitude;
-
-    @NotBlank(message = "Timezone must not be blank")
-    private ZoneId timezone;
+    private double latitude;
+    private double longitude;
+    private String timezone;
 
 }

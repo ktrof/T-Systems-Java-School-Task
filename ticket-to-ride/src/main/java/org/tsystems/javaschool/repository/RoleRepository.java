@@ -17,17 +17,15 @@ public interface RoleRepository {
      *
      * @param userLogin the user login
      * @return the list
-     * @throws SBBException the sbb exception
      */
-    Collection<RoleEntity> findRolesByUserLogin(String userLogin) throws SBBException;
+    Collection<RoleEntity> findRolesByUserLogin(String userLogin);
 
     /**
      * Find by id role entity.
      *
      * @param name the name
      * @return the role entity
-     * @throws SBBException the sbb exception
      */
-    RoleEntity findByName(String name) throws SBBException;
+    RoleEntity findByName(String name);
 
 }
