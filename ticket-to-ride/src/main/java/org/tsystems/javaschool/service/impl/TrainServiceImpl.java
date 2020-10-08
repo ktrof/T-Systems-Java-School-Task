@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.mapper.TrainMapper;
+import org.tsystems.javaschool.model.dto.AddTrainFormDto;
 import org.tsystems.javaschool.model.dto.TrainDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 import org.tsystems.javaschool.repository.TrainRepository;
@@ -50,17 +51,13 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public TrainDto save(TrainDto trainDto) {
+    public AddTrainFormDto save(AddTrainFormDto trainFormDto) {
         try {
-            TrainEntity existingTrainEntity = trainRepository.findById(trainDto.getId());
-            if (existingTrainEntity != null) {
-                throw new SBBException("Train with given id already exists");
-            }
-            trainRepository.add(trainMapper.toEntity(trainDto));
+            trainRepository.add(trainMapper.toEntity(trainFormDto));
         } catch (Exception e) {
             log.error("Error creating a train", e);
         }
-        return trainDto;
+        return trainFormDto;
     }
 
     @Override

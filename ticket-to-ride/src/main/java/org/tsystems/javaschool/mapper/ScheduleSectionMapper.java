@@ -6,6 +6,7 @@ import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 
+import java.time.Instant;
 import java.util.List;
 
 /**
@@ -23,8 +24,8 @@ public interface ScheduleSectionMapper {
      * @return the schedule dto
      */
     @Mappings({
-            @Mapping(target = "sectionDto", source = "scheduleSectionEntity.sectionEntity"),
-            @Mapping(target = "trainDto", source = "scheduleSectionEntity")
+            @Mapping(target = "trainDto", source = "scheduleSectionEntity"),
+            @Mapping(target = "sectionDtoId", source = "scheduleSectionEntity.sectionEntity.id")
     })
     ScheduleSectionDto toDto(ScheduleSectionEntity scheduleSectionEntity);
 
@@ -35,10 +36,9 @@ public interface ScheduleSectionMapper {
      * @return the schedule section entity
      */
     @Mappings({
-            @Mapping(target = "sectionEntity", source = "scheduleSectionDto.sectionDto"),
             @Mapping(target = "trainEntity", source = "scheduleSectionDto.trainDto"),
-            @Mapping(target = "indexWithinTrainRoute", ignore = true),
-            @Mapping(target = "ticketEntitySet", ignore = true)
+            @Mapping(target = "ticketEntitySet", ignore = true),
+            @Mapping(target = "sectionEntity", ignore = true)
     })
     ScheduleSectionEntity toEntity(ScheduleSectionDto scheduleSectionDto);
 
@@ -57,4 +57,5 @@ public interface ScheduleSectionMapper {
      * @return the list
      */
     List<ScheduleSectionEntity> toEntityList(List<ScheduleSectionDto> scheduleSectionDtoList);
+
 }

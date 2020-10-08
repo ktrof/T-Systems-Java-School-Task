@@ -1,6 +1,11 @@
 h1 {
-    color: #d52b00;
+    color: #c42800;
 }
+
+h3 {
+    color: #c42800;
+}
+
 
 .error-message {
     color: #c02700;
@@ -9,3 +14,8 @@ h1 {
 .error-message:first-letter {
     text-transform: capitalize;
 }
+
+textarea {
+    height: 90px;
+}
+

@@ -23,17 +23,22 @@ public class ScheduleSectionDto implements Serializable {
     @NotNull(message = "Set the train")
     private TrainDto trainDto;
 
-    @NotNull(message = "Set the section")
-    private SectionDto sectionDto;
+    @NotNull(message = "Set the section id")
+    private int sectionDtoId;
+
+    @NotNull(message = "Set stop duration")
+    private int stopDuration;
 
     @Min(value = 0, message = "Amount of tickets left can not be negative")
     @NotBlank
     private int ticketsAvailable;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    private int indexWithinTrainRoute;
+
+    @DateTimeFormat(pattern = "HH:mm")
     private Instant arrival;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
+    @DateTimeFormat(pattern = "HH:mm")
     private Instant departure;
 
 }

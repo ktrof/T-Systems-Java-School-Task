@@ -23,7 +23,7 @@ public interface CalendarMapper {
      * @return the calendar dto
      */
     @Mappings({
-            @Mapping(target = "trainDto", source = "calendarEntity.trainEntity")
+            @Mapping(target = "trainDto", source = "calendarEntity.trainEntity"),
     })
     CalendarDto toDto(CalendarEntity calendarEntity);
 

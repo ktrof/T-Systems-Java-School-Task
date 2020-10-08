@@ -1,20 +1,56 @@
 package org.tsystems.javaschool.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.tsystems.javaschool.model.dto.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.service.SectionService;
 import org.tsystems.javaschool.service.TrainService;
 
+import javax.validation.Valid;
+
 @Controller
+@RequiredArgsConstructor
 public class TrainController {
 
-    @Autowired
-    private TrainService trainService;
+    private final TrainService trainService;
+    private final SectionService sectionService;
+
+    @ModelAttribute("train")
+    public AddTrainFormDto trainForm() {
+        return AddTrainFormDto.builder().build();
+    }
 
     @GetMapping(value = "/trains")
     public String getAllTrains(Model model) {
         model.addAttribute("trains", trainService.getAll());
         return "trains";
     }
+
+    @GetMapping(value = "/trains/add")
+    public String getTrainForm() {
+        return "addTrain";
+    }
+
+    @PostMapping(value = "/trains/add")
+    public String addTrain(@ModelAttribute("train") @Valid AddTrainFormDto trainFormDto, Model model,
+                           BindingResult result) {
+        TrainDto existingTrain = trainService.getById(trainFormDto.getId());
+        if (existingTrain != null) {
+            result.rejectValue("id", null, "There is already a train with that id");
+        }
+        if (result.hasErrors()) {
+            return "addTrain";
+        }
+        model.addAttribute("sections", sectionService.getAll());
+        System.out.println(trainFormDto.getDates());
+        trainService.save(trainFormDto);
+        return "trains";
+    }
+
 }

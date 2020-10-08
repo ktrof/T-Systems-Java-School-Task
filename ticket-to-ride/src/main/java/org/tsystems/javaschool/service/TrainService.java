@@ -1,5 +1,6 @@
 package org.tsystems.javaschool.service;
 
+import org.tsystems.javaschool.model.dto.AddTrainFormDto;
 import org.tsystems.javaschool.model.dto.TrainDto;
 
 import java.util.List;
@@ -27,10 +28,10 @@ public interface TrainService {
     /**
      * Create train train dto.
      *
-     * @param trainDto the train dto
+     * @param trainFormDto the train form dto
      * @return the train dto
      */
-    TrainDto save(TrainDto trainDto);
+    AddTrainFormDto save(AddTrainFormDto trainFormDto);
 
     /**
      * Modify train train dto.

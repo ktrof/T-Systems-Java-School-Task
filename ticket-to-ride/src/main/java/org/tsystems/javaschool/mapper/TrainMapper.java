@@ -3,6 +3,7 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.tsystems.javaschool.model.dto.AddTrainFormDto;
 import org.tsystems.javaschool.model.dto.TrainDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
@@ -35,6 +36,13 @@ public interface TrainMapper {
             @Mapping(target = "scheduleSectionEntityList", ignore = true)
     })
     TrainEntity toEntity(TrainDto trainDto);
+
+    @Mappings({
+
+            @Mapping(target = "calendarEntityList", ignore = true),
+            @Mapping(target = "scheduleSectionEntityList", ignore = true)
+    })
+    TrainEntity toEntity(AddTrainFormDto trainFormDto);
 
     /**
      * To dto list list.

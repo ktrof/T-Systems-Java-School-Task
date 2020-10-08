@@ -32,6 +32,9 @@ public class ScheduleSectionEntity {
     @JoinColumn(name = "section_id")
     private SectionEntity sectionEntity;
 
+    @Column(name = "stop_duration")
+    private int stopDuration;
+
     @Column(name = "index_within_train_route")
     private int indexWithinTrainRoute;
 
