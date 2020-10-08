@@ -2,10 +2,8 @@ package org.tsystems.javaschool.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.mapper.TrainMapper;
 import org.tsystems.javaschool.model.dto.AddTrainFormDto;
 import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
@@ -20,14 +18,14 @@ import org.tsystems.javaschool.repository.SectionRepository;
 import org.tsystems.javaschool.repository.TrainRepository;
 import org.tsystems.javaschool.service.TrainService;
 
-import java.time.Instant;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Stack;
 import java.util.stream.Collectors;
 
 /**
@@ -110,33 +108,26 @@ public class TrainServiceImpl implements TrainService {
                         scheduleSectionEntity.setTicketsAvailable(trainFormDto.getNumberOfSeats());
                         if (i == 0) {
                             scheduleSectionEntity.setDeparture(
-                                    LocalDateTime.parse(
-                                            trainFormDto.getDeparture(), DateTimeFormatter.ofPattern("HH:mm"))
-                                            .atZone(sectionRepository
-                                                    .findById(scheduleSectionDtos[i].getSectionDtoId())
-                                                    .getStationEntityFrom().getTimezone())
-                                            .toInstant()
+                                    LocalTime.parse(trainFormDto
+                                            .getDeparture(), DateTimeFormatter.ofPattern("HH:mm"))
                             );
-                        } else {
+                        }
+                        else {
                             scheduleSectionEntity.setDeparture(
-                                    scheduleSectionDtos[i - 1].getArrival()
-                                            .plus(scheduleSectionDtos[i - 1].getStopDuration(), ChronoUnit.MINUTES)
+                                    scheduleSectionEntityList.get(i-1).getArrival()
+                                            .plusMinutes(scheduleSectionEntityList.get(i-1).getStopDuration())
                             );
                         }
                         scheduleSectionEntity.setArrival(
                                 scheduleSectionEntity.getDeparture()
-                                        .plus(
-                                                timeBetweenTwoStations(trainEntity, sectionRepository
-                                                        .findById(scheduleSectionDtos[i].getSectionDtoId())),
-                                                ChronoUnit.MINUTES
-                                        )
+                                        .plusMinutes(timeBetweenTwoStations(trainEntity, sectionRepository
+                                                .findById(scheduleSectionDtos[i].getSectionDtoId())))
                         );
-
                         scheduleSectionEntityList.add(scheduleSectionEntity);
                     }
                 scheduleSectionRepository.add(scheduleSectionEntityList);
                 } catch (Exception e) {
-                    log.error("Error creating schedule sections");
+                    log.error("Error creating schedule sections", e);
                 }
             }
         } catch (Exception e) {
@@ -146,7 +137,7 @@ public class TrainServiceImpl implements TrainService {
     }
 
     private long timeBetweenTwoStations(TrainEntity trainEntity, SectionEntity sectionEntity) {
-        return Double.valueOf(sectionEntity.getLength() / trainEntity.getAvgSpeed() * 60).longValue();
+        return Double.valueOf(60 * sectionEntity.getLength() / trainEntity.getAvgSpeed()).longValue();
     }
 
     @Override

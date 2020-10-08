@@ -21,7 +21,6 @@ public class CalendarDto implements Serializable {
     @NotNull(message = "Set the train")
     private TrainDto trainDto;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate rideDate;
 
 }

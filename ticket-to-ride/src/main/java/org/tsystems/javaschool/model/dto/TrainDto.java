@@ -34,7 +34,6 @@ public class TrainDto implements Serializable {
     @NotBlank(message = "Set the number of seats")
     private int numberOfSeats;
 
-    @NotBlank(message = "Set the train type")
     private String type;
 
 }

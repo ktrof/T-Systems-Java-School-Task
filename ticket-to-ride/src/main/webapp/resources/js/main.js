@@ -107,8 +107,3 @@ $(function() {
     if (extensionRange.datesText) $('#trainRideDates').val(extensionRange.datesText.join(','));
 });
 
-$(function () {
-    $('#datetimepickerDeparture').datetimepicker({
-        format: 'HH:mm'
-    });
-});

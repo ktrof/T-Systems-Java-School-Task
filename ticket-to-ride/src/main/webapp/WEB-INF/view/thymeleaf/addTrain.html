@@ -54,7 +54,7 @@
         <h1>New Train</h1>
         <select class="form-control" style="display: none"
                 name="dropdownSectionList" id="dropdownSectionList">
-            <option value="">Select route section</option>
+            <option value="0">Select route section</option>
             <option th:each="sectionItem : ${sections}"
                     th:value="${sectionItem.id}"
                     th:text="${sectionItem.getStationDtoFrom() + ' <--> ' + sectionItem.getStationDtoTo()}"></option>
@@ -149,10 +149,10 @@
                             <div class="col-3 form-group">
                                 <select class="form-control" id
                                         th:field="*{scheduleSectionDtoArray[__${status.index}__].sectionDtoId}">
-                                    <option value="">Select destination station</option>
+                                    <option value="0">Select destination station</option>
                                     <option th:each="sectionItem : ${sections}"
                                             th:value="${sectionItem.id}"
-                                            th:text="${sectionItem.getStationDtoFrom() + '->' + sectionItem.getStationDtoTo()}"></option>
+                                            th:text="${sectionItem.getStationDtoFrom() + '<-->' + sectionItem.getStationDtoTo()}"></option>
                                 </select>
                             </div>
                             <div class="col-2 col-md-2 form-group">

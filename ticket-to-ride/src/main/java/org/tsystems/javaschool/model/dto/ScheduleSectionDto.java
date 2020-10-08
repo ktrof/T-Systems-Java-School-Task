@@ -4,15 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.time.Instant;
+import java.time.LocalTime;
 
 @Data
 @Builder
@@ -37,10 +34,8 @@ public class ScheduleSectionDto implements Serializable {
 
     private int indexWithinTrainRoute;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    private Instant arrival;
+    private LocalTime departure;
 
-    @DateTimeFormat(pattern = "HH:mm")
-    private Instant departure;
+    private LocalTime arrival;
 
 }

@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.Instant;
+import java.time.LocalTime;
 import java.util.Set;
 
 @Entity
@@ -41,11 +41,11 @@ public class ScheduleSectionEntity {
     @Column(name = "tickets_available")
     private int ticketsAvailable;
 
-    @Column(name = "arrival")
-    private Instant arrival;
-
     @Column(name = "departure")
-    private Instant departure;
+    private LocalTime departure;
+
+    @Column(name = "arrival")
+    private LocalTime arrival;
 
     @ManyToMany(mappedBy = "scheduleSectionEntitySet", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
