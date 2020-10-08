@@ -37,7 +37,7 @@ public class AddTrainFormDto implements Serializable {
     private int numberOfSeats;
 
     @NotBlank(message = "Set departure date")
-    @Pattern(regexp = "^([2][0-3]|[0-1][0-9]|[1-9]):[0-5][0-9]$", message = "pattern {hh:MM}")
+    @Pattern(regexp = "^([2][0-3]|[0-1][0-9]|[1-9]):[0-5][0-9]$", message = "pattern {HH:mm}")
     private String departure;
 
     private String type;

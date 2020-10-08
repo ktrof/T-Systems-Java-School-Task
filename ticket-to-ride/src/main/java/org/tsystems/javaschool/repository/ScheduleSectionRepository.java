@@ -3,6 +3,7 @@ package org.tsystems.javaschool.repository;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,5 +43,13 @@ public interface ScheduleSectionRepository {
      * @return the schedule section entity
      */
     ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity);
+
+    /**
+     * Add iterable.
+     *
+     * @param scheduleSectionEntityCollection the schedule section entity collection
+     * @return the iterable
+     */
+    Iterable<ScheduleSectionEntity> add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection);
 
 }

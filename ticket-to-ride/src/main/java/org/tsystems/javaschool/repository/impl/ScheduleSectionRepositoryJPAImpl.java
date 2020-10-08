@@ -15,6 +15,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -69,5 +70,13 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
     public ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) {
         entityManager.persist(scheduleSectionEntity);
         return scheduleSectionEntity;
+    }
+
+    @Override
+    public Iterable<ScheduleSectionEntity> add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection) {
+        for (ScheduleSectionEntity scheduleSectionEntity : scheduleSectionEntityCollection) {
+            entityManager.persist(scheduleSectionEntity);
+        }
+        return scheduleSectionEntityCollection;
     }
 }

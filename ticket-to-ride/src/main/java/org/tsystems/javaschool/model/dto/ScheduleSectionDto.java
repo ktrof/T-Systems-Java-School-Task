@@ -6,6 +6,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -27,7 +29,7 @@ public class ScheduleSectionDto implements Serializable {
     private int sectionDtoId;
 
     @NotNull(message = "Set stop duration")
-    private int stopDuration;
+    private long stopDuration;
 
     @Min(value = 0, message = "Amount of tickets left can not be negative")
     @NotBlank

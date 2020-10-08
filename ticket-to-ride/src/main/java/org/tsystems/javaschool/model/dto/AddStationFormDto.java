@@ -21,7 +21,7 @@ public class AddStationFormDto implements Serializable {
     private int id;
 
     @NotBlank(message = "Station name must not be blank")
-    @Pattern(regexp = "^[a-zA-Z-]+$",message = "Latin letters and dashes are allowed")
+    @Pattern(regexp = "^[a-zA-Z-& ]+$",message = "Latin letters and dashes are allowed")
     private String name;
 
     @Min(value = -90, message = "Min latitude value is -90°")

@@ -3,6 +3,7 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.SectionMapper;
 import org.tsystems.javaschool.model.dto.SectionDto;
 import org.tsystems.javaschool.repository.SectionRepository;
@@ -22,6 +23,7 @@ public class SectionServiceImpl implements SectionService {
     private final SectionMapper sectionMapper;
 
     @Override
+    @Transactional
     public List<SectionDto> getAll() {
         List<SectionDto> sectionDtoList = null;
         try {

@@ -57,7 +57,7 @@
             <option value="">Select route section</option>
             <option th:each="sectionItem : ${sections}"
                     th:value="${sectionItem.id}"
-                    th:text="${sectionItem.getStationDtoFrom() + '->' + sectionItem.getStationDtoTo()}"></option>
+                    th:text="${sectionItem.getStationDtoFrom() + ' <--> ' + sectionItem.getStationDtoTo()}"></option>
         </select>
         <form th:action="@{/trains/add}" method="post"
               th:object="${train}">
@@ -104,6 +104,7 @@
                         <label for="departureTime" class="control-label">Departure Time</label>
                         <input id="departureTime"
                                class="form-control"
+                               type="time"
                                th:field="*{departure}"/>
                         <p class="error-message"
                            th:each="error: ${#fields.errors('departure')}"
@@ -127,7 +128,7 @@
                          th:classappend="${#fields.hasErrors('dates')}? 'has-error':''">
                         <div id="dateRange"></div>
                         <input id="trainRideDates" class="form-control"
-                                  th:field="*{dates}" readonly style="display: none"/>
+                               th:field="*{dates}" readonly style="display: none"/>
                         <p class="error-message"
                            th:each="error: ${#fields.errors('dates')}"
                            th:text="${error}">Validation error</p>
@@ -143,7 +144,8 @@
                             <div class="col col-md-2 form-group">Stop duration</div>
                             <div class="col col-md-3 form-group">Index in route</div>
                         </div>
-                        <div class="row item" th:id="${status.index}" th:each="section, status : ${train.scheduleSectionDtoArray}">
+                        <div class="row item" th:id="${status.index}"
+                             th:each="section, status : ${train.scheduleSectionDtoArray}">
                             <div class="col-3 form-group">
                                 <select class="form-control" id
                                         th:field="*{scheduleSectionDtoArray[__${status.index}__].sectionDtoId}">
@@ -171,8 +173,7 @@
                         <button type="button" class="btn btn-success" onclick="addScheduleSectionRow()">Add row</button>
                     </div>
                 </div>
-            </div>
-            <div class="row">
+
                 <!--SUBMIT FORM BUTTON-->
                 <div class="col">
                     <button type="submit" class="btn btn-primary">Submit</button>

@@ -13,6 +13,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -39,40 +40,39 @@ public class CalendarRepositoryJPAImpl implements CalendarRepository {
     }
 
     @Override
-    public List<CalendarEntity> findAllByTrain(TrainEntity trainEntity) throws SBBException {
+    public List<CalendarEntity> findAllByTrain(TrainEntity trainEntity) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<CalendarEntity> criteriaQuery = criteriaBuilder.createQuery(CalendarEntity.class);
         Root<CalendarEntity> root = criteriaQuery.from(CalendarEntity.class);
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(CalendarEntity_.trainEntity), trainEntity));
+
         TypedQuery<CalendarEntity> selectAllByTrainEntity = entityManager.createQuery(criteriaQuery);
-        List<CalendarEntity> calendarEntityList = selectAllByTrainEntity.getResultList();
-        if (calendarEntityList.size() != 0) {
-            return calendarEntityList;
-        } else throw new SBBException("No dates found by given train entity");
+        return selectAllByTrainEntity.getResultList();
     }
 
     @Override
-    public CalendarEntity findById(int id) throws SBBException {
-        CalendarEntity calendarEntity = entityManager.find(CalendarEntity.class, id);
-        if (calendarEntity != null) {
-            return calendarEntity;
-        } else throw new SBBException("No date found by given id");
+    public CalendarEntity findById(int id) {
+        return entityManager.find(CalendarEntity.class, id);
     }
 
     @Override
-    public CalendarEntity add(CalendarEntity calendarEntity) throws SBBException {
-        if (calendarEntity != null) {
+    public CalendarEntity add(CalendarEntity calendarEntity) {
+        entityManager.persist(calendarEntity);
+        return calendarEntity;
+    }
+
+    @Override
+    public Iterable<CalendarEntity> add(Collection<CalendarEntity> calendarEntityCollection) {
+        for (CalendarEntity calendarEntity : calendarEntityCollection) {
             entityManager.persist(calendarEntity);
-            return calendarEntity;
-        } else throw new SBBException("Calendar entity can not be null");
+        }
+        return calendarEntityCollection;
     }
 
     @Override
-    public void remove(CalendarEntity calendarEntity) throws SBBException {
-        if (calendarEntity != null) {
-            entityManager.remove(calendarEntity);
-        } else throw new SBBException("Calendar entity can not be null");
+    public void remove(CalendarEntity calendarEntity) {
+        entityManager.remove(calendarEntity);
     }
 }

@@ -1,9 +1,9 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.CalendarEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -25,34 +25,38 @@ public interface CalendarRepository {
      *
      * @param trainEntity the train entity
      * @return the list
-     * @throws SBBException the repository exception
      */
-    List<CalendarEntity> findAllByTrain(TrainEntity trainEntity) throws SBBException;
+    List<CalendarEntity> findAllByTrain(TrainEntity trainEntity);
 
     /**
      * Find by id calendar entity.
      *
      * @param id the id
      * @return the calendar entity
-     * @throws SBBException the repository exception
      */
-    CalendarEntity findById(int id) throws SBBException;
+    CalendarEntity findById(int id);
 
     /**
      * Add calendar entity.
      *
      * @param calendarEntity the calendar entity
      * @return the calendar entity
-     * @throws SBBException the repository exception
      */
-    CalendarEntity add(CalendarEntity calendarEntity) throws SBBException;
+    CalendarEntity add(CalendarEntity calendarEntity);
+
+    /**
+     * Add iterable.
+     *
+     * @param calendarEntityCollection the calendar entity collection
+     * @return the iterable
+     */
+    Iterable<CalendarEntity> add(Collection<CalendarEntity> calendarEntityCollection);
 
     /**
      * Remove.
      *
      * @param calendarEntity the calendar entity
-     * @throws SBBException the repository exception
      */
-    void remove(CalendarEntity calendarEntity) throws SBBException;
+    void remove(CalendarEntity calendarEntity);
 
 }

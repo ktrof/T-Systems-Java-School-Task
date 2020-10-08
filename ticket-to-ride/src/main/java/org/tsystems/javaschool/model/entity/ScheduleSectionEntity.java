@@ -33,7 +33,7 @@ public class ScheduleSectionEntity {
     private SectionEntity sectionEntity;
 
     @Column(name = "stop_duration")
-    private int stopDuration;
+    private long stopDuration;
 
     @Column(name = "index_within_train_route")
     private int indexWithinTrainRoute;

@@ -32,6 +32,7 @@ public class StationServiceImpl implements StationService {
     private final StationMapper stationMapper;
 
     @Override
+    @Transactional
     public List<StationDto> getAll() {
         List<StationDto> stationDtoList = null;
         try {

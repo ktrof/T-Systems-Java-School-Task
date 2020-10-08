@@ -30,7 +30,7 @@ public class SectionEntity {
     @Column(name = "length")
     private double length;
 
-    @OneToMany(mappedBy = "sectionEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "sectionEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

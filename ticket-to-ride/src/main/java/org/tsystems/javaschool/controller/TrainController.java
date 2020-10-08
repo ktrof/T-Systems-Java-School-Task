@@ -14,6 +14,7 @@ import org.tsystems.javaschool.service.SectionService;
 import org.tsystems.javaschool.service.TrainService;
 
 import javax.validation.Valid;
+import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -45,8 +46,7 @@ public class TrainController {
     }
 
     @PostMapping(value = "/trains/add")
-    public String addTrain(@ModelAttribute("train") @Valid AddTrainFormDto trainFormDto,
-                           BindingResult result) {
+    public String addTrain(@ModelAttribute("train") @Valid AddTrainFormDto trainFormDto, BindingResult result) {
         TrainDto existingTrain = trainService.getById(trainFormDto.getId());
         if (existingTrain != null) {
             result.rejectValue("id", null, "There is already a train with that id");
@@ -55,6 +55,7 @@ public class TrainController {
             return "addTrain";
         }
         System.out.println(trainFormDto.getDates());
+        System.out.println(Arrays.toString(trainFormDto.getScheduleSectionDtoArray()));
         trainService.save(trainFormDto);
         return "trains";
     }

@@ -106,3 +106,9 @@ $(function() {
     let extensionRange = $('#dateRange').datepicker('widget').data('datepickerExtensionRange');
     if (extensionRange.datesText) $('#trainRideDates').val(extensionRange.datesText.join(','));
 });
+
+$(function () {
+    $('#datetimepickerDeparture').datetimepicker({
+        format: 'HH:mm'
+    });
+});
