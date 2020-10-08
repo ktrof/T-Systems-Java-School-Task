@@ -1,6 +1,5 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.util.List;
@@ -24,34 +23,30 @@ public interface TrainRepository {
      *
      * @param id the id
      * @return the train entity
-     * @throws SBBException the repository exception
      */
-    TrainEntity findById(String id) throws SBBException;
+    TrainEntity findById(String id);
 
     /**
      * Add train entity.
      *
      * @param trainEntity the train entity
      * @return the train entity
-     * @throws SBBException the repository exception
      */
-    TrainEntity add(TrainEntity trainEntity) throws SBBException;
+    TrainEntity add(TrainEntity trainEntity);
 
     /**
      * Update avg speed train entity.
      *
      * @param trainEntity the train entity
      * @return the train entity
-     * @throws SBBException the repository exception
      */
-    TrainEntity update(TrainEntity trainEntity) throws SBBException;
+    TrainEntity update(TrainEntity trainEntity);
 
     /**
      * Remove.
      *
      * @param trainEntity the train entity
-     * @throws SBBException the repository exception
      */
-    void remove(TrainEntity trainEntity) throws SBBException;
+    void remove(TrainEntity trainEntity);
 
 }

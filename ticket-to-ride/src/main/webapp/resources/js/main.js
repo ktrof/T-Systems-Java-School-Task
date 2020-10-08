@@ -99,10 +99,10 @@ $(function() {
         range: 'multiple',
         dateFormat: 'yy-mm-dd',
         onSelect: function(dateText, inst, extensionRange) {
-            $('#TrainRideDates').val(extensionRange.datesText.join(','));
+            $('#trainRideDates').val(extensionRange.datesText.join(','));
         }
     });
 
     let extensionRange = $('#dateRange').datepicker('widget').data('datepickerExtensionRange');
-    if (extensionRange.datesText) $('#TrainRideDates').val(extensionRange.datesText.join(','));
+    if (extensionRange.datesText) $('#trainRideDates').val(extensionRange.datesText.join(','));
 });

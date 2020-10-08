@@ -40,37 +40,28 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     }
 
     @Override
-    public TrainEntity findById(String id) throws SBBException {
+    public TrainEntity findById(String id) {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("train-entity-graph");
         Map<String, Object> propertyMap = new HashMap<>();
         propertyMap.put("javax.persistence.fetchgraph", entityGraph);
-        TrainEntity trainEntity = entityManager.find(TrainEntity.class, id, propertyMap);
 
-        if (trainEntity != null) {
-            return trainEntity;
-        } else throw new SBBException("No train found by given id");
+        return entityManager.find(TrainEntity.class, id, propertyMap);
     }
 
     @Override
-    public TrainEntity add(TrainEntity trainEntity) throws SBBException {
-        if (trainEntity != null) {
-            entityManager.persist(trainEntity);
-            return trainEntity;
-        } else throw new SBBException("Train entity can not be null");
+    public TrainEntity add(TrainEntity trainEntity) {
+        entityManager.persist(trainEntity);
+        return trainEntity;
     }
 
     @Override
-    public TrainEntity update(TrainEntity trainEntity) throws SBBException {
-        if (trainEntity != null) {
-            return entityManager.merge(trainEntity);
-        } else throw new SBBException("Train entity can not be null");
+    public TrainEntity update(TrainEntity trainEntity) {
+        return entityManager.merge(trainEntity);
     }
 
     @Override
-    public void remove(TrainEntity trainEntity) throws SBBException {
-        if (trainEntity != null) {
-            entityManager.remove(trainEntity);
-        } else throw new SBBException("Train entity and number of seats can not be null");
+    public void remove(TrainEntity trainEntity) {
+        entityManager.remove(trainEntity);
     }
 
 }

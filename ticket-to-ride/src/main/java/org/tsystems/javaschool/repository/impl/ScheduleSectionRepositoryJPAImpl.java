@@ -43,7 +43,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
     }
 
     @Override
-    public List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) throws SBBException {
+    public List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
@@ -53,29 +53,21 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
                 .where(trainEqualsTrainEntity);
         TypedQuery<ScheduleSectionEntity> selectByTrain = entityManager.createQuery(criteriaQuery);
 
-        List<ScheduleSectionEntity> scheduleSectionEntityList = selectByTrain.getResultList();
-        if (scheduleSectionEntityList.size() != 0) {
-            return scheduleSectionEntityList;
-        } else throw new SBBException("No schedule sections found by given train entity");
+        return selectByTrain.getResultList();
     }
 
     @Override
-    public ScheduleSectionEntity findById(int id) throws SBBException {
+    public ScheduleSectionEntity findById(int id) {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-entity-graph");
         Map<String, Object> propertyMap = new HashMap<>();
         propertyMap.put("javax.persistence.fetchgraph", entityGraph);
-        ScheduleSectionEntity scheduleSectionEntity = entityManager.find(ScheduleSectionEntity.class, id, propertyMap);
 
-        if (scheduleSectionEntity != null) {
-            return scheduleSectionEntity;
-        } else throw new SBBException("No schedule section found by given id");
+        return entityManager.find(ScheduleSectionEntity.class, id, propertyMap);
     }
 
     @Override
-    public ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) throws SBBException {
-        if (scheduleSectionEntity != null) {
-            entityManager.persist(scheduleSectionEntity);
-            return scheduleSectionEntity;
-        } else throw new SBBException("Schedule section entity can not be null");
+    public ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity) {
+        entityManager.persist(scheduleSectionEntity);
+        return scheduleSectionEntity;
     }
 }
