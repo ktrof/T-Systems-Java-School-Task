@@ -35,6 +35,6 @@ public class StationEntity {
     private ZoneId timezone;
 
     @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<SectionEntity> sectionEntityList;
+    List<SectionEntity> sectionEntityListFrom;
 
 }

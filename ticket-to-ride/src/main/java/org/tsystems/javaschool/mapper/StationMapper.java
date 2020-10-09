@@ -33,7 +33,7 @@ public interface StationMapper {
      * @return the station entity
      */
     @Mappings({
-            @Mapping(target = "sectionEntityList", ignore = true)
+            @Mapping(target = "sectionEntityListFrom", ignore = true)
     })
     StationEntity toEntity(AddStationFormDto stationDto);
 
@@ -44,7 +44,7 @@ public interface StationMapper {
      * @return the station entity
      */
     @Mappings({
-            @Mapping(target = "sectionEntityList", ignore = true)
+            @Mapping(target = "sectionEntityListFrom", ignore = true)
     })
     StationEntity toEntity(StationDto stationDto);
 
