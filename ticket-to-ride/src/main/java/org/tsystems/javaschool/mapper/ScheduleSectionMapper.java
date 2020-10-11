@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.ScheduleSectionFormDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 
 import java.time.Instant;
@@ -25,9 +26,27 @@ public interface ScheduleSectionMapper {
      */
     @Mappings({
             @Mapping(target = "trainDto", source = "scheduleSectionEntity"),
-            @Mapping(target = "sectionDtoId", source = "scheduleSectionEntity.sectionEntity.id")
+            @Mapping(target = "sectionDto", source = "scheduleSectionEntity.sectionEntity")
     })
     ScheduleSectionDto toDto(ScheduleSectionEntity scheduleSectionEntity);
+
+    /**
+     * To entity schedule section entity.
+     *
+     * @param scheduleSectionFormDto the schedule section form dto
+     * @return the schedule section entity
+     */
+    @Mappings({
+
+            @Mapping(target = "arrival", ignore = true),
+            @Mapping(target = "departure", ignore = true),
+            @Mapping(target = "id", ignore = true),
+            @Mapping(target = "sectionEntity", ignore = true),
+            @Mapping(target = "ticketsAvailable", ignore = true),
+            @Mapping(target = "trainEntity", ignore = true),
+            @Mapping(target = "ticketScheduleSectionEntityList", ignore = true)
+    })
+    ScheduleSectionEntity toEntity(ScheduleSectionFormDto scheduleSectionFormDto);
 
     /**
      * To entity schedule section entity.
@@ -36,9 +55,10 @@ public interface ScheduleSectionMapper {
      * @return the schedule section entity
      */
     @Mappings({
-            @Mapping(target = "trainEntity", source = "scheduleSectionDto.trainDto"),
-            @Mapping(target = "ticketEntitySet", ignore = true),
-            @Mapping(target = "sectionEntity", ignore = true)
+
+            @Mapping(target = "sectionEntity", source = "scheduleSectionDto.sectionDto"),
+            @Mapping(target = "ticketScheduleSectionEntityList", ignore = true),
+            @Mapping(target = "trainEntity", ignore = true),
     })
     ScheduleSectionEntity toEntity(ScheduleSectionDto scheduleSectionDto);
 

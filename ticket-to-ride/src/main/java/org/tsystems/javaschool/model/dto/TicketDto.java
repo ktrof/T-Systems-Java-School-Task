@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,6 +21,5 @@ public class TicketDto implements Serializable {
 
     private int totalPrice;
 
-    private List<ScheduleSectionDto> scheduleSectionDtoList;
-
+    private List<TicketScheduleSectionDto> ticketScheduleSectionDtoList;
 }

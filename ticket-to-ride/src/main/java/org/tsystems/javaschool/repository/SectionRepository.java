@@ -1,6 +1,5 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
 

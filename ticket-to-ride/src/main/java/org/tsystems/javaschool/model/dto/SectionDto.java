@@ -28,6 +28,7 @@ public class SectionDto implements Serializable {
     @NotNull(message = "Set departure station")
     private String stationDtoFrom;
 
+    @NotNull(message = "Set destination station")
     private String stationDtoTo;
 
     @Min(value = 1, message = "Distance between two stations can not less then 1")

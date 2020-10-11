@@ -1,20 +1,15 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
-import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
-import org.tsystems.javaschool.model.entity.ScheduleSectionEntity_;
-import org.tsystems.javaschool.model.entity.TrainEntity;
+import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -55,6 +50,19 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
         TypedQuery<ScheduleSectionEntity> selectByTrain = entityManager.createQuery(criteriaQuery);
 
         return selectByTrain.getResultList();
+    }
+
+    @Override
+    public List<ScheduleSectionEntity> findBySection(SectionEntity sectionEntity) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
+        Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
+        criteriaQuery
+                .select(root)
+                .where(criteriaBuilder.equal(root.get(ScheduleSectionEntity_.sectionEntity), sectionEntity));
+        TypedQuery<ScheduleSectionEntity> selectBySection = entityManager.createQuery(criteriaQuery);
+
+        return selectBySection.getResultList();
     }
 
     @Override

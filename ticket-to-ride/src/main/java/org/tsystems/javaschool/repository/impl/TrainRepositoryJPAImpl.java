@@ -1,9 +1,7 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.TrainEntity;
-import org.tsystems.javaschool.model.entity.TrainEntity_;
 import org.tsystems.javaschool.repository.TrainRepository;
 
 import javax.persistence.EntityGraph;

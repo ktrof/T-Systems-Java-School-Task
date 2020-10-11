@@ -45,5 +45,5 @@ public class AddTrainFormDto implements Serializable {
     @NotBlank(message = "Choose ride dates")
     private String dates;
 
-    private ScheduleSectionDto[] scheduleSectionDtoArray;
+    private ScheduleSectionFormDto[] scheduleSectionFormDtoArray;
 }

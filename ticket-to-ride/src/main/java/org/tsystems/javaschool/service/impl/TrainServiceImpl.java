@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.TrainMapper;
 import org.tsystems.javaschool.model.dto.AddTrainFormDto;
 import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.ScheduleSectionFormDto;
 import org.tsystems.javaschool.model.dto.TrainDto;
 import org.tsystems.javaschool.model.entity.CalendarEntity;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
@@ -93,18 +94,18 @@ public class TrainServiceImpl implements TrainService {
                 log.error("Error creating ride dates", e);
             }
 
-            ScheduleSectionDto[] scheduleSectionDtos = trainFormDto.getScheduleSectionDtoArray();
-            if (scheduleSectionDtos.length != 0) {
+            ScheduleSectionFormDto[] scheduleSectionForms = trainFormDto.getScheduleSectionFormDtoArray();
+            if (scheduleSectionForms.length != 0) {
                 try {
                     List<ScheduleSectionEntity> scheduleSectionEntityList = new ArrayList<>();
-                    for (int i = 0; i < scheduleSectionDtos.length; i++) {
+                    for (int i = 0; i < scheduleSectionForms.length; i++) {
                         ScheduleSectionEntity scheduleSectionEntity = new ScheduleSectionEntity();
                         scheduleSectionEntity.setTrainEntity(trainEntity);
                         scheduleSectionEntity.setSectionEntity(sectionRepository
-                                .findById(scheduleSectionDtos[i].getSectionDtoId()));
-                        scheduleSectionEntity.setIndexWithinTrainRoute(scheduleSectionDtos[i]
+                                .findById(scheduleSectionForms[i].getSectionDtoId()));
+                        scheduleSectionEntity.setIndexWithinTrainRoute(scheduleSectionForms[i]
                                 .getIndexWithinTrainRoute());
-                        scheduleSectionEntity.setStopDuration(scheduleSectionDtos[i].getStopDuration());
+                        scheduleSectionEntity.setStopDuration(scheduleSectionForms[i].getStopDuration());
                         scheduleSectionEntity.setTicketsAvailable(trainFormDto.getNumberOfSeats());
                         if (i == 0) {
                             scheduleSectionEntity.setDeparture(
@@ -121,7 +122,7 @@ public class TrainServiceImpl implements TrainService {
                         scheduleSectionEntity.setArrival(
                                 scheduleSectionEntity.getDeparture()
                                         .plusMinutes(timeBetweenTwoStations(trainEntity, sectionRepository
-                                                .findById(scheduleSectionDtos[i].getSectionDtoId())))
+                                                .findById(scheduleSectionForms[i].getSectionDtoId())))
                         );
                         scheduleSectionEntityList.add(scheduleSectionEntity);
                     }

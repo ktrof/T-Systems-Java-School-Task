@@ -16,6 +16,7 @@
         <maven.surefire.version>3.0.0-M5</maven.surefire.version>
         <spring.version>5.2.8.RELEASE</spring.version>
         <spring.security.version>5.4.0</spring.security.version>
+        <streamex.version>0.7.3</streamex.version>
         <thymeleaf.version>3.0.11.RELEASE</thymeleaf.version>
         <thymeleaf-extras.version>3.0.4.RELEASE</thymeleaf-extras.version>
         <bootstrap.version>4.5.2</bootstrap.version>
@@ -84,6 +85,11 @@
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-taglibs</artifactId>
                 <version>${spring.security.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>one.util</groupId>
+                <artifactId>streamex</artifactId>
+                <version>${streamex.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.thymeleaf</groupId>

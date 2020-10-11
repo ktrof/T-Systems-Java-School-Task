@@ -14,16 +14,17 @@ public class DepthFirstSearch {
 
     public static <V extends Vertex<V, E>,
             E extends Edge<V, E>>
-    Collection<Path<V, E>> findAllSimplePaths(V sourceVertex, V targetVertex) {
+    Collection<Path<V, E>> findAllSimplePaths(V sourceVertex, V targetVertex, PathEdgeFilter<V, E> pathEdgeFilter) {
         Set<Path<V, E>> pathsToSourceVertex = new HashSet<>();
         pathsToSourceVertex.add(Path.startFrom(sourceVertex));
-        return recursiveFindAllSimplePaths(sourceVertex, targetVertex, pathsToSourceVertex);
+        return recursiveFindAllSimplePaths(sourceVertex, targetVertex, pathsToSourceVertex, pathEdgeFilter);
     }
 
     private static <V extends Vertex<V, E>,
             E extends Edge<V, E>>
     Collection<Path<V, E>> recursiveFindAllSimplePaths(V sourceVertex, V targetVertex,
-                                              Collection<Path<V, E>> pathsToSourceVertex) {
+                                                       Collection<Path<V, E>> pathsToSourceVertex,
+                                                       PathEdgeFilter<V, E> pathEdgeFilter) {
 
         if (pathsToSourceVertex.isEmpty()) {
             return Collections.emptyList();
@@ -38,11 +39,20 @@ public class DepthFirstSearch {
                 .flatMap(nextEdge -> {
                     V nextVertexSource = nextEdge.getSourceVertex();
                     Collection<Path<V, E>> nextPathToSource = pathsToSourceVertex.stream()
+                            .filter(path -> pathEdgeFilter.mayAppend(nextEdge, path))
                             .map(path -> path.AddEdge(nextEdge))
                             .collect(Collectors.toList());
-                    return recursiveFindAllSimplePaths(nextVertexSource, targetVertex, nextPathToSource).stream();
+                    return recursiveFindAllSimplePaths(nextVertexSource, targetVertex, nextPathToSource, pathEdgeFilter).stream();
                 })
                 .collect(Collectors.toList());
+    }
+
+    @FunctionalInterface
+    public interface PathEdgeFilter<
+            V extends Vertex<V, E>,
+            E extends Edge<V, E>> {
+
+        boolean mayAppend(E nextEdge, Path<V, E> currentPath);
     }
 
 }

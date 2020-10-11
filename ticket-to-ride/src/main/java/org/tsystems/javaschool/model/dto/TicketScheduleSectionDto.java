@@ -4,21 +4,23 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
+/**
+ * @author Trofim Kremen
+ */
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarDto implements Serializable {
+public class TicketScheduleSectionDto implements Serializable {
 
-    @NotNull(message = "Set the train")
-    private TrainDto trainDto;
-
-    private LocalDate rideDate;
+    private int ticketId;
+    private int scheduleSectionId;
+    private LocalDate departureDate;
+    private LocalTime departureTime;
 
 }

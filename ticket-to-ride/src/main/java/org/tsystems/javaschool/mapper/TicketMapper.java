@@ -24,7 +24,7 @@ public interface TicketMapper {
      */
     @Mappings({
             @Mapping(target = "passengerDto", source = "ticketEntity.passengerEntity"),
-            @Mapping(target = "scheduleSectionDtoList", source = "ticketEntity.scheduleSectionEntitySet")
+            @Mapping(target = "ticketScheduleSectionDtoList", source = "ticketEntity.ticketScheduleSectionEntityList")
     })
     TicketDto toDto(TicketEntity ticketEntity);
 
@@ -35,5 +35,26 @@ public interface TicketMapper {
      * @return the list
      */
     List<TicketDto> toDtoList(List<TicketEntity> ticketEntityList);
+
+    /**
+     * To entity ticket entity.
+     *
+     * @param ticketDto the ticket dto
+     * @return the ticket entity
+     */
+    @Mappings({
+
+            @Mapping(target = "passengerEntity", source = "ticketDto.passengerDto"),
+            @Mapping(target = "ticketScheduleSectionEntityList", source = "ticketDto.ticketScheduleSectionDtoList")
+    })
+    TicketEntity toEntity(TicketDto ticketDto);
+
+    /**
+     * To entity list list.
+     *
+     * @param ticketDtoList the ticket dto list
+     * @return the list
+     */
+    List<TicketEntity> toEntityList(List<TicketDto> ticketDtoList);
 
 }

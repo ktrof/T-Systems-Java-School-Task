@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 
 @Entity
@@ -12,18 +13,23 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@IdClass(CalendarEntity.ID.class)
 public class CalendarEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    @Column(name = "id")
-    private int id;
-
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinColumn(name = "train_id")
     private TrainEntity trainEntity;
 
+    @Id
     @Column(name = "ride_date")
     private LocalDate rideDate;
 
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class ID implements Serializable {
+        TrainEntity trainEntity;
+        LocalDate localDate;
+    }
 }

@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.repository.SectionRepository;

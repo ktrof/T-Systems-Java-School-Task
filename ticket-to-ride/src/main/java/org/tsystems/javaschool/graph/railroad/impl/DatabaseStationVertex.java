@@ -6,6 +6,7 @@ import org.tsystems.javaschool.graph.railroad.SectionEdge;
 import org.tsystems.javaschool.graph.railroad.StationVertex;
 import org.tsystems.javaschool.model.dto.StationDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
+import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 
 import java.time.ZoneId;
 import java.util.Collection;
@@ -20,6 +21,7 @@ public class DatabaseStationVertex implements StationVertex {
     private final int id;
     private final RailroadGraph railroadGraph;
     private final StationEntity stationEntity;
+    private final ScheduleSectionRepository scheduleSectionRepository;
 
     @Override
     public int getId() {
@@ -60,12 +62,20 @@ public class DatabaseStationVertex implements StationVertex {
     @Override
     public Collection<SectionEdge> getAllOutgoingEdges() {
         return stationEntity.getSectionEntityListFrom().stream()
-                .map(sectionEntity -> DatabaseSectionEdge.builder()
-                        .railroadGraph(railroadGraph)
-                        .sectionEntity(sectionEntity)
-                        .sourceStationVertex(this)
-                        .build())
+                .map(scheduleSectionRepository::findBySection)
+                .flatMap(Collection::stream)
+                .flatMap(scheduleSectionEntity -> scheduleSectionEntity.getTrainEntity().getCalendarEntityList().stream()
+                        .map(calendarEntity -> DatabaseSectionEdge.builder()
+                                .railroadGraph(railroadGraph)
+                                .sourceStationVertex(this)
+                                .scheduleSectionEntity(scheduleSectionEntity)
+                                .calendarEntity(calendarEntity)
+                                .build()))
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public String toString() {
+        return "Vertex (" + stationEntity.getName() + ")";
+    }
 }

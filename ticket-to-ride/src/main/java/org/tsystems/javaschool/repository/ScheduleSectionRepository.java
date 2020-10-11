@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.repository;
 
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
+import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.util.Collection;
@@ -27,6 +28,14 @@ public interface ScheduleSectionRepository {
      * @return the list
      */
     List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity);
+
+    /**
+     * Find by section list.
+     *
+     * @param sectionEntity the section entity
+     * @return the list
+     */
+    List<ScheduleSectionEntity> findBySection(SectionEntity sectionEntity);
 
     /**
      * Find by id schedule section entity.

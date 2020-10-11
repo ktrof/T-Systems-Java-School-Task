@@ -55,7 +55,7 @@ public class TrainController {
             return "addTrain";
         }
         System.out.println(trainFormDto.getDates());
-        System.out.println(Arrays.toString(trainFormDto.getScheduleSectionDtoArray()));
+        System.out.println(Arrays.toString(trainFormDto.getScheduleSectionFormDtoArray()));
         trainService.save(trainFormDto);
         return "redirect:/trains";
     }

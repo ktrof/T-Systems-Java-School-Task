@@ -22,8 +22,8 @@ public class ScheduleSectionDto implements Serializable {
     @NotNull(message = "Set the train")
     private TrainDto trainDto;
 
-    @NotNull(message = "Set the section id")
-    private int sectionDtoId;
+    @NotNull(message = "Set the section")
+    private SectionDto sectionDto;
 
     @NotNull(message = "Set stop duration")
     private long stopDuration;

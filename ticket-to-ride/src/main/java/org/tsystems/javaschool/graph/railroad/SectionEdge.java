@@ -2,11 +2,12 @@ package org.tsystems.javaschool.graph.railroad;
 
 import org.tsystems.javaschool.graph.Edge;
 import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.entity.TrainEntity;
+
+import java.time.LocalDate;
 
 /**
  * The interface Section edge.
- *
- * @author Trofim Kremen
  */
 public interface SectionEdge extends Edge<StationVertex, SectionEdge> {
 
@@ -25,9 +26,30 @@ public interface SectionEdge extends Edge<StationVertex, SectionEdge> {
     double getLength();
 
     /**
-     * To dto schedule section dto.
+     * Gets ride date.
      *
-     * @return the schedule section dto
+     * @return the ride date
+     */
+    LocalDate getRideDate();
+
+    /**
+     * Gets ticket count available.
+     *
+     * @return the ticket count available
+     */
+    int getTicketCountAvailable();
+
+    /**
+     * Gets train.
+     *
+     * @return the train
+     */
+    TrainEntity getTrain();
+
+    /**
+     * To dto section dto.
+     *
+     * @return the section dto
      */
     SectionDto toDto();
 }
