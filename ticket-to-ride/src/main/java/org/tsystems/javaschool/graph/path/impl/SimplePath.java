@@ -67,8 +67,9 @@ public class SimplePath<
         if (!getLastVertex().equals(edge.getSourceVertex())) {
             throw new IllegalArgumentException("Vertices are not adjacent. Unable to add edge to the path");
         }
-        edges.add(edge);
-        return new SimplePath<>(sourceVertex, edges);
+        List<E> newEdges = new ArrayList<>(edges);
+        newEdges.add(edge);
+        return new SimplePath<>(sourceVertex, newEdges);
     }
 
     private V getLastVertex() {

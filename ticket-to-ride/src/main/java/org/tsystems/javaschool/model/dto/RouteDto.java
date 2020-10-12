@@ -6,7 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -22,8 +25,8 @@ public class RouteDto implements Serializable {
 
     private UUID id;
     private List<RoutePartDto> routePartDtoList;
-    private LocalTime departureTime;
-    private LocalTime arrivalTime;
+    private LocalDateTime departureTime;
+    private LocalDateTime arrivalTime;
     private int ticketsAvailable;
 
     public StationDto getDepartureStation() {
@@ -39,8 +42,12 @@ public class RouteDto implements Serializable {
     }
 
     public double getTotalDistance() {
+        DecimalFormat decimalFormat = new DecimalFormat("#.###");
+        decimalFormat.setRoundingMode(RoundingMode.CEILING);
         return routePartDtoList.stream()
                 .map(RoutePartDto::getDistance)
+                .map(decimalFormat::format)
+                .map(Double::valueOf)
                 .reduce(0d, Double::sum);
     }
 

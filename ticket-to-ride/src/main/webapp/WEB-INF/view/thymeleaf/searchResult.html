@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbb route page">
+    <meta name="author" content="Trofim Kremen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+    <title>Routes</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
+            SBB App
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" th:href="@{/}">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
+                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
+            </div>
+        </div>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Sign out
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="!isAuthenticated()"
+              th:action="@{/login}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Sign in
+            </button>
+        </form>
+    </nav>
+</header>
+<main>
+    <h1 class="text-center" th:text="${searchForm.stationNameFrom} +
+    ' &LongRightArrow; ' + ${searchForm.stationNameTo}">
+    </h1>
+    <div class="container rounded-lg bg-light mt-3" th:each="route : ${discoveredRoutes}">
+        <h4>
+            <span class="row mt-1" th:text="'Total time: ' + ${route.getTotalDuration().toMinutes()} + ' min'"></span>
+            <span class="row mt-1" th:text="'Total distance: ' + ${route.getTotalDistance()} + ' km'"></span>
+            <span class="row mt-1" th:text="'Tickets left: ' + ${route.getTicketsAvailable()}"></span>
+        </h4>
+        <hr class="mt-2 mb-2"/>
+        <ul class="list-group" th:each="routePart : ${route.routePartDtoList}">
+            <li class="list-group-item">
+                <h5>
+                    <span th:text="'Ride time: ' + ${routePart.getDuration().toMinutes()} + ' min'"></span>
+                    <span th:text="'Ride distance: ' + ${routePart.getDistance()} + ' km'"></span>
+                </h5>
+                <div class="row">
+                    <div class="col text-right">
+                        <span th:text="${routePart.getStationDtoFrom().getName()}"></span>
+                    </div>
+                    <div class="col text-center">
+                        <span th:text="${routePart.getTrainId()} + ' ' + ${routePart.getTrainName()}"></span>
+                    </div>
+                    <div class="col text-left">
+                        <span th:text="${routePart.getStationDtoTo().getName()}"></span>
+                    </div>
+                </div>
+                <hr class="mt-2 mb-2"/>
+                <div class="row">
+                    <div class="col text-right">
+                        <span th:text="${#temporals.format(routePart.getDepartureTime(), 'HH:mm')}"></span>
+                    </div>
+                    <div class="col-2 text-center">
+                        <span>&LongRightArrow;</span>
+                    </div>
+                    <div class="col text-left">
+                        <span th:text="${#temporals.format(routePart.getArrivalTime(), 'HH:mm')}"></span>
+                    </div>
+                </div>
+                <div class="text-center small" th:unless="${routePart.getStationNameSequence().equals(null)}">
+                    <span th:text="'Through stations ' + ${routePart.getStationNameSequence()}"></span>
+                </div>
+            </li>
+        </ul>
+        <div>
+            <a th:href="@{/routes/{id}(id=${route.getId()})}" class="btn btn-primary mt-2">
+                Get your ticket to ride!
+            </a>
+        </div>
+    </div>
+</main>
+<footer class="fixed-bottom page-footer bg-light">
+    <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
+</html>

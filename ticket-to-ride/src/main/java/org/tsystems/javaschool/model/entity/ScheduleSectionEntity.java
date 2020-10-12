@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.time.LocalTime;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "schedule_section")
@@ -15,8 +14,12 @@ import java.util.Set;
 @AllArgsConstructor
 @Data
 @NamedEntityGraph(
-        name = "schedule-entity-graph",
-        attributeNodes = @NamedAttributeNode(value = "ticketEntitySet")
+        name = "schedule-section-graph",
+        attributeNodes = @NamedAttributeNode(value = "trainEntity", subgraph = "train-subgraph"),
+        subgraphs = @NamedSubgraph(
+                name = "train-subgraph",
+                attributeNodes = @NamedAttributeNode(value = "calendarEntityList")
+        )
 )
 public class ScheduleSectionEntity {
 

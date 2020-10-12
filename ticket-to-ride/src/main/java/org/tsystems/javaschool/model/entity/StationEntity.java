@@ -34,7 +34,7 @@ public class StationEntity {
     @Convert(converter = ZoneIdConverter.class)
     private ZoneId timezone;
 
-    @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<SectionEntity> sectionEntityListFrom;
 
 }

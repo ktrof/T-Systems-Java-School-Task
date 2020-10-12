@@ -6,7 +6,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbb trains page">
+    <meta name="description" content="sbb main page">
     <meta name="author" content="Trofim Kremen">
 
     <!-- Bootstrap CSS -->
@@ -47,7 +47,69 @@
         </form>
     </nav>
 </header>
-<h3>Hello, world!</h3>
+<main>
+    <div class="container container-fluid">
+        <h1>Get your ticket to ride!</h1>
+        <form th:action="@{/routes}" method="post" th:object="${search}">
+            <div class="row">
+                <p class="error-message"
+                   th:if="${#fields.hasGlobalErrors()}"
+                   th:each="error : ${#fields.errors('global')}"
+                   th:text="${error}">Validation error</p>
+                <div class="col-md-4">
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('stationNameFrom')}? 'has-error':''">
+                        <label for="stationFrom" class="control-label">Station from</label>
+                        <select class="form-control" id="stationFrom"
+                                th:field="*{stationNameFrom}">
+                            <option value="">Select departure station</option>
+                            <option th:each="stationItem : ${stations}"
+                                    th:value="${stationItem.name}"
+                                    th:text="${stationItem.getName()}"></option>
+                        </select>
+                        <p class="error-message"
+                           th:each="error: ${#fields.errors('stationNameFrom')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('stationNameTo')}? 'has-error':''">
+                        <label for="stationTo" class="control-label">Station to</label>
+                        <select class="form-control" id="stationTo"
+                                th:field="*{stationNameTo}">
+                            <option value="">Select destination station</option>
+                            <option th:each="stationItem : ${stations}"
+                                    th:value="${stationItem.name}"
+                                    th:text="${stationItem.getName()}"></option>
+                        </select>
+                        <p class="error-message"
+                           th:each="error: ${#fields.errors('stationNameTo')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group"
+                         th:classappend="${#fields.hasErrors('rideDate')}? 'has-error':''">
+                        <label for="rideDate" lang="en" class="control-label">Station to</label>
+                        <input id="rideDate"
+                               type="date"
+                               class="form-control"
+                               th:field="*{rideDate}">
+                        <p class="error-message"
+                           th:each="error: ${#fields.errors('rideDate')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</main>
 <footer class="fixed-bottom page-footer bg-light">
     <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
 </footer>

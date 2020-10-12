@@ -12,8 +12,7 @@ import org.tsystems.javaschool.repository.StationRepository;
 import org.tsystems.javaschool.repository.TicketScheduleSectionRepository;
 
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author Trofim Kremen
@@ -23,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class DatabaseRailroadGraph implements RailroadGraph {
 
-    private final Map<String, StationVertex> stationVertexMap = new HashMap<>();
+    private final ConcurrentHashMap<String, StationVertex> stationVertexMap = new ConcurrentHashMap<>();
 
     private final ScheduleSectionRepository scheduleSectionRepository;
     private final StationRepository stationRepository;

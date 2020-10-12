@@ -14,13 +14,10 @@ import java.util.List;
 @Data
 @NamedEntityGraph(
         name = "train-entity-graph",
-        attributeNodes = @NamedAttributeNode(
-                value = "scheduleSectionEntityList",
-                subgraph = "schedule-section-entity-subgraph"),
-        subgraphs = @NamedSubgraph(
-                name = "schedule-section-entity-subgraph",
-                attributeNodes = @NamedAttributeNode(value = "ticketEntitySet")
-        )
+        attributeNodes = {
+                @NamedAttributeNode(value = "scheduleSectionEntityList"),
+                @NamedAttributeNode(value = "calendarEntityList")
+        }
 )
 public class TrainEntity {
 

@@ -30,6 +30,6 @@ public class CalendarEntity {
     @Data
     public static class ID implements Serializable {
         TrainEntity trainEntity;
-        LocalDate localDate;
+        LocalDate rideDate;
     }
 }

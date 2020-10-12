@@ -7,12 +7,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.tsystems.javaschool.model.dto.AddTrainFormDto;
-import org.tsystems.javaschool.model.dto.SectionDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.*;
+import org.tsystems.javaschool.service.RouteService;
 import org.tsystems.javaschool.service.SectionService;
+import org.tsystems.javaschool.service.StationService;
 import org.tsystems.javaschool.service.TrainService;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.Arrays;
 import java.util.List;
@@ -59,5 +60,7 @@ public class TrainController {
         trainService.save(trainFormDto);
         return "redirect:/trains";
     }
+
+
 
 }

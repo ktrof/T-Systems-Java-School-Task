@@ -1,15 +1,20 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.model.entity.*;
+import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
+import org.tsystems.javaschool.model.entity.ScheduleSectionEntity_;
+import org.tsystems.javaschool.model.entity.SectionEntity;
+import org.tsystems.javaschool.model.entity.TrainEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.*;
-import java.time.LocalDate;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +59,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
     @Override
     public List<ScheduleSectionEntity> findBySection(SectionEntity sectionEntity) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-section-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
@@ -61,16 +67,14 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(ScheduleSectionEntity_.sectionEntity), sectionEntity));
         TypedQuery<ScheduleSectionEntity> selectBySection = entityManager.createQuery(criteriaQuery);
+        selectBySection.setHint("javax.persistence.loadgraph", entityGraph);
 
         return selectBySection.getResultList();
     }
 
     @Override
     public ScheduleSectionEntity findById(int id) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-entity-graph");
         Map<String, Object> propertyMap = new HashMap<>();
-        propertyMap.put("javax.persistence.fetchgraph", entityGraph);
-
         return entityManager.find(ScheduleSectionEntity.class, id, propertyMap);
     }
 

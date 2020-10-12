@@ -120,18 +120,18 @@
                         </div>
                         <div class="row item" th:id="${status.index}" th:each="section, status : ${station.correspondingSectionList}">
                             <div class="col form-group">
-                                <input th:field="*{correspondingSectionList[__${status.index}__].stationDtoFrom}"
-                                       th:value="${station}"
-                                       class="form-control">
-                            </div>
-                            <div class="col form-group">
                                 <select class="form-control" id
-                                        th:field="*{correspondingSectionList[__${status.index}__].stationDtoTo}">
+                                        th:field="*{correspondingSectionList[__${status.index}__].stationDtoFrom}">
                                     <option value="">Select destination station</option>
                                     <option th:each="stationItem : ${stations}"
                                             th:value="${stationItem.name}"
                                             th:text="${stationItem.getName()}"></option>
                                 </select>
+                            </div>
+                            <div class="col form-group">
+                                <input th:field="*{correspondingSectionList[__${status.index}__].stationDtoTo}"
+                                       th:value="${station}"
+                                       class="form-control">
                             </div>
                             <div class="col form-group">
                                 <button type="button" class="btn btn-danger">Delete row</button>

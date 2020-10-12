@@ -1,5 +1,6 @@
 package org.tsystems.javaschool.graph.path.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.tsystems.javaschool.graph.Edge;
 import org.tsystems.javaschool.graph.Vertex;
 import org.tsystems.javaschool.graph.path.Path;
@@ -10,6 +11,7 @@ import java.util.stream.Collectors;
 /**
  * @author Trofim Kremen
  */
+@Slf4j
 public class DepthFirstSearch {
 
     public static <V extends Vertex<V, E>,
@@ -18,6 +20,10 @@ public class DepthFirstSearch {
         Set<Path<V, E>> pathsToSourceVertex = new HashSet<>();
         pathsToSourceVertex.add(Path.startFrom(sourceVertex));
         return recursiveFindAllSimplePaths(sourceVertex, targetVertex, pathsToSourceVertex, pathEdgeFilter);
+    }
+
+    private static class FindAllSimplePaths {
+
     }
 
     private static <V extends Vertex<V, E>,
@@ -37,7 +43,7 @@ public class DepthFirstSearch {
         return outgoingEdges.stream()
                 .filter(nextEdge -> pathsToSourceVertex.stream().noneMatch(path -> path.containsEdge(nextEdge)))
                 .flatMap(nextEdge -> {
-                    V nextVertexSource = nextEdge.getSourceVertex();
+                    V nextVertexSource = nextEdge.getTargetVertex();
                     Collection<Path<V, E>> nextPathToSource = pathsToSourceVertex.stream()
                             .filter(path -> pathEdgeFilter.mayAppend(nextEdge, path))
                             .map(path -> path.AddEdge(nextEdge))

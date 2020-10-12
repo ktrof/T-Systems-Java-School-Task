@@ -11,13 +11,13 @@ let addSectionRow = function() {
         let col = document.createElement('div');
         col.classList.add('col', 'form-group');
 
-        if (fieldName === 'stationDtoFrom') {
+        if (fieldName === 'stationDtoTo') {
             let stationInput = document.getElementById('stationName');
             let input = newInput(listName, rowIndex, fieldName);
             input.readOnly = true;
             input.value = stationInput.value;
             col.appendChild(input);
-        } else if (fieldName === 'stationDtoTo'){
+        } else if (fieldName === 'stationDtoFrom'){
             let select = document.createElement('select');
             select.classList.add('form-control');
             select.id = listName + rowIndex + '.' + fieldName;
@@ -25,7 +25,7 @@ let addSectionRow = function() {
             $('#dropdownStationList option').clone().appendTo(select);
             col.appendChild(select);
         } else {
-            col.appendChild(deleteButton(rowIndex.toString()));
+            col.appendChild(deleteButton(rowIndex));
         }
         row.appendChild(col);
     });
@@ -34,7 +34,7 @@ let addSectionRow = function() {
 };
 
 let addScheduleSectionRow = function() {
-    let listName = 'scheduleSectionDtoArray';
+    let listName = 'scheduleSectionFormDtoArray';
     let fieldsNames = ['sectionDtoId', 'stopDuration', 'indexWithinTrainRoute', 'deleteButton'];
     let rowIndex = document.querySelectorAll('.item').length;
 
@@ -65,7 +65,7 @@ let addScheduleSectionRow = function() {
             col.appendChild(input);
         } else {
             col.classList.add('col-md-1', 'form-group');
-            col.appendChild(deleteButton(rowIndex.toString()));
+            col.appendChild(deleteButton(rowIndex));
         }
         row.appendChild(col);
     });

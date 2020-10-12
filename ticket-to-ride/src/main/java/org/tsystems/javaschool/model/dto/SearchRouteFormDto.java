@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.tsystems.javaschool.constraint.ValidateFields;
 
+import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -19,18 +22,20 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @ValidateFields(
+        equality = false,
         first = "stationNameFrom",
         second = "stationNameTo",
         message = "Stations can not match"
 )
 public class SearchRouteFormDto implements Serializable {
 
-    @NotNull(message = "Set station from")
+    @NotBlank(message = "Set departure")
     private String stationNameFrom;
 
-    @NotNull(message = "Set station to")
+    @NotBlank(message = "Set destination")
     private String stationNameTo;
 
+    @FutureOrPresent(message = "You can not set past date")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private LocalDate rideDate;
 
