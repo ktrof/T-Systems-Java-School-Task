@@ -4,6 +4,7 @@ import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -36,6 +37,16 @@ public interface PassengerRepository {
      * @return the list
      */
     List<PassengerEntity> findByName(String firstName, String secondName);
+
+    /**
+     * Find by name and birth date passenger entity.
+     *
+     * @param firstName  the first name
+     * @param secondName the second name
+     * @param birthDate  the birth date
+     * @return the passenger entity
+     */
+    PassengerEntity findByNameAndBirthDate(String firstName, String secondName, LocalDate birthDate);
 
     /**
      * Find by id passenger entity.

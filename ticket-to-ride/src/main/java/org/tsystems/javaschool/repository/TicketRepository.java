@@ -4,6 +4,7 @@ import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.TicketEntity;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -25,20 +26,18 @@ public interface TicketRepository {
      *
      * @param passengerEntity the passenger entity
      * @return the list
-     * @throws SBBException the repository exception
      */
-    List<TicketEntity> findByPassenger(PassengerEntity passengerEntity) throws SBBException;
+    List<TicketEntity> findByPassenger(PassengerEntity passengerEntity);
 
     /**
      * Find by passenger name and mobile list.
      *
-     * @param firstName    the first name
-     * @param secondName   the second name
-     * @param mobileNumber the mobile number
+     * @param firstName  the first name
+     * @param secondName the second name
+     * @param birthDate  the birth date
      * @return the list
-     * @throws SBBException the repository exception
      */
-    List<TicketEntity> findByPassengerNameAndMobile(String firstName, String secondName, String mobileNumber) throws SBBException;
+    List<TicketEntity> findByPassengerNameAndBirthDate(String firstName, String secondName, LocalDate birthDate);
 
     /**
      * Find by id ticket entity.

@@ -14,6 +14,7 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
     }
 
     @Override
-    public List<TicketEntity> findByPassenger(PassengerEntity passengerEntity) throws SBBException {
+    public List<TicketEntity> findByPassenger(PassengerEntity passengerEntity) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketEntity> criteriaQuery = criteriaBuilder.createQuery(TicketEntity.class);
         Root<TicketEntity> root = criteriaQuery.from(TicketEntity.class);
@@ -50,54 +51,37 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(TicketEntity_.passengerEntity), passengerEntity));
         TypedQuery<TicketEntity> selectAllByPassenger = entityManager.createQuery(criteriaQuery);
-        List<TicketEntity> ticketEntityList = selectAllByPassenger.getResultList();
 
-        if(ticketEntityList.size() != 0) {
-            return ticketEntityList;
-        } else throw new SBBException("No ticket found by given passenger");
+        return selectAllByPassenger.getResultList();
     }
 
     @Override
-    public List<TicketEntity> findByPassengerNameAndMobile(String firstName, String secondName, String mobileNumber) throws SBBException {
+    public List<TicketEntity> findByPassengerNameAndBirthDate(String firstName, String secondName, LocalDate birthDate) throws SBBException {
         TypedQuery<TicketEntity> selectAllByPassengerNameAndMobile = entityManager
                 .createQuery("SELECT t FROM TicketEntity t " +
                         "WHERE t.passengerEntity.firstName = :firstName " +
                         "AND t.passengerEntity.secondName = :secondName " +
-                        "AND t.passengerEntity.mobileNumber = :mobileNumber", TicketEntity.class)
+                        "AND t.passengerEntity.birthDate = :birthDate", TicketEntity.class)
                 .setParameter("firstName", firstName)
                 .setParameter("secondName", secondName)
-                .setParameter("mobileNumber", mobileNumber);
-        List<TicketEntity> ticketEntityList = selectAllByPassengerNameAndMobile.getResultList();
+                .setParameter("birthDate", birthDate);
 
-        if (ticketEntityList.size() != 0) {
-            return ticketEntityList;
-        } else throw new SBBException("No ticket found by given name and mobile number");
+        return selectAllByPassengerNameAndMobile.getResultList();
     }
 
     @Override
-    public TicketEntity findById(int id) throws SBBException {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("ticket-entity-graph");
-        Map<String, Object> propertyMap = new HashMap<>();
-        propertyMap.put("javax.persistence.fetchgraph", entityGraph);
-        TicketEntity ticketEntity = entityManager.find(TicketEntity.class, id, propertyMap);
-
-        if (ticketEntity != null) {
-            return ticketEntity;
-        } else throw new SBBException("No ticket found by given id");
+    public TicketEntity findById(int id) {
+        return entityManager.find(TicketEntity.class, id);
     }
 
     @Override
-    public TicketEntity add(TicketEntity ticketEntity) throws SBBException {
-        if (ticketEntity != null) {
-            entityManager.persist(ticketEntity);
-            return ticketEntity;
-        } else throw new SBBException("Ticket entity can not be null");
+    public TicketEntity add(TicketEntity ticketEntity) {
+        entityManager.persist(ticketEntity);
+        return ticketEntity;
     }
 
     @Override
-    public void remove(TicketEntity ticketEntity) throws SBBException {
-        if (ticketEntity != null) {
-            entityManager.remove(ticketEntity);
-        } else throw new SBBException("Ticket entity can not be null");
+    public void remove(TicketEntity ticketEntity) {
+        entityManager.remove(ticketEntity);
     }
 }

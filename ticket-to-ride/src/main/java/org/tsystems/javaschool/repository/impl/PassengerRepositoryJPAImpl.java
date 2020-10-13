@@ -14,6 +14,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -32,6 +33,7 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
         Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
+
         criteriaQuery
                 .select(root);
         TypedQuery<PassengerEntity> selectAll = entityManager.createQuery(criteriaQuery);
@@ -44,6 +46,7 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
         Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(PassengerEntity_.userEntity), userEntity));
@@ -57,14 +60,34 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
         Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
+
         Predicate firstNamePredicate = criteriaBuilder.equal(root.get(PassengerEntity_.firstName), firstName);
         Predicate secondNamePredicate = criteriaBuilder.equal(root.get(PassengerEntity_.secondName), secondName);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.and(firstNamePredicate, secondNamePredicate));
         TypedQuery<PassengerEntity> selectByName = entityManager.createQuery(criteriaQuery);
 
         return selectByName.getResultList();
+    }
+
+    @Override
+    public PassengerEntity findByNameAndBirthDate(String firstName, String secondName, LocalDate birthDate) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
+        Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
+
+        Predicate firstNameEquality = criteriaBuilder.equal(root.get(PassengerEntity_.firstName), firstName);
+        Predicate secondNameEquality = criteriaBuilder.equal(root.get(PassengerEntity_.secondName), secondName);
+        Predicate birthDateEquality = criteriaBuilder.equal(root.get(PassengerEntity_.birthDate), birthDate);
+
+        criteriaQuery
+                .select(root)
+                .where(criteriaBuilder.and(firstNameEquality, secondNameEquality, birthDateEquality));
+        TypedQuery<PassengerEntity> selectByPassengerDetails = entityManager.createQuery(criteriaQuery);
+
+        return selectByPassengerDetails.getSingleResult();
     }
 
     @Override
