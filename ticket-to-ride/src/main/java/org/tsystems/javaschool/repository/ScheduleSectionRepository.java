@@ -2,8 +2,10 @@ package org.tsystems.javaschool.repository;
 
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.SectionEntity;
+import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -44,6 +46,15 @@ public interface ScheduleSectionRepository {
      * @return the schedule section entity
      */
     ScheduleSectionEntity findById(int id);
+
+    /**
+     * Find by departure station id and r ide date list.
+     *
+     * @param stationEntity the station entity
+     * @param rideDate      the ride date
+     * @return the list
+     */
+    List<ScheduleSectionEntity> findByDepartureStationAndRideDate(StationEntity stationEntity, LocalDate rideDate);
 
     /**
      * Add schedule section entity.

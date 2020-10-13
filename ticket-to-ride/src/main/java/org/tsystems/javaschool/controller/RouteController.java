@@ -14,6 +14,7 @@ import org.tsystems.javaschool.model.dto.StationDto;
 import org.tsystems.javaschool.service.RouteService;
 import org.tsystems.javaschool.service.StationService;
 
+import javax.inject.Provider;
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.util.Comparator;
@@ -28,6 +29,7 @@ public class RouteController {
 
     private final RouteService routeService;
     private final StationService stationService;
+    private final Provider<RouteCache> routeCacheProvider;
 
     @ModelAttribute("stations")
     public List<StationDto> stationDtoList() {
@@ -47,6 +49,7 @@ public class RouteController {
         }
         SearchResultDto searchResultDto = routeService.findRouteGroups(searchRouteFormDto);
         List<RouteDto> routeDtoList = searchResultDto.getDiscoveredRoutes();
+        routeCacheProvider.get().addAll(routeDtoList);
         routeDtoList.sort(Comparator.comparing(RouteDto::getTotalDuration));
         model.addAttribute("discoveredRoutes", routeDtoList);
         model.addAttribute("selectedRoute", RouteDto.builder().build());

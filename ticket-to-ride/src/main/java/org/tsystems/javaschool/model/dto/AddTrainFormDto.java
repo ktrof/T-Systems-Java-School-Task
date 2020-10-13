@@ -42,6 +42,8 @@ public class AddTrainFormDto implements Serializable {
 
     private String type;
 
+    private int numberOfSections;
+
     @NotBlank(message = "Choose ride dates")
     private String dates;
 

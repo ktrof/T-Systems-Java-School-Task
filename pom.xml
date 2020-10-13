@@ -34,6 +34,7 @@
         <hibernate.version>5.4.21.Final</hibernate.version>
         <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
         <servlet.version>3.1.0</servlet.version>
+        <inject.version>1</inject.version>
         <liquibase.version>4.0.0</liquibase.version>
         <beanutils.version>1.9.4</beanutils.version>
         <log4j.version>2.13.3</log4j.version>
@@ -162,6 +163,11 @@
                 <artifactId>javax.servlet-api</artifactId>
                 <version>${servlet.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.inject</groupId>
+                <artifactId>javax.inject</artifactId>
+                <version>${inject.version}</version>
             </dependency>
             <dependency>
                 <groupId>javax</groupId>

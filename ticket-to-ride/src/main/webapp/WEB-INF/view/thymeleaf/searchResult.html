@@ -61,8 +61,8 @@
         <ul class="list-group" th:each="routePart : ${route.routePartDtoList}">
             <li class="list-group-item">
                 <h5>
-                    <span th:text="'Ride time: ' + ${routePart.getDuration().toMinutes()} + ' min'"></span>
-                    <span th:text="'Ride distance: ' + ${routePart.getDistance()} + ' km'"></span>
+                    <span class="row mt-1" th:text="'Ride time: ' + ${routePart.getDuration().toMinutes()} + ' min'"></span>
+                    <span class="row mt-1" th:text="'Ride distance: ' + ${routePart.getDistance()} + ' km'"></span>
                 </h5>
                 <div class="row">
                     <div class="col text-right">
@@ -87,8 +87,8 @@
                         <span th:text="${#temporals.format(routePart.getArrivalTime(), 'HH:mm')}"></span>
                     </div>
                 </div>
-                <div class="text-center small" th:unless="${routePart.getStationNameSequence().equals(null)}">
-                    <span th:text="'Through stations ' + ${routePart.getStationNameSequence()}"></span>
+                <div class="text-center small">
+                    <span th:text="${routePart.getStationNameSequence()}"></span>
                 </div>
             </li>
         </ul>

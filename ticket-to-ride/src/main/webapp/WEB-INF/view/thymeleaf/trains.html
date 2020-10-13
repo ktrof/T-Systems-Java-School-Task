@@ -50,6 +50,11 @@
 <main>
     <div class="container container-fluid">
         <h3>Train List</h3>
+        <div class="row-cols-1" sec:authorize="hasRole('ROLE_ADMIN')">
+            <a class="mb-4 mt-3 mr-2 ml-2 btn btn-primary"
+               role="button"
+               th:href="@{/trains/add}">Add train</a>
+        </div>
         <div class="list-group">
             <a class="list-group-item list-group-item-action btn btn-primary"
                role="button"

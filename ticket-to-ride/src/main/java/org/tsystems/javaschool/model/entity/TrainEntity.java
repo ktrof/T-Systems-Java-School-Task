@@ -12,13 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@NamedEntityGraph(
-        name = "train-entity-graph",
-        attributeNodes = {
-                @NamedAttributeNode(value = "scheduleSectionEntityList"),
-                @NamedAttributeNode(value = "calendarEntityList")
-        }
-)
 public class TrainEntity {
 
     @Id
@@ -36,6 +29,9 @@ public class TrainEntity {
 
     @Column(name = "type")
     private String type;
+
+    @Column(name = "number_of_sections")
+    private int numberOfSections;
 
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<CalendarEntity> calendarEntityList;

@@ -6,16 +6,17 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.tsystems.javaschool.model.dto.*;
-import org.tsystems.javaschool.service.RouteService;
+import org.tsystems.javaschool.model.dto.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.service.ScheduleSectionService;
 import org.tsystems.javaschool.service.SectionService;
-import org.tsystems.javaschool.service.StationService;
 import org.tsystems.javaschool.service.TrainService;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -24,6 +25,7 @@ public class TrainController {
 
     private final TrainService trainService;
     private final SectionService sectionService;
+    private final ScheduleSectionService scheduleSectionService;
 
     @ModelAttribute("train")
     public AddTrainFormDto trainFormDto() {
@@ -55,12 +57,19 @@ public class TrainController {
         if (result.hasErrors()) {
             return "addTrain";
         }
-        System.out.println(trainFormDto.getDates());
-        System.out.println(Arrays.toString(trainFormDto.getScheduleSectionFormDtoArray()));
+        trainFormDto.setNumberOfSections(trainFormDto.getScheduleSectionFormDtoArray().length);
         trainService.save(trainFormDto);
         return "redirect:/trains";
     }
 
-
+    @GetMapping(value = "/trains/{id}")
+    public String getTrainById(@PathVariable("id") String id, Model model) {
+        TrainDto trainDto = trainService.getById(id);
+        System.out.println(trainDto.toString());
+        List<ScheduleSectionDto> scheduleSectionDtoList = scheduleSectionService.getByTrain(trainDto);
+        model.addAttribute("trainItem", trainDto);
+        model.addAttribute("scheduleSectionList", scheduleSectionDtoList);
+        return "trainItem";
+    }
 
 }

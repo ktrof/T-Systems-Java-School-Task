@@ -39,11 +39,7 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
 
     @Override
     public TrainEntity findById(String id) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("train-entity-graph");
-        Map<String, Object> propertyMap = new HashMap<>();
-        propertyMap.put("javax.persistence.fetchgraph", entityGraph);
-
-        return entityManager.find(TrainEntity.class, id, propertyMap);
+        return entityManager.find(TrainEntity.class, id);
     }
 
     @Override

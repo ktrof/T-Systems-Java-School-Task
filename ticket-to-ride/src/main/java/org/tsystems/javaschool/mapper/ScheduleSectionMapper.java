@@ -25,7 +25,7 @@ public interface ScheduleSectionMapper {
      * @return the schedule dto
      */
     @Mappings({
-            @Mapping(target = "trainDto", source = "scheduleSectionEntity"),
+            @Mapping(target = "trainDto", source = "scheduleSectionEntity.trainEntity"),
             @Mapping(target = "sectionDto", source = "scheduleSectionEntity.sectionEntity")
     })
     ScheduleSectionDto toDto(ScheduleSectionEntity scheduleSectionEntity);

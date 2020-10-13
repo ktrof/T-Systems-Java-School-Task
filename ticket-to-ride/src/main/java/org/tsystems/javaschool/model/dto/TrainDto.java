@@ -36,4 +36,6 @@ public class TrainDto implements Serializable {
 
     private String type;
 
+    private int numberOfSections;
+
 }

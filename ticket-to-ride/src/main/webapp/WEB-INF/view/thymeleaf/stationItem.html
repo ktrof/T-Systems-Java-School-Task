@@ -28,7 +28,7 @@
             <div class="navbar-nav">
                 <a class="nav-item nav-link" th:href="@{/}">Home</a>
                 <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
-                <a class="nav-item nav-link active" th:href="@{/stations}">Stations<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
             </div>
         </div>
         <form class="form-inline mt-2 mt-md-0" method="get"
@@ -49,51 +49,29 @@
 </header>
 <main>
     <div class="container container-fluid">
-        <h3>Station List</h3>
-        <div class="row-cols-1" sec:authorize="hasRole('ROLE_ADMIN')">
-            <a class="mb-4 mt-3 mr-2 ml-2 btn btn-primary"
-               role="button"
-               th:href="@{/trains/add}">Add train</a>
+        <h4 th:text="'Station ' + ${stationItem.getName()}"></h4>
+        <hr>
+        <h5>Latitude</h5>
+        <p th:text="${stationItem.getLatitude()+'°'}"></p>
+        <hr>
+        <h5>Longitude</h5>
+        <p th:text="${stationItem.getLongitude()+'°'}"></p>
+        <hr>
+        <h5>Timezone</h5>
+        <p th:text="${stationItem.getTimezone()}"></p>
+        <hr class="mt-2 mb-5"/>
+        <div class="row">
+            <div class="col form-group">Train</div>
+            <div class="col form-group">Departure</div>
         </div>
-        <div class="list-group">
-            <a class="list-group-item list-group-item-action btn btn-primary"
-               role="button"
-               data-toggle="modal"
-               aria-expanded="true"
-               id="trainDetails"
-               th:each="station : ${stations}"
-               th:attr="data-target='#modal' + ${station.getId()}"
-               th:text="'Station ' + ${station.getName()}">
-            </a>
-            <div class="modal fade" tabindex="1"
-                 th:each="station : ${stations}"
-                 th:id="modal + ${station.getId()}"
-                 aria-labelledby="modalLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h5 class="modal-title" th:id="modalLabel" th:text="'Station ' + ${station.getId()}"></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <h5>Latitude</h5>
-                            <p th:text="${station.getLatitude()+'°'}"></p>
-                            <hr>
-                            <h5>Longitude</h5>
-                            <p th:text="${station.getLongitude()+'°'}"></p>
-                            <hr>
-                            <h5>Timezone</h5>
-                            <p th:text="${station.getTimezone()}"></p>
-                        </div>
-                        <div class="modal-footer">
-                            <a role="button" class="btn btn-secondary" data-dismiss="modal">Close</a>
-                            <a role="button" class="btn btn-primary"
-                               th:href="@{/stations/{id}(id=${station.getId()})}">Inspect</a>
-                        </div>
-                    </div>
-                </div>
+        <div class="row item"
+             th:each="section, status : ${scheduleSectionList}">
+            <div class="col form-group">
+                <span class="text-right" th:text="${section.getTrainDto().getId()} + ' ' + ${section.getTrainDto().getName()}"></span>
+            </div>
+            <div class="col form-group">
+                <span class="text-right" th:text="${section.getIndexWithinTrainRoute() == section.getTrainDto().getNumberOfSections() - 1} ?
+                '' :${#temporals.format(section.getDeparture(), 'HH:mm')}"></span>
             </div>
         </div>
     </div>
