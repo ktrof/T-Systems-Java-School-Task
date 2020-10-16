@@ -7,11 +7,13 @@ import org.tsystems.javaschool.graph.railroad.RailroadGraph;
 import org.tsystems.javaschool.graph.railroad.StationVertex;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
+import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 import org.tsystems.javaschool.repository.StationRepository;
 import org.tsystems.javaschool.repository.TicketScheduleSectionRepository;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -44,8 +46,9 @@ public class DatabaseRailroadGraph implements RailroadGraph {
 
     @Override
     public int countBoughtTickets(ScheduleSectionEntity scheduleSectionEntity, LocalDate rideDate) {
-        return ticketScheduleSectionRepository
-                .findByScheduleSectionIdAndDepartureDate(scheduleSectionEntity.getId(), rideDate).size();
+        List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList = ticketScheduleSectionRepository
+                .findByScheduleSectionIdAndDepartureDate(scheduleSectionEntity.getId(), rideDate);
+        return ticketScheduleSectionEntityList.size();
     }
 
 

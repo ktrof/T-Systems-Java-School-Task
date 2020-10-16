@@ -28,22 +28,25 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
         CriteriaQuery<TicketScheduleSectionEntity> criteriaQuery = criteriaBuilder
                 .createQuery(TicketScheduleSectionEntity.class);
         Root<TicketScheduleSectionEntity> root = criteriaQuery.from(TicketScheduleSectionEntity.class);
+
         Join<TicketScheduleSectionEntity, ScheduleSectionEntity> scheduleSectionEntityJoin = root
                 .join(TicketScheduleSectionEntity_.scheduleSectionEntity);
         Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = scheduleSectionEntityJoin
                 .join(ScheduleSectionEntity_.trainEntity);
         Join<TrainEntity, CalendarEntity> calendarEntityJoin = trainEntityJoin
                 .join(TrainEntity_.calendarEntityList);
+
         Predicate scheduleSectionIdEquality = criteriaBuilder
                 .equal(scheduleSectionEntityJoin.get(ScheduleSectionEntity_.id), id);
         Predicate departureDateEquality = criteriaBuilder
                 .equal(calendarEntityJoin.get(CalendarEntity_.rideDate), departureDate);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.and(scheduleSectionIdEquality, departureDateEquality));
-
         TypedQuery<TicketScheduleSectionEntity> selectByScheduleSectionIdAndDepartureDate = entityManager
                 .createQuery(criteriaQuery);
+
         return selectByScheduleSectionIdAndDepartureDate.getResultList();
     }
 

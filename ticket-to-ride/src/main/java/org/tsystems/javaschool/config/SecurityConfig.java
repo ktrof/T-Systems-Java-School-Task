@@ -16,6 +16,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /**
@@ -44,6 +45,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return auth;
     }
 
+    @Bean
+    public AuthenticationSuccessHandler successHandler() {
+        return new LoginSuccessHandler();
+    }
+
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.authenticationProvider(authenticationProvider());
@@ -55,14 +61,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
+                    .antMatchers("/routes/{id}/**", "/routes/{id}").hasAnyRole("USER", "ADMIN")
                 .and().formLogin()
                     .loginPage("/login")
                     .permitAll()
-                    .defaultSuccessUrl("/", true)
+                    .successHandler(successHandler())
                 .and().logout()
                     .invalidateHttpSession(true)
                     .permitAll()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/")
                 .and().csrf().disable();
     }
 

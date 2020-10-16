@@ -54,7 +54,7 @@ public interface ScheduleSectionRepository {
      * @param rideDate      the ride date
      * @return the list
      */
-    List<ScheduleSectionEntity> findByDepartureStationAndRideDate(StationEntity stationEntity, LocalDate rideDate);
+    List<ScheduleSectionEntity> findByStationAndRideDate(StationEntity stationEntity, LocalDate rideDate);
 
     /**
      * Add schedule section entity.

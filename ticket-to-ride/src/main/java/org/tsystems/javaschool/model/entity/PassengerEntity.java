@@ -20,7 +20,7 @@ public class PassengerEntity {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
@@ -39,7 +39,7 @@ public class PassengerEntity {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "passengerEntity", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "passengerEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     List<TicketEntity> ticketEntityList;
 
 }

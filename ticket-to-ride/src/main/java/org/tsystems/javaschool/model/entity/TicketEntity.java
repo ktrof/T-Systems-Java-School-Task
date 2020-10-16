@@ -13,6 +13,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@NamedEntityGraph(
+        name = "ticket-graph",
+        attributeNodes = @NamedAttributeNode(value = "ticketScheduleSectionEntityList")
+)
 public class TicketEntity {
 
     @Id
@@ -20,15 +24,14 @@ public class TicketEntity {
     @Column(name = "id")
     private int id;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "passenger_id")
     private PassengerEntity passengerEntity;
 
     @Column(name = "total_price")
     private int totalPrice;
 
-    @OneToMany(mappedBy = "ticketEntity", fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "ticketEntity", fetch = FetchType.LAZY)
     private List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList;
 
 }

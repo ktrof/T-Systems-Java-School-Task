@@ -6,13 +6,13 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbb route page">
+    <meta name="description" content="sbb main page">
     <meta name="author" content="Trofim Kremen">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
-    <title>Routes</title>
+    <title>Index</title>
 </head>
 <body>
 <header>
@@ -33,8 +33,15 @@
         </div>
         <form class="form-inline mt-2 mt-md-0" method="get"
               sec:authorize="isAuthenticated()"
+              th:action="@{/profile}">
+            <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Profile
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
               th:action="@{/logout}">
-            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
                 Sign out
             </button>
         </form>
@@ -48,6 +55,7 @@
     </nav>
 </header>
 <main>
+
     <h1 class="text-center" th:text="${searchForm.stationNameFrom} +
     ' &LongRightArrow; ' + ${searchForm.stationNameTo}">
     </h1>
@@ -99,7 +107,7 @@
         </div>
     </div>
 </main>
-<footer class="fixed-bottom page-footer bg-light">
+<footer class="rounded-bottom page-footer bg-light">
     <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
 </footer>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>

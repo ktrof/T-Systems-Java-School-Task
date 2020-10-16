@@ -46,12 +46,11 @@ public class RoutePartDto implements Serializable {
     public double getDistance() {
         DecimalFormat decimalFormat = new DecimalFormat("#.###");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
-        return (scheduleSectionDtoList.stream()
+        double distance = scheduleSectionDtoList.stream()
                 .map(ScheduleSectionDto::getSectionDto)
                 .map(SectionDto::getLength)
-                .map(decimalFormat::format)
-                .map(Double::valueOf)
-                .reduce(0d, Double::sum));
+                .reduce(0d, Double::sum);
+        return Double.parseDouble(decimalFormat.format(distance));
     }
 
 }

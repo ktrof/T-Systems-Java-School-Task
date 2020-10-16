@@ -3,6 +3,7 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
+import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
 import org.tsystems.javaschool.model.dto.UserDto;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
@@ -32,10 +33,9 @@ public interface UserMapper {
      */
     @Mappings({
             @Mapping(target = "roleEntitySet", ignore = true),
-            @Mapping(target = "password", ignore = true),
-            @Mapping(target = "passengerEntityList", ignore = true)
+            @Mapping(target = "passengerEntityList", ignore = true),
     })
-    UserEntity toEntity(UserDto userDto);
+    UserEntity toEntity(UpdateUserFormDto userDto);
 
     /**
      * To dto list list.

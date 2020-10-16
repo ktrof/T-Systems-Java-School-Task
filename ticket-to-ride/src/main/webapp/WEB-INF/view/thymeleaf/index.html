@@ -33,8 +33,15 @@
         </div>
         <form class="form-inline mt-2 mt-md-0" method="get"
               sec:authorize="isAuthenticated()"
+              th:action="@{/profile}">
+            <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Profile
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
               th:action="@{/logout}">
-            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
                 Sign out
             </button>
         </form>
@@ -49,6 +56,12 @@
 </header>
 <main>
     <div class="container container-fluid">
+        <div th:if="${param.logout}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <p>You have logged out!</p>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
         <h1>Get your ticket to ride!</h1>
         <form th:action="@{/routes}" method="post" th:object="${search}">
             <div class="row">
@@ -111,7 +124,7 @@
     </div>
 </main>
 <footer class="fixed-bottom page-footer bg-light">
-    <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
+    <span class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </span>
 </footer>
 <script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>

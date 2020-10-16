@@ -17,6 +17,8 @@ import org.tsystems.javaschool.service.ScheduleSectionService;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author Trofim Kremen
@@ -32,12 +34,38 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
     private final ScheduleSectionMapper scheduleSectionMapper;
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<ScheduleSectionDto> getByDepartureStationAndRideDate(StationDto departureStation, LocalDate rideDate) {
         List<ScheduleSectionDto> scheduleSectionDtoList = null;
         try {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
-                    .findByDepartureStationAndRideDate(stationMapper.toEntity(departureStation), rideDate);
+                    .findByStationAndRideDate(stationMapper.toEntity(departureStation), rideDate)
+                    .stream()
+                    .filter(section ->
+                                    Objects.equals(section.getSectionEntity().getStationEntityFrom().getId(),
+                                            departureStation.getId())
+                            )
+                    .collect(Collectors.toList());
+            scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
+        } catch (Exception e) {
+            log.error("Error getting schedule sections by station and ride date", e);
+        }
+        return scheduleSectionDtoList;
+    }
+
+    @Override
+    @Transactional
+    public List<ScheduleSectionDto> getByDestinationStationAndRideDate(StationDto destinationStation, LocalDate rideDate) {
+        List<ScheduleSectionDto> scheduleSectionDtoList = null;
+        try {
+            List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
+                    .findByStationAndRideDate(stationMapper.toEntity(destinationStation), rideDate)
+                    .stream()
+                    .filter(section ->
+                            Objects.equals(section.getSectionEntity().getStationEntityTo().getId(),
+                                    destinationStation.getId())
+                    )
+                    .collect(Collectors.toList());
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
         } catch (Exception e) {
             log.error("Error getting schedule sections by station and ride date", e);

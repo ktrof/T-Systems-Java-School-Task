@@ -1,11 +1,8 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
-import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * The interface User repository.
@@ -65,7 +62,6 @@ public interface UserRepository {
      * Remove.
      *
      * @param userEntity the user entity
-     * @throws SBBException the sbb exception
      */
-    void remove(UserEntity userEntity) throws SBBException;
+    void remove(UserEntity userEntity);
 }

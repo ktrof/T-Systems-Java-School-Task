@@ -42,7 +42,7 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
     }
 
     @Override
-    public List<PassengerEntity> findAllByUser(UserEntity userEntity) throws SBBException {
+    public List<PassengerEntity> findAllByUser(UserEntity userEntity) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<PassengerEntity> criteriaQuery = criteriaBuilder.createQuery(PassengerEntity.class);
         Root<PassengerEntity> root = criteriaQuery.from(PassengerEntity.class);
@@ -87,7 +87,7 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
                 .where(criteriaBuilder.and(firstNameEquality, secondNameEquality, birthDateEquality));
         TypedQuery<PassengerEntity> selectByPassengerDetails = entityManager.createQuery(criteriaQuery);
 
-        return selectByPassengerDetails.getSingleResult();
+        return selectByPassengerDetails.getResultStream().findFirst().orElse(null);
     }
 
     @Override

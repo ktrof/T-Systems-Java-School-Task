@@ -18,9 +18,13 @@ import java.time.LocalTime;
 @AllArgsConstructor
 public class TicketScheduleSectionDto implements Serializable {
 
-    private int ticketId;
-    private int scheduleSectionId;
+    private Integer ticketId;
+    private Integer scheduleSectionId;
     private LocalDate departureDate;
     private LocalTime departureTime;
+    private int indexWithinTicket;
+    private LocalDate arrivalDate;
+    private LocalTime arrivalTime;
+
 
 }

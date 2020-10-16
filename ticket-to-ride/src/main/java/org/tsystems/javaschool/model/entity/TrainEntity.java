@@ -30,9 +30,6 @@ public class TrainEntity {
     @Column(name = "type")
     private String type;
 
-    @Column(name = "number_of_sections")
-    private int numberOfSections;
-
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     List<CalendarEntity> calendarEntityList;
 

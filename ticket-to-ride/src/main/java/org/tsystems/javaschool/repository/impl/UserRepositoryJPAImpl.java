@@ -32,6 +32,7 @@ public class UserRepositoryJPAImpl implements UserRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
+
         criteriaQuery
                 .select(root);
         TypedQuery<UserEntity> selectAll = entityManager.createQuery(criteriaQuery);
@@ -41,8 +42,7 @@ public class UserRepositoryJPAImpl implements UserRepository {
 
     @Override
     public UserEntity findById(int id) {
-        UserEntity userEntity = entityManager.find(UserEntity.class, id);
-        return userEntity;
+        return entityManager.find(UserEntity.class, id);
     }
 
     @Override
@@ -50,12 +50,13 @@ public class UserRepositoryJPAImpl implements UserRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(UserEntity_.login), login));
         TypedQuery<UserEntity> selectByLogin = entityManager.createQuery(criteriaQuery);
 
-        return selectByLogin.getSingleResult();
+        return selectByLogin.getResultStream().findFirst().orElse(null);
     }
 
     @Override
@@ -63,12 +64,13 @@ public class UserRepositoryJPAImpl implements UserRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<UserEntity> criteriaQuery = criteriaBuilder.createQuery(UserEntity.class);
         Root<UserEntity> root = criteriaQuery.from(UserEntity.class);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(UserEntity_.email), email));
         TypedQuery<UserEntity> selectByEmail = entityManager.createQuery(criteriaQuery);
 
-        return selectByEmail.getSingleResult();
+        return selectByEmail.getResultStream().findFirst().orElse(null);
     }
 
 

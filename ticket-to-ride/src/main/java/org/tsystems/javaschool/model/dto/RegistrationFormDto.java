@@ -37,11 +37,13 @@ public class RegistrationFormDto implements Serializable {
     private String login;
 
     @NotBlank(message = "Set email")
-    @Pattern(regexp = "^([A-Za-z0-9+_.-]+@(.+))?$", message = "Latin letters, digits, dashes, underscores and points are allowed")
+    @Pattern(regexp = "^([A-Za-z0-9+_.-]+@(.+))?$",
+            message = "Latin letters, digits, dashes, underscores and points are allowed")
     private String email;
 
     @NotBlank(message = "Confirm email")
-    @Pattern(regexp = "^([A-Za-z0-9+_.-]+@(.+))?$", message = "Latin letters, digits, dashes, underscores and points are allowed")
+    @Pattern(regexp = "^([A-Za-z0-9+_.-]+@(.+))?$",
+            message = "Latin letters, digits, dashes, underscores and points are allowed")
     private String confirmEmail;
 
     @NotBlank(message = "Set password")

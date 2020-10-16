@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.UserMapper;
 import org.tsystems.javaschool.model.dto.RegistrationFormDto;
+import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
 import org.tsystems.javaschool.model.dto.UserDto;
 import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
@@ -28,11 +29,8 @@ import java.util.stream.Stream;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-
     private final RoleRepository roleRepository;
-
     private final UserMapper userMapper;
-
     private final PasswordEncoder passwordEncoder;
 
     @Override
@@ -47,6 +45,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto getByLogin(String login) {
         UserDto userDto = null;
         try {
@@ -58,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserDto getByEmail(String email) {
         UserDto userDto = null;
         try {
@@ -92,12 +92,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto editUser(UserDto userDto) {
+    @Transactional
+    public UserDto editUser(UpdateUserFormDto userDto) {
+        UserDto updatedUserDto = null;
         try {
-            userRepository.update(userMapper.toEntity(userDto));
+            UserEntity updatedUserEntity = userRepository.update(userMapper.toEntity(userDto));
+            updatedUserDto = userMapper.toDto(updatedUserEntity);
         } catch (Exception e) {
             log.error("Error updating user", e);
         }
-        return userDto;
+        return updatedUserDto;
     }
 }

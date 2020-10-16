@@ -1,8 +1,10 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.PassengerDto;
-import org.tsystems.javaschool.model.dto.RouteDto;
+import org.tsystems.javaschool.model.dto.PassengerFormDto;
 import org.tsystems.javaschool.model.dto.TicketDto;
+import org.tsystems.javaschool.model.dto.UserDto;
+
+import java.util.List;
 
 /**
  * The interface Ticket service.
@@ -12,37 +14,43 @@ import org.tsystems.javaschool.model.dto.TicketDto;
 public interface TicketService {
 
     /**
+     * Gets by user dto.
+     *
+     * @param login the login
+     * @return the by user dto
+     */
+    List<TicketDto> getByUserLogin(String login);
+
+    /**
      * Has passenger boolean.
      *
-     * @param routeDto     the route dto
-     * @param passengerDto the passenger dto
+     * @param passengerFormDto the passenger dto
      * @return the boolean
      */
-    boolean hasPassenger(RouteDto routeDto, PassengerDto passengerDto);
+    boolean hasPassenger(PassengerFormDto passengerFormDto);
 
     /**
      * Is time left boolean.
      *
-     * @param routeDto the route dto
+     * @param passengerFormDto the passenger dto
      * @return the boolean
      */
-    boolean isTimeLeft(RouteDto routeDto);
+    boolean isTimeLeft(PassengerFormDto passengerFormDto);
 
     /**
      * Are tickets available boolean.
      *
-     * @param routeDto the route dto
+     * @param passengerFormDto the passenger dto
      * @return the boolean
      */
-    boolean areTicketsAvailable(RouteDto routeDto);
+    boolean areTicketsAvailable(PassengerFormDto passengerFormDto);
 
     /**
      * Buy ticket ticket dto.
      *
-     * @param routeDto     the route dto
-     * @param passengerDto the passenger dto
+     * @param passengerFormDto the passenger dto
      * @return the ticket dto
      */
-    TicketDto buyTicket(RouteDto routeDto, PassengerDto passengerDto);
+    TicketDto buyTicket(PassengerFormDto passengerFormDto);
 
 }

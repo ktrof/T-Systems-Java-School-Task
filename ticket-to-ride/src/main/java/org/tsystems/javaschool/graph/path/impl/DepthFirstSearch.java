@@ -22,10 +22,6 @@ public class DepthFirstSearch {
         return recursiveFindAllSimplePaths(sourceVertex, targetVertex, pathsToSourceVertex, pathEdgeFilter);
     }
 
-    private static class FindAllSimplePaths {
-
-    }
-
     private static <V extends Vertex<V, E>,
             E extends Edge<V, E>>
     Collection<Path<V, E>> recursiveFindAllSimplePaths(V sourceVertex, V targetVertex,

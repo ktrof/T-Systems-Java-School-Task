@@ -2,9 +2,7 @@ package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import org.tsystems.javaschool.exception.SBBException;
-import org.tsystems.javaschool.model.entity.PassengerEntity;
-import org.tsystems.javaschool.model.entity.TicketEntity;
-import org.tsystems.javaschool.model.entity.TicketEntity_;
+import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.TicketRepository;
 
 import javax.persistence.EntityGraph;
@@ -13,11 +11,10 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Root;
 import java.time.LocalDate;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type Ticket repository jpa.
@@ -43,16 +40,21 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
     }
 
     @Override
-    public List<TicketEntity> findByPassenger(PassengerEntity passengerEntity) {
+    public List<TicketEntity> findByUser(UserEntity userEntity) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("ticket-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketEntity> criteriaQuery = criteriaBuilder.createQuery(TicketEntity.class);
         Root<TicketEntity> root = criteriaQuery.from(TicketEntity.class);
+
+        Join<TicketEntity, PassengerEntity> passengerEntityJoin = root.join(TicketEntity_.passengerEntity);
+
         criteriaQuery
                 .select(root)
-                .where(criteriaBuilder.equal(root.get(TicketEntity_.passengerEntity), passengerEntity));
-        TypedQuery<TicketEntity> selectAllByPassenger = entityManager.createQuery(criteriaQuery);
+                .where(criteriaBuilder.equal(passengerEntityJoin.get(PassengerEntity_.userEntity), userEntity));
+        TypedQuery<TicketEntity> selectAllByUser = entityManager.createQuery(criteriaQuery);
+        selectAllByUser.setHint("javax.persistence.loadgraph", entityGraph);
 
-        return selectAllByPassenger.getResultList();
+        return selectAllByUser.getResultList();
     }
 
     @Override

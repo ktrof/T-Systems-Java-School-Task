@@ -71,10 +71,15 @@ public class StationController {
     @GetMapping(value = "/stations/{id}")
     public String getStationById(@PathVariable("id") int id, Model model) {
         StationDto stationDto = stationService.getById(id);
-        List<ScheduleSectionDto> scheduleSectionDtoList = scheduleSectionService
+        List<ScheduleSectionDto> departureSectionDtoList = scheduleSectionService
                 .getByDepartureStationAndRideDate(stationDto, LocalDate.now());
+
+        List<ScheduleSectionDto> destinationSectionDtoList = scheduleSectionService
+                .getByDestinationStationAndRideDate(stationDto, LocalDate.now());
+
         model.addAttribute("stationItem", stationDto);
-        model.addAttribute("scheduleSectionList", scheduleSectionDtoList);
+        model.addAttribute("departureSectionDtoList", departureSectionDtoList);
+        model.addAttribute("destinationSectionDtoList", destinationSectionDtoList);
         return "stationItem";
     }
 

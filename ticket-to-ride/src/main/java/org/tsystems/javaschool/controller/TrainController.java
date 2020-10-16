@@ -57,7 +57,6 @@ public class TrainController {
         if (result.hasErrors()) {
             return "addTrain";
         }
-        trainFormDto.setNumberOfSections(trainFormDto.getScheduleSectionFormDtoArray().length);
         trainService.save(trainFormDto);
         return "redirect:/trains";
     }

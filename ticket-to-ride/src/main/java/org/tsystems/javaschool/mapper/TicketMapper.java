@@ -13,7 +13,7 @@ import java.util.List;
  *
  * @author Trofim Kremen
  */
-@Mapper
+@Mapper(uses = {PassengerMapper.class, TicketScheduleSectionMapper.class})
 public interface TicketMapper {
 
     /**

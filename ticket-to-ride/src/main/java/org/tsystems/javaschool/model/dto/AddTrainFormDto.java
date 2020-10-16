@@ -32,7 +32,7 @@ public class AddTrainFormDto implements Serializable {
     @NotNull(message = "Set the average speed of train")
     private int avgSpeed;
 
-    @Min(value = 8, message = "Min number of seats is 8")
+    @Min(value = 1, message = "Min number of seats is 1")
     @NotNull(message = "Set the number of seats")
     private int numberOfSeats;
 
@@ -41,8 +41,6 @@ public class AddTrainFormDto implements Serializable {
     private String departure;
 
     private String type;
-
-    private int numberOfSections;
 
     @NotBlank(message = "Choose ride dates")
     private String dates;

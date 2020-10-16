@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.PassengerDto;
+import org.tsystems.javaschool.model.dto.PassengerFormDto;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.List;
  *
  * @author Trofim Kremen
  */
-@Mapper
+@Mapper(uses = {UserMapper.class})
 public interface PassengerMapper {
 
     /**
@@ -22,22 +23,20 @@ public interface PassengerMapper {
      * @param passengerEntity the passenger entity
      * @return the passenger dto
      */
-    @Mappings({
-            @Mapping(target = "userDto", source = "passengerEntity.userEntity")
-    })
     PassengerDto toDto(PassengerEntity passengerEntity);
 
     /**
      * To entity passenger entity.
      *
-     * @param passengerDto the passenger dto
+     * @param passengerFormDto the passenger dto
      * @return the passenger entity
      */
     @Mappings({
-            @Mapping(target = "userEntity", source = "passengerDto.userDto"),
-            @Mapping(target = "ticketEntityList", ignore = true)
+            @Mapping(target = "userEntity", ignore = true),
+            @Mapping(target = "ticketEntityList", ignore = true),
+            @Mapping(target = "id", ignore = true)
     })
-    PassengerEntity toEntity(PassengerDto passengerDto);
+    PassengerEntity toEntity(PassengerFormDto passengerFormDto);
 
     /**
      * To dto list list.
@@ -50,8 +49,8 @@ public interface PassengerMapper {
     /**
      * To entity list list.
      *
-     * @param passengerDtoList the passenger dto list
+     * @param passengerFormDtoList the passenger dto list
      * @return the list
      */
-    List<PassengerEntity> toEntityList(List<PassengerDto> passengerDtoList);
+    List<PassengerEntity> toEntityList(List<PassengerFormDto> passengerFormDtoList);
 }

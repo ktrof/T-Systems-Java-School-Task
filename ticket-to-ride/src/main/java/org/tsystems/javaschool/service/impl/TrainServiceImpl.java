@@ -86,6 +86,7 @@ public class TrainServiceImpl implements TrainService {
                     CalendarEntity calendarEntity = new CalendarEntity();
                     calendarEntity.setTrainEntity(trainEntity);
                     calendarEntity.setRideDate(rideDate);
+                    calendarEntity.setTicketsAvailable(trainEntity.getNumberOfSeats());
 
                     calendarEntityList.add(calendarEntity);
                 }
@@ -106,7 +107,6 @@ public class TrainServiceImpl implements TrainService {
                         scheduleSectionEntity.setIndexWithinTrainRoute(scheduleSectionForms[i]
                                 .getIndexWithinTrainRoute());
                         scheduleSectionEntity.setStopDuration(scheduleSectionForms[i].getStopDuration());
-                        scheduleSectionEntity.setTicketsAvailable(trainFormDto.getNumberOfSeats());
                         if (i == 0) {
                             scheduleSectionEntity.setDeparture(
                                     LocalTime.parse(trainFormDto

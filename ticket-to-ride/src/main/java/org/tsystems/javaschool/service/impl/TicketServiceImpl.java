@@ -3,25 +3,25 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.tsystems.javaschool.controller.RouteCache;
 import org.tsystems.javaschool.mapper.PassengerMapper;
+import org.tsystems.javaschool.mapper.PassengerMapperImpl;
 import org.tsystems.javaschool.mapper.TicketMapper;
 import org.tsystems.javaschool.model.dto.*;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.TicketEntity;
 import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
-import org.tsystems.javaschool.model.entity.TrainEntity;
-import org.tsystems.javaschool.repository.PassengerRepository;
-import org.tsystems.javaschool.repository.ScheduleSectionRepository;
-import org.tsystems.javaschool.repository.TicketRepository;
-import org.tsystems.javaschool.repository.TicketScheduleSectionRepository;
+import org.tsystems.javaschool.model.entity.UserEntity;
+import org.tsystems.javaschool.repository.*;
 import org.tsystems.javaschool.service.TicketService;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+import javax.inject.Provider;
+import java.time.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -38,19 +38,36 @@ public class TicketServiceImpl implements TicketService {
     private final PassengerRepository passengerRepository;
     private final TicketScheduleSectionRepository ticketScheduleSectionRepository;
     private final ScheduleSectionRepository scheduleSectionRepository;
+    private final UserRepository userRepository;
     private final TicketMapper ticketMapper;
     private final PassengerMapper passengerMapper;
+    private final Provider<RouteCache> routeCacheProvider;
 
     @Override
-    public boolean hasPassenger(RouteDto routeDto, PassengerDto passengerDto) {
-        List<TicketScheduleSectionDto> newTicketSections = mapRouteToTicketSections(routeDto);
+    @Transactional
+    public List<TicketDto> getByUserLogin(String login) {
+        List<TicketDto> ticketDtoList = null;
+        try {
+            UserEntity userEntity = userRepository.findByLogin(login);
+            List<TicketEntity> ticketEntityList = ticketRepository.findByUser(userEntity);
+            ticketDtoList = ticketMapper.toDtoList(ticketEntityList);
+        } catch (Exception e) {
+            log.error("Error getting tickets by user", e);
+        }
+        return ticketDtoList;
+    }
+
+    @Override
+    @Transactional
+    public boolean hasPassenger(PassengerFormDto passengerFormDto) {
+        List<TicketScheduleSectionDto> newTicketSections = mapRouteToTicketSections(getRouteDto(passengerFormDto));
         try {
             List<TicketDto> passengerTicketDtoList = getByPassengerNameAndBirthDate(
-                    passengerDto.getFirstName(), passengerDto.getSecondName(), passengerDto.getBirthDate());
+                    passengerFormDto.getFirstName(), passengerFormDto.getSecondName(), passengerFormDto.getBirthDate());
             for (TicketDto passengerTicket : passengerTicketDtoList) {
                 for (TicketScheduleSectionDto existingTicketSection : passengerTicket.getTicketScheduleSectionDtoList()) {
                     for (TicketScheduleSectionDto newTicketSection : newTicketSections) {
-                        if (areSectionsSame(existingTicketSection, newTicketSection)) {
+                        if (areSectionsSame(newTicketSection, existingTicketSection)) {
                             return true;
                         }
                     }
@@ -81,50 +98,39 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public boolean isTimeLeft(RouteDto routeDto) {
-        return Duration.between(LocalDateTime.now(), routeDto.getDepartureTime())
+    public boolean isTimeLeft(PassengerFormDto passengerFormDto) {
+        return Duration.between(ZonedDateTime.now(ZoneId.of("UTC+3")),
+                ZonedDateTime.of(getRouteDto(passengerFormDto).getDepartureTime(), ZoneId.of("UTC")))
                 .compareTo(MIN_ALLOWED_TIME_TO_BUY_TICKET) < 0;
     }
 
     @Override
-    public boolean areTicketsAvailable(RouteDto routeDto) {
-        return routeDto.getTicketsAvailable() >= 1;
+    public boolean areTicketsAvailable(PassengerFormDto passengerFormDto) {
+        return getRouteDto(passengerFormDto).getTicketsAvailable() >= 1;
     }
 
     @Override
-    public TicketDto buyTicket(RouteDto routeDto, PassengerDto passengerDto) {
+    @Transactional
+    public TicketDto buyTicket(PassengerFormDto passengerFormDto) {
         PassengerEntity passengerEntity = passengerRepository
                 .findByNameAndBirthDate(
-                        passengerDto.getFirstName(), passengerDto.getSecondName(), passengerDto.getBirthDate()
+                        passengerFormDto.getFirstName(), passengerFormDto.getSecondName(), passengerFormDto.getBirthDate()
                 );
-        if (passengerEntity == null) {
-            passengerEntity = passengerRepository.add(passengerMapper.toEntity(passengerDto));
+        if (Objects.isNull(passengerEntity)) {
+            passengerEntity = passengerMapper.toEntity(passengerFormDto);
+            passengerEntity.setUserEntity(userRepository.findByLogin(passengerFormDto.getUserLogin()));
+            PassengerEntity newPassengerEntity = passengerRepository.add(passengerEntity);
+            System.out.println(newPassengerEntity.toString());
         }
 
         TicketDto newTicket = TicketDto.builder()
-                .ticketScheduleSectionDtoList(mapRouteToTicketSections(routeDto))
+                .ticketScheduleSectionDtoList(mapRouteToTicketSections(getRouteDto(passengerFormDto)))
                 .passengerDto(passengerMapper.toDto(passengerEntity))
                 .build();
+
         createTicket(newTicket);
 
         return newTicket;
-    }
-
-    private List<TicketScheduleSectionDto> mapRouteToTicketSections(RouteDto routeDto) {
-        return routeDto.getRoutePartDtoList().stream()
-                .map(routePartDto -> routePartDto.getScheduleSectionDtoList().stream()
-                        .map(scheduleSectionDto ->
-                                TicketScheduleSectionDto.builder()
-                                        .ticketId(0)
-                                        .scheduleSectionId(scheduleSectionDto.getId())
-                                        .departureDate(routePartDto.getDepartureTime().toLocalDate())
-                                        .departureTime(scheduleSectionDto.getDeparture())
-                                        .build()
-                        )
-                        .collect(Collectors.toList())
-                )
-                .flatMap(Collection::stream)
-                .collect(Collectors.toList());
     }
 
     private void createTicket(TicketDto newTicket) {
@@ -136,6 +142,8 @@ public class TicketServiceImpl implements TicketService {
                                     .ticketEntity(ticketEntity)
                                     .departureDate(ticketScheduleSectionDto.getDepartureDate())
                                     .departureTime(ticketScheduleSectionDto.getDepartureTime())
+                                    .arrivalDate(ticketScheduleSectionDto.getArrivalDate())
+                                    .arrivalTime(ticketScheduleSectionDto.getArrivalTime())
                                     .scheduleSectionEntity(
                                             scheduleSectionRepository.findById(
                                                     ticketScheduleSectionDto.getScheduleSectionId()
@@ -146,4 +154,28 @@ public class TicketServiceImpl implements TicketService {
             log.error("Error creating ticket", e);
         }
     }
+
+    private RouteDto getRouteDto(PassengerFormDto passengerFormDto) {
+        return routeCacheProvider.get().findById(passengerFormDto.getId());
+    }
+
+    private List<TicketScheduleSectionDto> mapRouteToTicketSections(RouteDto routeDto) {
+        AtomicInteger indexWithinTicket = new AtomicInteger(0);
+        return routeDto.getRoutePartDtoList().stream()
+                .map(routePartDto -> routePartDto.getScheduleSectionDtoList().stream()
+                        .map(scheduleSectionDto ->
+                                TicketScheduleSectionDto.builder()
+                                        .scheduleSectionId(scheduleSectionDto.getId())
+                                        .departureDate(routePartDto.getDepartureTime().toLocalDate())
+                                        .departureTime(scheduleSectionDto.getDeparture())
+                                        .arrivalDate(routePartDto.getArrivalTime().toLocalDate())
+                                        .arrivalTime(scheduleSectionDto.getArrival())
+                                        .indexWithinTicket(indexWithinTicket.getAndIncrement())
+                                        .build())
+                        .collect(Collectors.toList())
+                )
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+    }
+
 }

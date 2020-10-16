@@ -28,10 +28,6 @@ public class ScheduleSectionDto implements Serializable {
     @NotNull(message = "Set stop duration")
     private long stopDuration;
 
-    @Min(value = 0, message = "Amount of tickets left can not be negative")
-    @NotBlank
-    private int ticketsAvailable;
-
     private int indexWithinTrainRoute;
 
     private LocalTime departure;

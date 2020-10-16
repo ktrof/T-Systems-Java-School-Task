@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.service;
 
 import org.tsystems.javaschool.model.dto.RegistrationFormDto;
+import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
 import org.tsystems.javaschool.model.dto.UserDto;
 
 import java.util.List;
@@ -57,6 +58,6 @@ public interface UserService {
      * @param userDto the user dto
      * @return the user dto
      */
-    UserDto editUser(UserDto userDto);
+    UserDto editUser(UpdateUserFormDto userDto);
 
 }

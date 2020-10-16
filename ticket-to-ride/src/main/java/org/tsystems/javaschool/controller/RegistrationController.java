@@ -53,7 +53,7 @@ public class RegistrationController {
         }
 
         userService.registerUser(userDto);
-        return "redirect:/login";
+        return "redirect:/login?success";
     }
 
 }

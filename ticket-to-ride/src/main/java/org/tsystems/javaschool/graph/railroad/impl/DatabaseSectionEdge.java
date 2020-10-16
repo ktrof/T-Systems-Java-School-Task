@@ -40,7 +40,7 @@ public class DatabaseSectionEdge implements SectionEdge {
     @Override
     public int getTicketCountAvailable() {
         int ticketsBought = railroadGraph.countBoughtTickets(scheduleSectionEntity, calendarEntity.getRideDate());
-        return getTrain().getNumberOfSeats() - ticketsBought;
+        return calendarEntity.getTicketsAvailable() - ticketsBought;
     }
 
     @Override

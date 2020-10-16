@@ -19,16 +19,13 @@ import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 import org.tsystems.javaschool.service.RouteService;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.time.*;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
+ * The type Route service.
+ *
  * @author Trofim Kremen
  */
 @Service
@@ -48,21 +45,28 @@ public class RouteServiceImpl implements RouteService {
         LocalDate requestedRideDate = searchRouteFormDto.getRideDate();
 
         Collection<Path<StationVertex, SectionEdge>> discoveredPath = DepthFirstSearch
-                .findAllSimplePaths(departureStation, destinationStation, ((nextEdge, currentPath) -> {
-                    LocalDate requiredDate;
-                    LocalTime requiredArrivalTime = null;
-                    if (currentPath.isEmpty()) {
-                        requiredDate = requestedRideDate;
-                    } else {
-                        requiredDate = currentPath.getLastEdge().getRideDate();
-                        requiredArrivalTime = scheduleSectionRepository
-                                .findById(currentPath.getLastEdge().getId()).getArrival();
-                    }
-                    return isSectionInTimeBoundaries(nextEdge, requiredArrivalTime, requiredDate);
-                }));
+                .findAllSimplePaths(departureStation, destinationStation, ((nextEdge, currentPath) ->
+                        isSearchResultWithinConditions(nextEdge, currentPath, requestedRideDate)));
+
         return SearchResultDto.builder()
                 .discoveredRoutes(mapPathsToRouteGroups(discoveredPath))
                 .build();
+    }
+
+    private boolean isSearchResultWithinConditions(SectionEdge nextEdge,
+                                                   Path<StationVertex, SectionEdge> currentPath,
+                                                   LocalDate requestedRideDate) {
+        LocalDate requiredDate;
+        LocalTime requiredArrivalTime = null;
+        if (currentPath.isEmpty()) {
+            requiredDate = requestedRideDate;
+        } else {
+            requiredDate = currentPath.getLastEdge().getRideDate();
+            requiredArrivalTime = scheduleSectionRepository
+                    .findById(currentPath.getLastEdge().getId()).getArrival();
+        }
+        return isSectionInTimeBoundaries(nextEdge, requiredArrivalTime, requiredDate)
+                && areTicketsAvailable(nextEdge);
     }
 
     private boolean isSectionInTimeBoundaries(SectionEdge nextEdge,
@@ -71,13 +75,21 @@ public class RouteServiceImpl implements RouteService {
             ScheduleSectionEntity nextScheduleSection = scheduleSectionRepository
                     .findById(nextEdge.getId());
             return nextScheduleSection.getDeparture().isAfter(requiredArrivalTime) &&
-                    nextEdge.getRideDate().isEqual(requiredDate);
+                    nextEdge.getRideDate().isEqual(requiredDate) &&
+                    ZonedDateTime.now(ZoneId.of("UTC+3")).plusMinutes(10)
+                            .isBefore(ZonedDateTime
+                                    .of(LocalDateTime.of(requiredDate, requiredArrivalTime), ZoneId.of("UTC")));
         } else return nextEdge.getRideDate().isEqual(requiredDate);
+    }
+
+    private boolean areTicketsAvailable(SectionEdge nextEdge) {
+        return nextEdge.getTicketCountAvailable() > 0;
     }
 
     private List<RouteDto> mapPathsToRouteGroups(Collection<Path<StationVertex, SectionEdge>> discoveredPath) {
         return discoveredPath.stream()
                 .map(this::mapPathToRoute)
+                .sorted(Comparator.comparing(RouteDto::getTotalDuration))
                 .collect(Collectors.toList());
     }
 

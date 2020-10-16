@@ -42,9 +42,6 @@ public class ScheduleSectionEntity {
     @Column(name = "index_within_train_route")
     private int indexWithinTrainRoute;
 
-    @Column(name = "tickets_available")
-    private int ticketsAvailable;
-
     @Column(name = "departure")
     private LocalTime departure;
 

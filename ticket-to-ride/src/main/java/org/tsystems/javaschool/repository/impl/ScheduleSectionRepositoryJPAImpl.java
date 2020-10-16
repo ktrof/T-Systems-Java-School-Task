@@ -77,7 +77,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
     }
 
     @Override
-    public List<ScheduleSectionEntity> findByDepartureStationAndRideDate(StationEntity stationEntity, LocalDate rideDate) {
+    public List<ScheduleSectionEntity> findByStationAndRideDate(StationEntity stationEntity, LocalDate rideDate) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
@@ -88,12 +88,16 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
         Predicate departureStationEquality = criteriaBuilder
                 .equal(sectionEntityJoin.get(SectionEntity_.stationEntityFrom), stationEntity);
+        Predicate destinationStationEquality = criteriaBuilder
+                .equal(sectionEntityJoin.get(SectionEntity_.stationEntityTo), stationEntity);
         Predicate rideDateEquality = criteriaBuilder.
                 equal(calendarEntityJoin.get(CalendarEntity_.rideDate), rideDate);
+        Predicate departureAndRideDate = criteriaBuilder.and(departureStationEquality, rideDateEquality);
+        Predicate destinationAndRideDate = criteriaBuilder.and(destinationStationEquality, rideDateEquality);
 
         criteriaQuery
                 .select(root)
-                .where(criteriaBuilder.and(departureStationEquality, rideDateEquality));
+                .where(criteriaBuilder.or(departureAndRideDate, destinationAndRideDate));
         TypedQuery<ScheduleSectionEntity> selectByDepartureStationIdAndRideDate = entityManager.createQuery(criteriaQuery);
 
         return selectByDepartureStationIdAndRideDate.getResultList();

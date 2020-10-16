@@ -44,11 +44,10 @@ public class RouteDto implements Serializable {
     public double getTotalDistance() {
         DecimalFormat decimalFormat = new DecimalFormat("#.###");
         decimalFormat.setRoundingMode(RoundingMode.CEILING);
-        return routePartDtoList.stream()
+        double totalDistance = routePartDtoList.stream()
                 .map(RoutePartDto::getDistance)
-                .map(decimalFormat::format)
-                .map(Double::valueOf)
                 .reduce(0d, Double::sum);
+        return Double.parseDouble(decimalFormat.format(totalDistance));
     }
 
     private int getTransferCount() {

@@ -42,7 +42,6 @@ public interface ScheduleSectionMapper {
             @Mapping(target = "departure", ignore = true),
             @Mapping(target = "id", ignore = true),
             @Mapping(target = "sectionEntity", ignore = true),
-            @Mapping(target = "ticketsAvailable", ignore = true),
             @Mapping(target = "trainEntity", ignore = true),
             @Mapping(target = "ticketScheduleSectionEntityList", ignore = true)
     })
@@ -57,8 +56,8 @@ public interface ScheduleSectionMapper {
     @Mappings({
 
             @Mapping(target = "sectionEntity", source = "scheduleSectionDto.sectionDto"),
-            @Mapping(target = "ticketScheduleSectionEntityList", ignore = true),
-            @Mapping(target = "trainEntity", ignore = true),
+            @Mapping(target = "trainEntity", source = "scheduleSectionDto.trainDto"),
+            @Mapping(target = "ticketScheduleSectionEntityList", ignore = true)
     })
     ScheduleSectionEntity toEntity(ScheduleSectionDto scheduleSectionDto);
 

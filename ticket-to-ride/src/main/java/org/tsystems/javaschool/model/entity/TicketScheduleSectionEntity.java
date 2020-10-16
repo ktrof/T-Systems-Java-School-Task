@@ -46,6 +46,15 @@ public class TicketScheduleSectionEntity {
     @Column(name = "departure_time")
     private LocalTime departureTime;
 
+    @Column(name = "arrival_date")
+    private LocalDate arrivalDate;
+
+    @Column(name = "arrival_time")
+    private LocalTime arrivalTime;
+
+    @Column(name = "index_within_ticket")
+    private int indexWithinTicket;
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Data

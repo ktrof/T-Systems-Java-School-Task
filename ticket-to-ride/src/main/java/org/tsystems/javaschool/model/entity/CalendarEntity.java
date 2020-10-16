@@ -25,6 +25,9 @@ public class CalendarEntity {
     @Column(name = "ride_date")
     private LocalDate rideDate;
 
+    @Column(name = "tickets_available")
+    private int ticketsAvailable;
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
