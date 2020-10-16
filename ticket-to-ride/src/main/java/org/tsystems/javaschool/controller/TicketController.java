@@ -59,10 +59,10 @@ public class TicketController {
         if (hasPassenger) {
             bindingResult.rejectValue("validationMessage","You have already bought a ticket.");
         }
-        if (ticketService.isTimeLeft(passengerFormDto)) {
+        if (!ticketService.isTimeLeft(passengerFormDto)) {
             bindingResult.rejectValue("validationMessage","No time left");
         }
-        if (ticketService.areTicketsAvailable(passengerFormDto)) {
+        if (!ticketService.areTicketsAvailable(passengerFormDto)) {
             bindingResult.rejectValue("validationMessage", "No tickets left");
         }
         if (bindingResult.hasErrors()) {

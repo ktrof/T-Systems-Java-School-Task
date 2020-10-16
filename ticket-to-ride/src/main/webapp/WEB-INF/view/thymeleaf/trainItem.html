@@ -68,15 +68,18 @@
             <h5>Number of seats</h5>
             <p th:text="${trainItem.getNumberOfSeats()}"></p>
             <hr class="mt-2 mb-5"/>
-            <div class="row">
-                <div class="col-4 form-group">Train route</div>
-            </div>
-            <div class="row item"
-                 th:each="section, status : ${scheduleSectionList}">
-                <div class="col-4 form-group">
+            <div class="container rounded-lg bg-light mt-3">
+                <div class="row">
+                    <div class="col-4 form-group h5">Train route</div>
+                </div>
+                <hr>
+                <div class="row item"
+                     th:each="section, status : ${scheduleSectionList}">
+                    <div class="col-4 form-group">
                     <span class="text-center" th:text="${section.getSectionDto().getStationDtoFrom()}
-                     + ' &rightarrow; ' + ${section.getSectionDto().getStationDtoTo()}"></span>
-                    <span class="row text-left ml-2" th:unless="${status.last}">&downarrow;</span>
+                     + ' &longrightarrow; ' + ${section.getSectionDto().getStationDtoTo()}"></span>
+                        <span class="row text-left ml-2" th:unless="${status.last}">&downarrow;</span>
+                    </div>
                 </div>
             </div>
         </div>

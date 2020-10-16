@@ -12,6 +12,7 @@
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/css/datepicker-extension/jquery-ui-1.10.3.custom.css}"/>
     <title>Index</title>
 </head>
 <body>
@@ -62,7 +63,7 @@
             <option value="0">Select route section</option>
             <option th:each="sectionItem : ${sections}"
                     th:value="${sectionItem.id}"
-                    th:text="${sectionItem.getStationDtoFrom() + ' <--> ' + sectionItem.getStationDtoTo()}"></option>
+                    th:text="${sectionItem.getStationDtoFrom() + ' &longrightarrow; ' + sectionItem.getStationDtoTo()}"></option>
         </select>
         <form th:action="@{/trains/add}" method="post"
               th:object="${train}">
