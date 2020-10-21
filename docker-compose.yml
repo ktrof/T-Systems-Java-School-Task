@@ -22,6 +22,23 @@ services:
     links:
       - db
 
+  stand:
+    build:
+      context: ./train-display
+      dockerfile: Dockerfile
+    container_name: stand
+    ports:
+    - 8081:8080
+    - 9990:9990
+    - 8001:8001
+    restart: on-failure
+    depends_on:
+      - server
+    networks:
+      - main
+    links:
+      - server
+
   db:
     image: postgres:latest
     container_name: postgresql
