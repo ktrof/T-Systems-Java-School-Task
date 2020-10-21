@@ -13,14 +13,27 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@NamedEntityGraph(
-        name = "schedule-section-graph",
-        attributeNodes = @NamedAttributeNode(value = "trainEntity", subgraph = "train-subgraph"),
-        subgraphs = @NamedSubgraph(
-                name = "train-subgraph",
-                attributeNodes = @NamedAttributeNode(value = "calendarEntityList")
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+                name = "schedule-calendar-graph",
+                attributeNodes = @NamedAttributeNode(value = "trainEntity", subgraph = "train-subgraph"),
+                subgraphs = @NamedSubgraph(
+                        name = "train-subgraph",
+                        attributeNodes = @NamedAttributeNode(value = "calendarEntityList")
+                )
+        ),
+        @NamedEntityGraph(
+                name = "schedule-station-graph",
+                attributeNodes = @NamedAttributeNode(value = "sectionEntity", subgraph = "section-subgraph"),
+                subgraphs = @NamedSubgraph(
+                        name = "section-subgraph",
+                        attributeNodes = {
+                                @NamedAttributeNode(value = "stationEntityFrom"),
+                                @NamedAttributeNode(value = "stationEntityTo")
+                        }
+                )
         )
-)
+})
 public class ScheduleSectionEntity {
 
     @Id

@@ -52,7 +52,7 @@ public class StationRepositoryJPAImpl implements StationRepository {
                 .where(criteriaBuilder.equal(root.get(StationEntity_.name), name));
         TypedQuery<StationEntity> selectByName = entityManager.createQuery(criteriaQuery);
 
-        return selectByName.getSingleResult();
+        return selectByName.getResultStream().findFirst().orElse(null);
     }
 
     @Override

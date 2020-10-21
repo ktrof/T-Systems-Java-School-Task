@@ -57,13 +57,13 @@ public class TicketController {
         boolean hasPassenger = ticketService.hasPassenger(passengerFormDto);
         System.out.println(hasPassenger);
         if (hasPassenger) {
-            bindingResult.rejectValue("validationMessage","You have already bought a ticket.");
+            bindingResult.reject("validationMessage", "You have already bought a ticket.");
         }
         if (!ticketService.isTimeLeft(passengerFormDto)) {
-            bindingResult.rejectValue("validationMessage","No time left");
+            bindingResult.reject("validationMessage", "No time left");
         }
         if (!ticketService.areTicketsAvailable(passengerFormDto)) {
-            bindingResult.rejectValue("validationMessage", "No tickets left");
+            bindingResult.reject("validationMessage", "No tickets left");
         }
         if (bindingResult.hasErrors()) {
             System.out.println(bindingResult.getAllErrors().toString());

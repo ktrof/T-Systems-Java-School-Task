@@ -57,7 +57,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
     @Override
     public List<ScheduleSectionEntity> findBySection(SectionEntity sectionEntity) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-section-graph");
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-calendar-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
@@ -73,7 +73,10 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
     @Override
     public ScheduleSectionEntity findById(int id) {
-        return entityManager.find(ScheduleSectionEntity.class, id);
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-station-graph");
+        Map<String, Object> propertyMap = new HashMap<>();
+        propertyMap.put("javax.persistence.fetchgraph", entityGraph);
+        return entityManager.find(ScheduleSectionEntity.class, id, propertyMap);
     }
 
     @Override

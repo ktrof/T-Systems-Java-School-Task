@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class TicketServiceImpl implements TicketService {
 
-    public static final Duration MIN_ALLOWED_TIME_TO_BUY_TICKET = Duration.ofMinutes(10);
+    public static final long MIN_ALLOWED_TIME_TO_BUY_TICKET = 10;
 
     private final TicketRepository ticketRepository;
     private final PassengerRepository passengerRepository;
@@ -99,9 +99,8 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     public boolean isTimeLeft(PassengerFormDto passengerFormDto) {
-        return Duration.between(ZonedDateTime.now(ZoneId.of("UTC+3")),
-                ZonedDateTime.of(getRouteDto(passengerFormDto).getDepartureTime(), ZoneId.of("UTC")))
-                .compareTo(MIN_ALLOWED_TIME_TO_BUY_TICKET) < 0;
+        ZonedDateTime minimumTime = ZonedDateTime.now(ZoneId.of("UTC+3")).plusMinutes(MIN_ALLOWED_TIME_TO_BUY_TICKET);
+        return minimumTime.isBefore(getRouteDto(passengerFormDto).getDepartureTime());
     }
 
     @Override
@@ -167,9 +166,9 @@ public class TicketServiceImpl implements TicketService {
                                 TicketScheduleSectionDto.builder()
                                         .scheduleSectionId(scheduleSectionDto.getId())
                                         .departureDate(routePartDto.getDepartureTime().toLocalDate())
-                                        .departureTime(scheduleSectionDto.getDeparture())
+                                        .departureTime(routePartDto.getDepartureTime().toLocalTime())
                                         .arrivalDate(routePartDto.getArrivalTime().toLocalDate())
-                                        .arrivalTime(scheduleSectionDto.getArrival())
+                                        .arrivalTime(routePartDto.getArrivalTime().toLocalTime())
                                         .indexWithinTicket(indexWithinTicket.getAndIncrement())
                                         .build())
                         .collect(Collectors.toList())

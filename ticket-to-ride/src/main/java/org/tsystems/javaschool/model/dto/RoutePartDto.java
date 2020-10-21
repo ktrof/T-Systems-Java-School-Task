@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,8 +28,8 @@ public class RoutePartDto implements Serializable {
     private List<ScheduleSectionDto> scheduleSectionDtoList;
     private StationDto stationDtoFrom;
     private StationDto stationDtoTo;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
+    private ZonedDateTime departureTime;
+    private ZonedDateTime arrivalTime;
 
     public Duration getDuration() {
         return Duration.between(departureTime, arrivalTime);

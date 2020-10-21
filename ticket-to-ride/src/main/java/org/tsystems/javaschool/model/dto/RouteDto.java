@@ -9,8 +9,7 @@ import java.io.Serializable;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.time.Duration;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -25,8 +24,8 @@ public class RouteDto implements Serializable {
 
     private UUID id;
     private List<RoutePartDto> routePartDtoList;
-    private LocalDateTime departureTime;
-    private LocalDateTime arrivalTime;
+    private ZonedDateTime departureTime;
+    private ZonedDateTime arrivalTime;
     private int ticketsAvailable;
 
     public StationDto getDepartureStation() {

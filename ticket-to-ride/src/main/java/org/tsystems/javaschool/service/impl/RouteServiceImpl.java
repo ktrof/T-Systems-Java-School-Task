@@ -33,6 +33,8 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class RouteServiceImpl implements RouteService {
 
+    public static final long MIN_ALLOWED_TIME_TO_BUY_TICKET = 10;
+
     private final RailroadGraph railroadGraph;
     private final ScheduleSectionRepository scheduleSectionRepository;
     private final ScheduleSectionMapper scheduleSectionMapper;
@@ -57,29 +59,40 @@ public class RouteServiceImpl implements RouteService {
                                                    Path<StationVertex, SectionEdge> currentPath,
                                                    LocalDate requestedRideDate) {
         LocalDate requiredDate;
+        LocalTime requiredDepartureTime;
         LocalTime requiredArrivalTime = null;
+        ZoneId timezone;
         if (currentPath.isEmpty()) {
             requiredDate = requestedRideDate;
+            requiredDepartureTime = scheduleSectionRepository.findById(nextEdge.getId()).getDeparture();
+            timezone = currentPath.getSourceVertex().getTimezone();
         } else {
             requiredDate = currentPath.getLastEdge().getRideDate();
+            requiredDepartureTime = scheduleSectionRepository
+                    .findById(currentPath.getLastEdge().getId()).getDeparture();
             requiredArrivalTime = scheduleSectionRepository
                     .findById(currentPath.getLastEdge().getId()).getArrival();
+            timezone = nextEdge.getSourceVertex().getTimezone();
         }
         return isSectionInTimeBoundaries(nextEdge, requiredArrivalTime, requiredDate)
-                && areTicketsAvailable(nextEdge);
+                && areTicketsAvailable(nextEdge)
+                && isTimeLeftToBuyTicket(requiredDepartureTime, requiredDate, timezone);
     }
 
-    private boolean isSectionInTimeBoundaries(SectionEdge nextEdge,
-                                              LocalTime requiredArrivalTime, LocalDate requiredDate) {
+    private boolean isSectionInTimeBoundaries(SectionEdge nextEdge, LocalTime requiredArrivalTime, LocalDate requiredDate) {
         if (requiredArrivalTime != null) {
             ScheduleSectionEntity nextScheduleSection = scheduleSectionRepository
                     .findById(nextEdge.getId());
-            return nextScheduleSection.getDeparture().isAfter(requiredArrivalTime) &&
-                    nextEdge.getRideDate().isEqual(requiredDate) &&
-                    ZonedDateTime.now(ZoneId.of("UTC+3")).plusMinutes(10)
-                            .isBefore(ZonedDateTime
-                                    .of(LocalDateTime.of(requiredDate, requiredArrivalTime), ZoneId.of("UTC")));
+            return nextScheduleSection.getDeparture().isAfter(requiredArrivalTime)
+                    && nextEdge.getRideDate().isEqual(requiredDate);
         } else return nextEdge.getRideDate().isEqual(requiredDate);
+    }
+
+    private boolean isTimeLeftToBuyTicket(LocalTime requiredDepartureTime,
+                                          LocalDate requiredDate, ZoneId timezone) {
+        ZonedDateTime minTimeLeft = ZonedDateTime.now(ZoneId.of("UTC+3")).plusMinutes(MIN_ALLOWED_TIME_TO_BUY_TICKET);
+        ZonedDateTime departureTime = ZonedDateTime.of(LocalDateTime.of(requiredDate, requiredDepartureTime), timezone);
+        return departureTime.isAfter(minTimeLeft);
     }
 
     private boolean areTicketsAvailable(SectionEdge nextEdge) {
@@ -97,14 +110,16 @@ public class RouteServiceImpl implements RouteService {
         List<SectionEdge> sectionEdgeList = discoveredPath.getEdges();
         SectionEdge firstSection = sectionEdgeList.get(0);
         SectionEdge lastSection = sectionEdgeList.get(sectionEdgeList.size() - 1);
-        LocalTime departureTime = scheduleSectionRepository
-                .findById(sectionEdgeList.get(0).getId()).getDeparture();
-        LocalTime arrivalTime = scheduleSectionRepository
-                .findById(sectionEdgeList.get(sectionEdgeList.size() - 1).getId()).getArrival();
+        ScheduleSectionEntity firstSectionEntity = scheduleSectionRepository.findById(firstSection.getId());
+        ScheduleSectionEntity lastSectionEntity = scheduleSectionRepository.findById(lastSection.getId());
+        LocalTime departureTime = firstSectionEntity.getDeparture();
+        LocalTime arrivalTime = lastSectionEntity.getArrival();
         return RouteDto.builder()
                 .id(UUID.randomUUID())
-                .departureTime(LocalDateTime.of(firstSection.getRideDate(), departureTime))
-                .arrivalTime(LocalDateTime.of(lastSection.getRideDate(), arrivalTime))
+                .departureTime(ZonedDateTime.of(LocalDateTime.of(firstSection.getRideDate(), departureTime),
+                        firstSectionEntity.getSectionEntity().getStationEntityFrom().getTimezone()))
+                .arrivalTime(ZonedDateTime.of(LocalDateTime.of(lastSection.getRideDate(), arrivalTime),
+                        lastSectionEntity.getSectionEntity().getStationEntityTo().getTimezone()))
                 .ticketsAvailable(sectionEdgeList.stream()
                         .mapToInt(SectionEdge::getTicketCountAvailable)
                         .min()
@@ -124,11 +139,15 @@ public class RouteServiceImpl implements RouteService {
     private RoutePartDto mapSectionGroupToRoutePart(List<SectionEdge> sectionGroup) {
         SectionEdge firstSection = sectionGroup.get(0);
         SectionEdge lastSection = sectionGroup.get(sectionGroup.size() - 1);
-        LocalTime departureTime = scheduleSectionRepository.findById(firstSection.getId()).getDeparture();
-        LocalTime arrivalTime = scheduleSectionRepository.findById(lastSection.getId()).getArrival();
+        ScheduleSectionEntity firstSectionEntity = scheduleSectionRepository.findById(firstSection.getId());
+        ScheduleSectionEntity lastSectionEntity = scheduleSectionRepository.findById(lastSection.getId());
+        LocalTime departureTime = firstSectionEntity.getDeparture();
+        LocalTime arrivalTime = lastSectionEntity.getArrival();
         return RoutePartDto.builder()
-                .departureTime(LocalDateTime.of(firstSection.getRideDate(), departureTime))
-                .arrivalTime(LocalDateTime.of(lastSection.getRideDate(), arrivalTime))
+                .departureTime(ZonedDateTime.of(LocalDateTime.of(firstSection.getRideDate(), departureTime),
+                        firstSectionEntity.getSectionEntity().getStationEntityFrom().getTimezone()))
+                .arrivalTime(ZonedDateTime.of(LocalDateTime.of(lastSection.getRideDate(), arrivalTime),
+                        lastSectionEntity.getSectionEntity().getStationEntityTo().getTimezone()))
                 .scheduleSectionDtoList(sectionGroup.stream()
                         .map(SectionEdge::getId)
                         .map(scheduleSectionRepository::findById)
