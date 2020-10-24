@@ -58,10 +58,4 @@ public interface UserRepository {
      */
     UserEntity update(UserEntity userEntity);
 
-    /**
-     * Remove.
-     *
-     * @param userEntity the user entity
-     */
-    void remove(UserEntity userEntity);
 }

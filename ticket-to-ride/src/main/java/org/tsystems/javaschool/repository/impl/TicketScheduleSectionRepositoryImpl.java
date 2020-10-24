@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -57,10 +58,9 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
     }
 
     @Override
-    public List<TicketScheduleSectionEntity> addAll(List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList) {
-        for (TicketScheduleSectionEntity ticketScheduleSectionEntity : ticketScheduleSectionEntityList) {
-            entityManager.persist(ticketScheduleSectionEntity);
-        }
-        return ticketScheduleSectionEntityList;
+    public Iterable<TicketScheduleSectionEntity> add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection) {
+        ticketScheduleSectionEntityCollection.forEach(this::add);
+        return ticketScheduleSectionEntityCollection;
     }
+
 }

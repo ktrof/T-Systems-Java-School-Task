@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.controller.RouteCache;
 import org.tsystems.javaschool.mapper.PassengerMapper;
-import org.tsystems.javaschool.mapper.PassengerMapperImpl;
 import org.tsystems.javaschool.mapper.TicketMapper;
 import org.tsystems.javaschool.model.dto.*;
 import org.tsystems.javaschool.model.entity.PassengerEntity;

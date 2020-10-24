@@ -53,10 +53,39 @@ public interface CalendarRepository {
     Iterable<CalendarEntity> add(Collection<CalendarEntity> calendarEntityCollection);
 
     /**
-     * Remove.
+     * Cancel ride.
      *
      * @param calendarEntity the calendar entity
      */
-    void remove(CalendarEntity calendarEntity);
+    void cancelRide(CalendarEntity calendarEntity);
+
+    /**
+     * Cancel all rides.
+     *
+     * @param calendarEntityCollection the calendar entity collection
+     */
+    void cancelAllRides(Collection<CalendarEntity> calendarEntityCollection);
+
+    /**
+     * Restart ride.
+     *
+     * @param calendarEntity the calendar entity
+     */
+    void restartRide(CalendarEntity calendarEntity);
+
+    /**
+     * Restart all rides.
+     *
+     * @param calendarEntityCollection the calendar entity collection
+     */
+    void restartAllRides(Collection<CalendarEntity> calendarEntityCollection);
+
+    /**
+     * Delay ride.
+     *
+     * @param calendarEntity the calendar entity
+     * @param minutes        the minutes
+     */
+    void delayRide(CalendarEntity calendarEntity, int minutes);
 
 }

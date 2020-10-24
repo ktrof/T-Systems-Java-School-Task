@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.TicketRepository;
 
@@ -32,6 +31,7 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketEntity> criteriaQuery = criteriaBuilder.createQuery(TicketEntity.class);
         Root<TicketEntity> root = criteriaQuery.from(TicketEntity.class);
+
         criteriaQuery
                 .select(root);
         TypedQuery<TicketEntity> selectAll = entityManager.createQuery(criteriaQuery);
@@ -58,7 +58,7 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
     }
 
     @Override
-    public List<TicketEntity> findByPassengerNameAndBirthDate(String firstName, String secondName, LocalDate birthDate) throws SBBException {
+    public List<TicketEntity> findByPassengerNameAndBirthDate(String firstName, String secondName, LocalDate birthDate) {
         TypedQuery<TicketEntity> selectAllByPassengerNameAndMobile = entityManager
                 .createQuery("SELECT t FROM TicketEntity t " +
                         "WHERE t.passengerEntity.firstName = :firstName " +
@@ -82,8 +82,4 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
         return ticketEntity;
     }
 
-    @Override
-    public void remove(TicketEntity ticketEntity) {
-        entityManager.remove(ticketEntity);
-    }
 }

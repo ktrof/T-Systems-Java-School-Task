@@ -20,5 +20,6 @@ public class StationDto implements Serializable {
     private double latitude;
     private double longitude;
     private String timezone;
+    private boolean closed;
 
 }

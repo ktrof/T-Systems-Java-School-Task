@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.controller;
 
 import lombok.RequiredArgsConstructor;
-import one.util.streamex.StreamEx;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,18 +10,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.tsystems.javaschool.model.dto.AddStationFormDto;
 import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.SectionDto;
 import org.tsystems.javaschool.model.dto.StationDto;
-import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.service.ScheduleSectionService;
 import org.tsystems.javaschool.service.StationService;
 
 import javax.validation.Valid;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * @author Trofim Kremen

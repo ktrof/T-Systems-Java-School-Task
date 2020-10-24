@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.RoleEntity_;
 import org.tsystems.javaschool.model.entity.UserEntity;
@@ -34,7 +33,9 @@ public class RoleRepositoryJPAImpl implements RoleRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<RoleEntity> criteriaQuery = criteriaBuilder.createQuery(RoleEntity.class);
         Root<RoleEntity> root = criteriaQuery.from(RoleEntity.class);
+
         Join<RoleEntity, UserEntity> userEntityJoin = root.join(RoleEntity_.userEntitySet);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.equal(userEntityJoin.get(UserEntity_.login), userLogin));
@@ -48,6 +49,7 @@ public class RoleRepositoryJPAImpl implements RoleRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<RoleEntity> criteriaQuery = criteriaBuilder.createQuery(RoleEntity.class);
         Root<RoleEntity> root = criteriaQuery.from(RoleEntity.class);
+
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.equal(root.get(RoleEntity_.name), name));

@@ -44,21 +44,4 @@ public interface SectionRepository {
      */
     Iterable<SectionEntity> add(Collection<SectionEntity> sectionEntityCollection);
 
-    /**
-     * Update stations section entity.
-     *
-     * @param stationFrom   the station from
-     * @param stationTo     the station to
-     * @param sectionEntity the section entity
-     * @return the section entity
-     */
-    SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity);
-
-    /**
-     * Remove.
-     *
-     * @param sectionEntity the section entity
-     */
-    void remove(SectionEntity sectionEntity);
-
 }

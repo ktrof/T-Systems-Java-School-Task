@@ -1,6 +1,5 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
@@ -91,12 +90,5 @@ public interface PassengerRepository {
      * @return the passenger entity
      */
     PassengerEntity updateEmail(String email, PassengerEntity passengerEntity);
-
-    /**
-     * Remove.
-     *
-     * @param passengerEntity the passenger entity
-     */
-    void remove(PassengerEntity passengerEntity);
 
 }

@@ -1,9 +1,9 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -31,11 +31,11 @@ public interface TicketScheduleSectionRepository {
     TicketScheduleSectionEntity add(TicketScheduleSectionEntity ticketScheduleSectionEntity);
 
     /**
-     * Add all list.
+     * Add iterable.
      *
-     * @param ticketScheduleSectionEntityList the ticket schedule section entity list
-     * @return the list
+     * @param ticketScheduleSectionEntityCollection the ticket schedule section entity collection
+     * @return the iterable
      */
-    List<TicketScheduleSectionEntity> addAll(List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList);
+    Iterable<TicketScheduleSectionEntity> add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection);
 
 }

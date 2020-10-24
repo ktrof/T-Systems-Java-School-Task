@@ -15,6 +15,8 @@
     <properties>
         <maven.compiler.version>3.8.1</maven.compiler.version>
         <maven.surefire.version>3.0.0-M5</maven.surefire.version>
+        <maven.war.version>3.3.1</maven.war.version>
+        <maven.wildfly.version>2.0.2.Final</maven.wildfly.version>
         <spring.version>5.2.8.RELEASE</spring.version>
         <spring.security.version>5.4.0</spring.security.version>
         <streamex.version>0.7.3</streamex.version>
@@ -37,6 +39,11 @@
         <jakarta.cdi.version>2.0.2</jakarta.cdi.version>
         <jakarta.ejb.version>3.2.6</jakarta.ejb.version>
         <jakarta.inject.version>1.0.3</jakarta.inject.version>
+        <jakarta.faces.version>2.3.2</jakarta.faces.version>
+        <primefaces.version>8.0</primefaces.version>
+        <resteasy.jaxrs.version>3.13.2.Final</resteasy.jaxrs.version>
+        <resteasy.version>4.5.8.Final</resteasy.version>
+        <activemq.version>5.16.0</activemq.version>
         <liquibase.version>4.0.0</liquibase.version>
         <beanutils.version>1.9.4</beanutils.version>
         <log4j.version>2.13.3</log4j.version>
@@ -67,6 +74,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-webmvc</artifactId>
+                <version>${spring.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-jms</artifactId>
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
@@ -182,6 +194,37 @@
                 <groupId>jakarta.inject</groupId>
                 <artifactId>jakarta.inject-api</artifactId>
                 <version>${jakarta.inject.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.faces</groupId>
+                <artifactId>jakarta.faces-api</artifactId>
+                <version>${jakarta.faces.version}</version>
+                <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.primefaces</groupId>
+                <artifactId>primefaces</artifactId>
+                <version>${primefaces.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-all</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jaxrs</artifactId>
+                <version>${resteasy.jaxrs.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson2-provider</artifactId>
+                <version>${resteasy.version}</version>
             </dependency>
             <dependency>
                 <groupId>commons-beanutils</groupId>
@@ -304,6 +347,16 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${maven.surefire.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-war-plugin</artifactId>
+                    <version>${maven.war.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.wildfly.plugins</groupId>
+                    <artifactId>wildfly-maven-plugin</artifactId>
+                    <version>${maven.wildfly.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

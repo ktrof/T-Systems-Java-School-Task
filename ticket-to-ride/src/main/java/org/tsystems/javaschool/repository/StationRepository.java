@@ -51,10 +51,17 @@ public interface StationRepository {
     StationEntity update(StationEntity stationEntity);
 
     /**
-     * Remove.
+     * Close.
      *
      * @param stationEntity the station entity
      */
-    void remove(StationEntity stationEntity);
+    void close(StationEntity stationEntity);
+
+    /**
+     * Open.
+     *
+     * @param stationEntity the station entity
+     */
+    void open(StationEntity stationEntity);
 
 }

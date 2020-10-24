@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.tsystems.javaschool.model.dto.TicketDto;
 import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
 import org.tsystems.javaschool.model.dto.UserDto;
-import org.tsystems.javaschool.repository.UserRepository;
 import org.tsystems.javaschool.service.TicketService;
 import org.tsystems.javaschool.service.UserService;
 

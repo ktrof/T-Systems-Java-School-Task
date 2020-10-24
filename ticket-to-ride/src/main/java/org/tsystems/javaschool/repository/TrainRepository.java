@@ -42,11 +42,4 @@ public interface TrainRepository {
      */
     TrainEntity update(TrainEntity trainEntity);
 
-    /**
-     * Remove.
-     *
-     * @param trainEntity the train entity
-     */
-    void remove(TrainEntity trainEntity);
-
 }

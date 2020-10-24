@@ -4,16 +4,13 @@ import org.springframework.stereotype.Repository;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 import org.tsystems.javaschool.repository.TrainRepository;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type Train repository jpa.
@@ -29,12 +26,14 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     @Override
     public List<TrainEntity> findAll() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrainEntity> selectAllTrains = criteriaBuilder.createQuery(TrainEntity.class);
-        Root<TrainEntity> trainEntityRoot = selectAllTrains.from(TrainEntity.class);
-        selectAllTrains.select(trainEntityRoot);
-        TypedQuery<TrainEntity> selectAllQuery = entityManager.createQuery(selectAllTrains);
+        CriteriaQuery<TrainEntity> criteriaQuery = criteriaBuilder.createQuery(TrainEntity.class);
+        Root<TrainEntity> trainEntityRoot = criteriaQuery.from(TrainEntity.class);
 
-        return selectAllQuery.getResultList();
+        criteriaQuery
+                .select(trainEntityRoot);
+        TypedQuery<TrainEntity> selectAll = entityManager.createQuery(criteriaQuery);
+
+        return selectAll.getResultList();
     }
 
     @Override
@@ -51,11 +50,6 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     @Override
     public TrainEntity update(TrainEntity trainEntity) {
         return entityManager.merge(trainEntity);
-    }
-
-    @Override
-    public void remove(TrainEntity trainEntity) {
-        entityManager.remove(trainEntity);
     }
 
 }

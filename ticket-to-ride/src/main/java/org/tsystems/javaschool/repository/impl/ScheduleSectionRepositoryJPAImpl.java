@@ -114,9 +114,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
     @Override
     public Iterable<ScheduleSectionEntity> add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection) {
-        for (ScheduleSectionEntity scheduleSectionEntity : scheduleSectionEntityCollection) {
-            entityManager.persist(scheduleSectionEntity);
-        }
+        scheduleSectionEntityCollection.forEach(this::add);
         return scheduleSectionEntityCollection;
     }
 }

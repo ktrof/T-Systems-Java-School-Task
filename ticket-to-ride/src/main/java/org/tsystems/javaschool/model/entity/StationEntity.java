@@ -34,6 +34,9 @@ public class StationEntity {
     @Convert(converter = ZoneIdConverter.class)
     private ZoneId timezone;
 
+    @Column(name = "closed")
+    private boolean closed;
+
     @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<SectionEntity> sectionEntityListFrom;
 

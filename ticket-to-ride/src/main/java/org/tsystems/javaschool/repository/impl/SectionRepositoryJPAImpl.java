@@ -2,7 +2,6 @@ package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
 import org.tsystems.javaschool.model.entity.SectionEntity;
-import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.repository.SectionRepository;
 
 import javax.persistence.EntityManager;
@@ -31,6 +30,7 @@ public class SectionRepositoryJPAImpl implements SectionRepository {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<SectionEntity> criteriaQuery = criteriaBuilder.createQuery(SectionEntity.class);
         Root<SectionEntity> root = criteriaQuery.from(SectionEntity.class);
+
         criteriaQuery
                 .select(root);
         TypedQuery<SectionEntity> selectAll = entityManager.createQuery(criteriaQuery);
@@ -51,22 +51,8 @@ public class SectionRepositoryJPAImpl implements SectionRepository {
 
     @Override
     public Iterable<SectionEntity> add(Collection<SectionEntity> sectionEntityCollection) {
-        for (SectionEntity sectionEntity : sectionEntityCollection) {
-            entityManager.persist(sectionEntity);
-        }
+        sectionEntityCollection.forEach(this::add);
         return sectionEntityCollection;
-    }
-
-    @Override
-    public SectionEntity updateStations(StationEntity stationFrom, StationEntity stationTo, SectionEntity sectionEntity) {
-        sectionEntity.setStationEntityFrom(stationFrom);
-        sectionEntity.setStationEntityTo(stationTo);
-        return entityManager.merge(sectionEntity);
-    }
-
-    @Override
-    public void remove(SectionEntity sectionEntity) {
-        entityManager.remove(sectionEntity);
     }
 
 }

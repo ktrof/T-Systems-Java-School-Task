@@ -28,6 +28,12 @@ public class CalendarEntity {
     @Column(name = "tickets_available")
     private int ticketsAvailable;
 
+    @Column(name = "cancelled")
+    private boolean cancelled;
+
+    @Column(name = "minutes_delayed")
+    private int minutesDelayed;
+
     @NoArgsConstructor
     @AllArgsConstructor
     @Data
