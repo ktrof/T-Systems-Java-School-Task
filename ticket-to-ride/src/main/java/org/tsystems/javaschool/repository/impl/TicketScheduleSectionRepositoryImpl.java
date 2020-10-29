@@ -4,6 +4,7 @@ import org.springframework.stereotype.Repository;
 import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.TicketScheduleSectionRepository;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -25,6 +26,7 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
 
     @Override
     public List<TicketScheduleSectionEntity> findByScheduleSectionIdAndDepartureDate(int id, LocalDate departureDate) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("ticket-schedule-section-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketScheduleSectionEntity> criteriaQuery = criteriaBuilder
                 .createQuery(TicketScheduleSectionEntity.class);
@@ -47,6 +49,7 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
                 .where(criteriaBuilder.and(scheduleSectionIdEquality, departureDateEquality));
         TypedQuery<TicketScheduleSectionEntity> selectByScheduleSectionIdAndDepartureDate = entityManager
                 .createQuery(criteriaQuery);
+        selectByScheduleSectionIdAndDepartureDate.setHint("javax.persistence.loadgraph", entityGraph);
 
         return selectByScheduleSectionIdAndDepartureDate.getResultList();
     }

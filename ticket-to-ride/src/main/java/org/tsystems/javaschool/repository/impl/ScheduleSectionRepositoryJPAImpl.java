@@ -81,6 +81,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
     @Override
     public List<ScheduleSectionEntity> findByStationAndRideDate(StationEntity stationEntity, LocalDate rideDate) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-station-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
@@ -102,6 +103,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
                 .select(root)
                 .where(criteriaBuilder.or(departureAndRideDate, destinationAndRideDate));
         TypedQuery<ScheduleSectionEntity> selectByDepartureStationIdAndRideDate = entityManager.createQuery(criteriaQuery);
+        selectByDepartureStationIdAndRideDate.setHint("javax.persistence.loadgraph", entityGraph);
 
         return selectByDepartureStationIdAndRideDate.getResultList();
     }

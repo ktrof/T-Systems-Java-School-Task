@@ -3,6 +3,7 @@ package org.tsystems.javaschool.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import org.tsystems.javaschool.mapper.ZoneIdConverter;
 
 import javax.persistence.*;
@@ -37,7 +38,8 @@ public class StationEntity {
     @Column(name = "closed")
     private boolean closed;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    List<SectionEntity> sectionEntityListFrom;
+    private List<SectionEntity> sectionEntityListFrom;
 
 }

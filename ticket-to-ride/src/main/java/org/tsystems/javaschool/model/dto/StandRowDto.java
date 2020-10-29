@@ -17,6 +17,7 @@ import java.time.ZonedDateTime;
 public class StandRowDto {
 
     private String trainNumber;
+    private String trainStatus;
     private ZonedDateTime departureTime;
     private ZonedDateTime arrivalTime;
 

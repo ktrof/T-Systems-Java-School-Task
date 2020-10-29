@@ -40,6 +40,6 @@ public class PassengerEntity {
     private String email;
 
     @OneToMany(mappedBy = "passengerEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    List<TicketEntity> ticketEntityList;
+    private List<TicketEntity> ticketEntityList;
 
 }

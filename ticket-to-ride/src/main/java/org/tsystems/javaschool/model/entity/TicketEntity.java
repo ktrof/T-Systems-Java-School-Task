@@ -4,6 +4,7 @@ package org.tsystems.javaschool.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,6 +32,7 @@ public class TicketEntity {
     @Column(name = "total_price")
     private int totalPrice;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "ticketEntity", fetch = FetchType.LAZY)
     private List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList;
 

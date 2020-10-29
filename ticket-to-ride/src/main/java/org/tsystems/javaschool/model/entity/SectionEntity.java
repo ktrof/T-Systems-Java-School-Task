@@ -3,6 +3,7 @@ package org.tsystems.javaschool.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,7 +31,8 @@ public class SectionEntity {
     @Column(name = "length")
     private double length;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "sectionEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<ScheduleSectionEntity> scheduleSectionEntityList;
+    private List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

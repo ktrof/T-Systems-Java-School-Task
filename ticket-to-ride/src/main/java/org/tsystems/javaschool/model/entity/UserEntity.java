@@ -54,8 +54,9 @@ public class UserEntity {
     @Column(name = "mobile_number")
     private String mobileNumber;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "userEntity", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    List<PassengerEntity> passengerEntityList;
+    private List<PassengerEntity> passengerEntityList;
 
 }

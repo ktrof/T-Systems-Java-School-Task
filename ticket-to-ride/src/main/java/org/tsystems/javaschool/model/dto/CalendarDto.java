@@ -20,6 +20,5 @@ public class CalendarDto implements Serializable {
     private LocalDate rideDate;
     private int ticketsAvailable;
     private boolean cancelled;
-    private int minutesDelayed;
 
 }

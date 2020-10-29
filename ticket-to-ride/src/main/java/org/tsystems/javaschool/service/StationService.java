@@ -53,10 +53,17 @@ public interface StationService {
     StationDto edit(StationDto stationDto);
 
     /**
-     * Delete station.
+     * Close.
      *
      * @param stationDto the station dto
      */
-    void delete(StationDto stationDto);
+    void close(StationDto stationDto);
+
+    /**
+     * Open.
+     *
+     * @param stationDto the station dto
+     */
+    void open(StationDto stationDto);
 
 }

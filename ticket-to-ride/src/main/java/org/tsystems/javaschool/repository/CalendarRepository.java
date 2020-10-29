@@ -3,6 +3,7 @@ package org.tsystems.javaschool.repository;
 import org.tsystems.javaschool.model.entity.CalendarEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 
@@ -27,6 +28,15 @@ public interface CalendarRepository {
      * @return the list
      */
     List<CalendarEntity> findAllByTrain(TrainEntity trainEntity);
+
+    /**
+     * Find by train at date calendar entity.
+     *
+     * @param trainEntity the train entity
+     * @param rideDate    the ride date
+     * @return the calendar entity
+     */
+    CalendarEntity findByTrainAndDate(TrainEntity trainEntity, LocalDate rideDate);
 
     /**
      * Find by id calendar entity.
@@ -79,13 +89,5 @@ public interface CalendarRepository {
      * @param calendarEntityCollection the calendar entity collection
      */
     void restartAllRides(Collection<CalendarEntity> calendarEntityCollection);
-
-    /**
-     * Delay ride.
-     *
-     * @param calendarEntity the calendar entity
-     * @param minutes        the minutes
-     */
-    void delayRide(CalendarEntity calendarEntity, int minutes);
 
 }

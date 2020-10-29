@@ -3,6 +3,7 @@ package org.tsystems.javaschool.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,10 +31,16 @@ public class TrainEntity {
     @Column(name = "type")
     private String type;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<CalendarEntity> calendarEntityList;
+    private List<CalendarEntity> calendarEntityList;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<ScheduleSectionEntity> scheduleSectionEntityList;
+    private List<TrainScheduleEntity> trainScheduleEntityList;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

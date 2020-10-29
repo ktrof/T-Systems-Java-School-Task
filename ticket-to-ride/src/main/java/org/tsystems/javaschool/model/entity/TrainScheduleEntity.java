@@ -7,14 +7,18 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalTime;
 
+/**
+ * @author Trofim Kremen
+ */
 @Entity
-@Table(name = "calendar")
+@Table(name = "train_schedule")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@IdClass(CalendarEntity.ID.class)
-public class CalendarEntity {
+@IdClass(TrainScheduleEntity.ID.class)
+public class TrainScheduleEntity {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -22,14 +26,23 @@ public class CalendarEntity {
     private TrainEntity trainEntity;
 
     @Id
-    @Column(name = "ride_date")
-    private LocalDate rideDate;
+    @Column(name = "departure_date")
+    private LocalDate departureDate;
 
-    @Column(name = "tickets_available")
-    private int ticketsAvailable;
+    @Column(name = "departure_time")
+    private LocalTime departureTime;
 
-    @Column(name = "cancelled")
-    private boolean cancelled;
+    @Column(name = "arrival_date")
+    private LocalDate arrivalDate;
+
+    @Column(name = "arrival_time")
+    private LocalTime arrivalTime;
+
+    @Column(name = "minutes_delayed")
+    private int minutesDelayed;
+
+    @Column(name = "index_within_train_route")
+    private int indexWithinTrainRoute;
 
     @NoArgsConstructor
     @AllArgsConstructor
@@ -38,4 +51,5 @@ public class CalendarEntity {
         TrainEntity trainEntity;
         LocalDate rideDate;
     }
+
 }

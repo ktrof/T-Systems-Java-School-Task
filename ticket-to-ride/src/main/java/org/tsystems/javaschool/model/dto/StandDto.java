@@ -19,6 +19,7 @@ import java.util.List;
 public class StandDto implements Serializable {
 
     private String stationName;
+    private String stationStatus;
     private LocalDate rideDate;
     private List<StandRowDto> standRowDtoList;
 
