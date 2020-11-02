@@ -3,22 +3,20 @@ package org.tsystems.javaschool.model.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
-import java.time.LocalTime;
+import java.util.List;
 
-/**
- * @author Trofim Kremen
- */
 @Entity
-@Table(name = "train_schedule")
+@Table(name = "ride")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-@IdClass(TrainScheduleEntity.ID.class)
-public class TrainScheduleEntity {
+@IdClass(RideEntity.ID.class)
+public class RideEntity {
 
     @Id
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -26,23 +24,14 @@ public class TrainScheduleEntity {
     private TrainEntity trainEntity;
 
     @Id
-    @Column(name = "departure_date")
-    private LocalDate departureDate;
+    @Column(name = "ride_date")
+    private LocalDate rideDate;
 
-    @Column(name = "departure_time")
-    private LocalTime departureTime;
+    @Column(name = "tickets_available")
+    private int ticketsAvailable;
 
-    @Column(name = "arrival_date")
-    private LocalDate arrivalDate;
-
-    @Column(name = "arrival_time")
-    private LocalTime arrivalTime;
-
-    @Column(name = "minutes_delayed")
-    private int minutesDelayed;
-
-    @Column(name = "index_within_train_route")
-    private int indexWithinTrainRoute;
+    @Column(name = "cancelled")
+    private boolean cancelled;
 
     @NoArgsConstructor
     @AllArgsConstructor

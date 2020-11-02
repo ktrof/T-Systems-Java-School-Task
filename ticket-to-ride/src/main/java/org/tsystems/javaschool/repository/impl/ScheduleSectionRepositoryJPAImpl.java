@@ -45,14 +45,29 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
 
-        Predicate trainEqualsTrainEntity = criteriaBuilder.equal(root.get(ScheduleSectionEntity_.trainEntity), trainEntity);
-
         criteriaQuery
                 .select(root)
-                .where(trainEqualsTrainEntity);
+                .where(criteriaBuilder.equal(root.get(ScheduleSectionEntity_.trainEntity), trainEntity));
         TypedQuery<ScheduleSectionEntity> selectByTrain = entityManager.createQuery(criteriaQuery);
 
         return selectByTrain.getResultList();
+    }
+
+    @Override
+    public ScheduleSectionEntity findByTrainAndSectionIndex(TrainEntity trainEntity, int sectionIndex) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
+        Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
+
+        Predicate trainEquality = criteriaBuilder.equal(root.get(ScheduleSectionEntity_.trainEntity), trainEntity);
+        Predicate indexEquality = criteriaBuilder.equal(root.get(ScheduleSectionEntity_.indexWithinTrainRoute), sectionIndex);
+
+        criteriaQuery
+                .select(root)
+                .where(criteriaBuilder.and(trainEquality, indexEquality));
+        TypedQuery<ScheduleSectionEntity> selectByTrainAndSectionIndex = entityManager.createQuery(criteriaQuery);
+
+        return selectByTrainAndSectionIndex.getResultStream().findFirst().orElse(null);
     }
 
     @Override
@@ -88,14 +103,14 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
         Join<ScheduleSectionEntity, SectionEntity> sectionEntityJoin = root.join(ScheduleSectionEntity_.sectionEntity);
         Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = root.join(ScheduleSectionEntity_.trainEntity);
-        Join<TrainEntity, CalendarEntity> calendarEntityJoin = trainEntityJoin.join(TrainEntity_.calendarEntityList);
+        Join<TrainEntity, RideEntity> calendarEntityJoin = trainEntityJoin.join(TrainEntity_.rideEntityList);
 
         Predicate departureStationEquality = criteriaBuilder
                 .equal(sectionEntityJoin.get(SectionEntity_.stationEntityFrom), stationEntity);
         Predicate destinationStationEquality = criteriaBuilder
                 .equal(sectionEntityJoin.get(SectionEntity_.stationEntityTo), stationEntity);
         Predicate rideDateEquality = criteriaBuilder.
-                equal(calendarEntityJoin.get(CalendarEntity_.rideDate), rideDate);
+                equal(calendarEntityJoin.get(RideEntity_.rideDate), rideDate);
         Predicate departureAndRideDate = criteriaBuilder.and(departureStationEquality, rideDateEquality);
         Predicate destinationAndRideDate = criteriaBuilder.and(destinationStationEquality, rideDateEquality);
 

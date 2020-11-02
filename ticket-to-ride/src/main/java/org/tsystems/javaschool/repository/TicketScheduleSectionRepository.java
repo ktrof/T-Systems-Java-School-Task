@@ -17,10 +17,10 @@ public interface TicketScheduleSectionRepository {
      * Find by schedule section and departure date ticket schedule section entity.
      *
      * @param id            the id
-     * @param departureDate the departure date
+     * @param rideDate the departure date
      * @return the ticket schedule section entity
      */
-    List<TicketScheduleSectionEntity> findByScheduleSectionIdAndDepartureDate(int id, LocalDate departureDate);
+    List<TicketScheduleSectionEntity> findByScheduleSectionIdAndRideDate(int id, LocalDate rideDate);
 
     /**
      * Add ticket schedule section entity.

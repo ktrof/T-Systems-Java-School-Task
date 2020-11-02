@@ -32,15 +32,16 @@ public interface TrainMapper {
      * @return the train entity
      */
     @Mappings({
-            @Mapping(target = "calendarEntityList", ignore = true),
-            @Mapping(target = "scheduleSectionEntityList", ignore = true)
+            @Mapping(target = "rideEntityList", ignore = true),
+            @Mapping(target = "scheduleSectionEntityList", ignore = true),
+            @Mapping(target = "rideScheduleEntityList", ignore = true)
     })
     TrainEntity toEntity(TrainDto trainDto);
 
     @Mappings({
-
-            @Mapping(target = "calendarEntityList", ignore = true),
-            @Mapping(target = "scheduleSectionEntityList", ignore = true)
+            @Mapping(target = "rideEntityList", ignore = true),
+            @Mapping(target = "scheduleSectionEntityList", ignore = true),
+            @Mapping(target = "rideScheduleEntityList", ignore = true)
     })
     TrainEntity toEntity(AddTrainFormDto trainFormDto);
 

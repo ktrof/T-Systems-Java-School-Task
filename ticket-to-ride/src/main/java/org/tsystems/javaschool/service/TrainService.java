@@ -1,8 +1,10 @@
 package org.tsystems.javaschool.service;
 
 import org.tsystems.javaschool.model.dto.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.RideScheduleDto;
 import org.tsystems.javaschool.model.dto.TrainDto;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -41,4 +43,42 @@ public interface TrainService {
      */
     TrainDto edit(TrainDto trainDto);
 
+    /**
+     * Cancel train.
+     *
+     * @param trainDto the train dto
+     */
+    void cancelTrain(TrainDto trainDto);
+
+    /**
+     * Cancel ride.
+     *
+     * @param trainDto the train dto
+     * @param rideDate the ride date
+     */
+    void cancelRide(TrainDto trainDto, LocalDate rideDate);
+
+    /**
+     * Restart train.
+     *
+     * @param trainDto the train dto
+     */
+    void restartTrain(TrainDto trainDto);
+
+    /**
+     * Restart ride.
+     *
+     * @param trainDto the train dto
+     * @param rideDate the ride date
+     */
+    void restartRide(TrainDto trainDto, LocalDate rideDate);
+
+    /**
+     * Delay train.
+     *
+     * @param trainId         the train id
+     * @param rideScheduleDto the train schedule dto
+     * @param minutesDelayed  the minutes delayed
+     */
+    void delayTrain(String trainId, RideScheduleDto rideScheduleDto, int minutesDelayed);
 }

@@ -102,6 +102,11 @@ public class RouteServiceImpl implements RouteService {
     private List<RouteDto> mapPathsToRouteGroups(Collection<Path<StationVertex, SectionEdge>> discoveredPath) {
         return discoveredPath.stream()
                 .map(this::mapPathToRoute)
+                .filter(routeDto -> routeDto.getRoutePartDtoList().stream()
+                        .noneMatch(routePartDto ->
+                                routePartDto.getStationDtoFrom().isClosed() ||
+                                routePartDto.getStationDtoTo().isClosed())
+                )
                 .sorted(Comparator.comparing(RouteDto::getTotalDuration))
                 .collect(Collectors.toList());
     }

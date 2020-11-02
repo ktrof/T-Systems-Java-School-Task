@@ -32,6 +32,15 @@ public interface ScheduleSectionRepository {
     List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity);
 
     /**
+     * Find by train and section index.
+     *
+     * @param trainEntity  the train entity
+     * @param sectionIndex the section index
+     * @return the list
+     */
+    ScheduleSectionEntity findByTrainAndSectionIndex(TrainEntity trainEntity, int sectionIndex);
+
+    /**
      * Find by section list.
      *
      * @param sectionEntity the section entity

@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.repository;
 
 import org.tsystems.javaschool.model.entity.StationEntity;
+import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.util.List;
 
@@ -17,6 +18,14 @@ public interface StationRepository {
      * @return the list
      */
     List<StationEntity> findAll();
+
+    /**
+     * Find all by train list.
+     *
+     * @param trainEntity the train entity
+     * @return the list
+     */
+    List<StationEntity> findAllByTrain(TrainEntity trainEntity);
 
     /**
      * Find by id station entity.

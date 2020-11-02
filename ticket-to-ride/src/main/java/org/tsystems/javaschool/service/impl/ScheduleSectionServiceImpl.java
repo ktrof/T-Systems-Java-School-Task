@@ -41,10 +41,10 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
                     .findByStationAndRideDate(stationMapper.toEntity(departureStation), rideDate)
                     .stream()
-                    .filter(section ->
-                                    Objects.equals(section.getSectionEntity().getStationEntityFrom().getId(),
-                                            departureStation.getId())
-                            )
+                    .filter(section -> Objects.equals(
+                            section.getSectionEntity().getStationEntityFrom().getId(),
+                            departureStation.getId())
+                    )
                     .collect(Collectors.toList());
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
         } catch (Exception e) {
@@ -61,9 +61,9 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
                     .findByStationAndRideDate(stationMapper.toEntity(destinationStation), rideDate)
                     .stream()
-                    .filter(section ->
-                            Objects.equals(section.getSectionEntity().getStationEntityTo().getId(),
-                                    destinationStation.getId())
+                    .filter(section -> Objects.equals(
+                            section.getSectionEntity().getStationEntityTo().getId(),
+                            destinationStation.getId())
                     )
                     .collect(Collectors.toList());
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);

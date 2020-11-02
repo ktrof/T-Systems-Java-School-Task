@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tsystems.javaschool.mapper.ZoneIdConverter;
 
 import javax.persistence.*;
@@ -40,6 +42,12 @@ public class StationEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
     private List<SectionEntity> sectionEntityListFrom;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "stationEntityTo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<SectionEntity> sectionEntityListTo;
 
 }

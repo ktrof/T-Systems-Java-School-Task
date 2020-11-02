@@ -21,8 +21,8 @@ import java.util.List;
                 subgraphs = @NamedSubgraph(
                         name = "train-subgraph",
                         attributeNodes = {
-                                @NamedAttributeNode(value = "calendarEntityList"),
-                                @NamedAttributeNode(value = "trainScheduleEntityList")
+                                @NamedAttributeNode(value = "rideEntityList"),
+                                @NamedAttributeNode(value = "rideScheduleEntityList")
                         }
                 )
         ),

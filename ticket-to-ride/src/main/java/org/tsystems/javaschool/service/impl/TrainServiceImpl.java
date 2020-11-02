@@ -5,28 +5,20 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.TrainMapper;
-import org.tsystems.javaschool.model.dto.AddTrainFormDto;
-import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.ScheduleSectionFormDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
-import org.tsystems.javaschool.model.entity.CalendarEntity;
-import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
-import org.tsystems.javaschool.model.entity.SectionEntity;
-import org.tsystems.javaschool.model.entity.TrainEntity;
-import org.tsystems.javaschool.repository.CalendarRepository;
-import org.tsystems.javaschool.repository.ScheduleSectionRepository;
-import org.tsystems.javaschool.repository.SectionRepository;
-import org.tsystems.javaschool.repository.TrainRepository;
+import org.tsystems.javaschool.mapper.RideScheduleMapper;
+import org.tsystems.javaschool.model.dto.*;
+import org.tsystems.javaschool.model.entity.*;
+import org.tsystems.javaschool.repository.*;
 import org.tsystems.javaschool.service.TrainService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Stack;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -40,10 +32,14 @@ import java.util.stream.Collectors;
 public class TrainServiceImpl implements TrainService {
 
     private final TrainRepository trainRepository;
-    private final CalendarRepository calendarRepository;
+    private final RideRepository rideRepository;
     private final ScheduleSectionRepository scheduleSectionRepository;
+    private final RideScheduleRepository rideScheduleRepository;
     private final SectionRepository sectionRepository;
+    private final StationRepository stationRepository;
     private final TrainMapper trainMapper;
+    private final RideScheduleMapper rideScheduleMapper;
+    private final MessageSender messageSender;
 
     @Override
     @Transactional
@@ -81,16 +77,16 @@ public class TrainServiceImpl implements TrainService {
                     .collect(Collectors.toList());
 
             try {
-                List<CalendarEntity> calendarEntityList = new ArrayList<>();
+                List<RideEntity> rideEntityList = new ArrayList<>();
                 for (LocalDate rideDate : rideDates) {
-                    CalendarEntity calendarEntity = new CalendarEntity();
-                    calendarEntity.setTrainEntity(trainEntity);
-                    calendarEntity.setRideDate(rideDate);
-                    calendarEntity.setTicketsAvailable(trainEntity.getNumberOfSeats());
+                    RideEntity rideEntity = new RideEntity();
+                    rideEntity.setTrainEntity(trainEntity);
+                    rideEntity.setRideDate(rideDate);
+                    rideEntity.setTicketsAvailable(trainEntity.getNumberOfSeats());
 
-                    calendarEntityList.add(calendarEntity);
+                    rideEntityList.add(rideEntity);
                 }
-                calendarRepository.add(calendarEntityList);
+                rideRepository.add(rideEntityList);
             } catch (Exception e) {
                 log.error("Error creating ride dates", e);
             }
@@ -149,5 +145,131 @@ public class TrainServiceImpl implements TrainService {
             log.error("Error modifying the train", e);
         }
         return trainDto;
+    }
+
+    @Override
+    public void cancelTrain(TrainDto trainDto) {
+        try {
+            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            rideRepository.cancelAllRides(rideRepository.findAllByTrain(trainEntity));
+            sendMessage(trainEntity);
+        } catch (Exception e) {
+            log.error("Error canceling the train", e);
+        }
+    }
+
+    @Override
+    public void cancelRide(TrainDto trainDto, LocalDate rideDate) {
+        try {
+            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            rideRepository.cancelRide(rideRepository.findByTrainAndDate(trainEntity, rideDate));
+            sendMessage(trainEntity);
+        } catch (Exception e) {
+            log.error("Error cancelling the ride", e);
+        }
+    }
+
+    @Override
+    public void restartTrain(TrainDto trainDto) {
+        try {
+            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            rideRepository.restartAllRides(rideRepository.findAllByTrain(trainEntity));
+            sendMessage(trainEntity);
+        } catch (Exception e) {
+            log.error("Error restarting the train", e);
+        }
+    }
+
+    @Override
+    public void restartRide(TrainDto trainDto, LocalDate rideDate) {
+        try {
+            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            rideRepository.restartRide(rideRepository.findByTrainAndDate(trainEntity, rideDate));
+            sendMessage(trainEntity);
+        } catch (Exception e) {
+            log.error("Error restarting the ride", e);
+        }
+    }
+
+    @Override
+    public void delayTrain(String trainId, RideScheduleDto rideScheduleDto, int minutesDelayed) {
+        try {
+            TrainEntity trainEntity = trainRepository.findById(trainId);
+            RideScheduleEntity rideScheduleEntity = rideScheduleMapper.toEntity(rideScheduleDto);
+            ScheduleSectionEntity scheduleSectionEntity = scheduleSectionRepository.findByTrainAndSectionIndex(trainEntity,
+                    rideScheduleEntity.getIndexWithinTrainRoute());
+
+            //delay first section
+            rideScheduleRepository.delayArrival(rideScheduleEntity,
+                    ZonedDateTime.of(
+                            rideScheduleEntity.getArrivalDatePlan(),
+                            scheduleSectionEntity.getArrival(),
+                            rideScheduleEntity.getArrival().getZone()).plusMinutes(minutesDelayed),
+                    minutesDelayed);
+            //delay rest sections
+            rideScheduleRepository.findByTrainAndRideDate(trainEntity, LocalDate.now()).stream()
+                    .skip(rideScheduleEntity.getIndexWithinTrainRoute())
+                    .forEach(rideSchedule -> {
+                        ScheduleSectionEntity scheduleSectionEntity1 = scheduleSectionRepository
+                                .findByTrainAndSectionIndex(trainEntity, rideSchedule.getIndexWithinTrainRoute());
+                        rideScheduleRepository.delayDeparture(rideSchedule,
+                                ZonedDateTime.of(
+                                        rideSchedule.getDepartureDatePlan(),
+                                        scheduleSectionEntity1.getDeparture(),
+                                        rideSchedule.getDeparture().getZone()).plusMinutes(minutesDelayed),
+                                minutesDelayed);
+                        rideScheduleRepository.delayArrival(rideSchedule,
+                                ZonedDateTime.of(
+                                        rideSchedule.getArrivalDatePlan(),
+                                        scheduleSectionEntity1.getArrival(),
+                                        rideSchedule.getArrival().getZone()).plusMinutes(minutesDelayed),
+                                minutesDelayed);
+                    });
+            sendMessage(trainEntity);
+        } catch (Exception e) {
+            log.error("Error delaying the train", e);
+        }
+    }
+
+    private void sendMessage(TrainEntity trainEntity) {
+        List<StationEntity> stationEntityList = stationRepository.findAllByTrain(trainEntity);
+        stationEntityList.forEach(stationEntity ->  messageSender.sendMessage(StandDto.builder()
+                .stationName(stationEntity.getName())
+                .stationStatus((stationEntity.isClosed()) ? "Station is closed!" : "Station is opened!")
+                .rideDate(LocalDate.now())
+                .standRowDtoList(scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
+                        .stream()
+                        .filter(scheduleSectionEntity -> Objects.equals(
+                                scheduleSectionEntity.getTrainEntity().getId(),
+                                trainEntity.getId())
+                        )
+                        .map(scheduleSectionEntity -> {
+                            RideScheduleEntity rideScheduleEntity = rideScheduleRepository
+                                    .findByTrainAndSectionIndexAndArrivalDate(trainEntity,
+                                            scheduleSectionEntity.getIndexWithinTrainRoute(), LocalDate.now());
+                            return StandRowDto.builder()
+                                    .trainNumber(trainEntity.getId())
+                                    .trainStatus(defineTrainStatus(rideScheduleEntity))
+                                    .departureTime(rideScheduleEntity.getDeparture())
+                                    .departureStationName(scheduleSectionEntity.getSectionEntity()
+                                            .getStationEntityFrom().getName())
+                                    .arrivalTime(rideScheduleEntity.getArrival())
+                                    .destinationStationName(scheduleSectionEntity.getSectionEntity()
+                                            .getStationEntityTo().getName())
+                                    .build();
+                        })
+                        .collect(Collectors.toList()))
+                .build())
+        );
+    }
+
+    private String defineTrainStatus(RideScheduleEntity rideScheduleEntity) {
+        if (rideRepository.findByTrainAndDate(rideScheduleEntity.getTrainEntity(),
+                rideScheduleEntity.getRideDate()).isCancelled()) {
+            return "Cancelled!";
+        } else {
+            return (rideScheduleEntity.getMinutesDelayed() == 0) ? "On time."
+                    : "Delayed by " + rideScheduleEntity.getMinutesDelayed() + " minutes.";
+        }
     }
 }

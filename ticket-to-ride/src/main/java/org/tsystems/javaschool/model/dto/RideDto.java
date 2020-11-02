@@ -15,8 +15,9 @@ import java.time.LocalDate;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CalendarDto implements Serializable {
+public class RideDto implements Serializable {
 
+    private TrainDto trainDto;
     private LocalDate rideDate;
     private int ticketsAvailable;
     private boolean cancelled;

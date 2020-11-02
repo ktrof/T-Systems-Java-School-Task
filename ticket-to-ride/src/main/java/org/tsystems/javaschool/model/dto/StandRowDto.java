@@ -19,6 +19,8 @@ public class StandRowDto {
     private String trainNumber;
     private String trainStatus;
     private ZonedDateTime departureTime;
+    private String departureStationName;
     private ZonedDateTime arrivalTime;
+    private String destinationStationName;
 
 }

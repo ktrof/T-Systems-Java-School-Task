@@ -25,7 +25,7 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
     private EntityManager entityManager;
 
     @Override
-    public List<TicketScheduleSectionEntity> findByScheduleSectionIdAndDepartureDate(int id, LocalDate departureDate) {
+    public List<TicketScheduleSectionEntity> findByScheduleSectionIdAndRideDate(int id, LocalDate rideDate) {
         EntityGraph<?> entityGraph = entityManager.getEntityGraph("ticket-schedule-section-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketScheduleSectionEntity> criteriaQuery = criteriaBuilder
@@ -36,13 +36,13 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
                 .join(TicketScheduleSectionEntity_.scheduleSectionEntity);
         Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = scheduleSectionEntityJoin
                 .join(ScheduleSectionEntity_.trainEntity);
-        Join<TrainEntity, CalendarEntity> calendarEntityJoin = trainEntityJoin
-                .join(TrainEntity_.calendarEntityList);
+        Join<TrainEntity, RideEntity> calendarEntityJoin = trainEntityJoin
+                .join(TrainEntity_.rideEntityList);
 
         Predicate scheduleSectionIdEquality = criteriaBuilder
                 .equal(scheduleSectionEntityJoin.get(ScheduleSectionEntity_.id), id);
         Predicate departureDateEquality = criteriaBuilder
-                .equal(calendarEntityJoin.get(CalendarEntity_.rideDate), departureDate);
+                .equal(calendarEntityJoin.get(RideEntity_.rideDate), rideDate);
 
         criteriaQuery
                 .select(root)

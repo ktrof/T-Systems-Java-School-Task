@@ -33,11 +33,11 @@ public class TrainEntity {
 
     @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<CalendarEntity> calendarEntityList;
+    private List<RideEntity> rideEntityList;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<TrainScheduleEntity> trainScheduleEntityList;
+    private List<RideScheduleEntity> rideScheduleEntityList;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

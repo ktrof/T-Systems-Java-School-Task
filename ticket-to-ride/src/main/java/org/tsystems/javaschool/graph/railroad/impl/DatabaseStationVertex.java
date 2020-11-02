@@ -64,12 +64,12 @@ public class DatabaseStationVertex implements StationVertex {
         return stationEntity.getSectionEntityListFrom().stream()
                 .map(scheduleSectionRepository::findBySection)
                 .flatMap(Collection::stream)
-                .flatMap(scheduleSectionEntity -> scheduleSectionEntity.getTrainEntity().getCalendarEntityList().stream()
+                .flatMap(scheduleSectionEntity -> scheduleSectionEntity.getTrainEntity().getRideEntityList().stream()
                         .map(calendarEntity -> DatabaseSectionEdge.builder()
                                 .railroadGraph(railroadGraph)
                                 .sourceStationVertex(this)
                                 .scheduleSectionEntity(scheduleSectionEntity)
-                                .calendarEntity(calendarEntity)
+                                .rideEntity(calendarEntity)
                                 .build()))
                 .collect(Collectors.toList());
     }
