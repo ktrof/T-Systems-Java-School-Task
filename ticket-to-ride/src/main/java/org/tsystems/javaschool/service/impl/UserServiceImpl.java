@@ -2,23 +2,19 @@ package org.tsystems.javaschool.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.UserMapper;
-import org.tsystems.javaschool.model.dto.RegistrationFormDto;
-import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
-import org.tsystems.javaschool.model.dto.UserDto;
-import org.tsystems.javaschool.model.entity.RoleEntity;
+import org.tsystems.javaschool.model.dto.user.RegistrationFormDto;
+import org.tsystems.javaschool.model.dto.user.UpdateUserFormDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.repository.RoleRepository;
 import org.tsystems.javaschool.repository.UserRepository;
 import org.tsystems.javaschool.service.UserService;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Trofim Kremen

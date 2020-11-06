@@ -3,7 +3,7 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 
 import java.util.List;

@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
 
 import java.util.List;
 

@@ -1,8 +1,7 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.AddStationFormDto;
-import org.tsystems.javaschool.model.dto.SectionDto;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.station.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 
 import java.util.List;
 
@@ -55,15 +54,15 @@ public interface StationService {
     /**
      * Close.
      *
-     * @param stationDto the station dto
+     * @param stationId the station id
      */
-    void close(StationDto stationDto);
+    void close(int stationId);
 
     /**
      * Open.
      *
-     * @param stationDto the station dto
+     * @param stationId the station id
      */
-    void open(StationDto stationDto);
+    void open(int stationId);
 
 }

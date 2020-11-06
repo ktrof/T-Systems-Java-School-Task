@@ -6,7 +6,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.TrainMapper;
 import org.tsystems.javaschool.mapper.RideScheduleMapper;
-import org.tsystems.javaschool.model.dto.*;
+import org.tsystems.javaschool.model.dto.rideschedule.RideScheduleDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionFormDto;
+import org.tsystems.javaschool.model.dto.stand.StandDto;
+import org.tsystems.javaschool.model.dto.stand.StandRowDto;
+import org.tsystems.javaschool.model.dto.stand.StandUpdateDto;
+import org.tsystems.javaschool.model.dto.train.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.*;
 import org.tsystems.javaschool.service.TrainService;
@@ -233,34 +239,27 @@ public class TrainServiceImpl implements TrainService {
 
     private void sendMessage(TrainEntity trainEntity) {
         List<StationEntity> stationEntityList = stationRepository.findAllByTrain(trainEntity);
-        stationEntityList.forEach(stationEntity ->  messageSender.sendMessage(StandDto.builder()
-                .stationName(stationEntity.getName())
-                .stationStatus((stationEntity.isClosed()) ? "Station is closed!" : "Station is opened!")
-                .rideDate(LocalDate.now())
-                .standRowDtoList(scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
-                        .stream()
-                        .filter(scheduleSectionEntity -> Objects.equals(
-                                scheduleSectionEntity.getTrainEntity().getId(),
-                                trainEntity.getId())
-                        )
-                        .map(scheduleSectionEntity -> {
+        stationEntityList
+                .forEach(stationEntity -> scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
+                        .forEach(scheduleSection -> {
                             RideScheduleEntity rideScheduleEntity = rideScheduleRepository
-                                    .findByTrainAndSectionIndexAndArrivalDate(trainEntity,
-                                            scheduleSectionEntity.getIndexWithinTrainRoute(), LocalDate.now());
-                            return StandRowDto.builder()
-                                    .trainNumber(trainEntity.getId())
-                                    .trainStatus(defineTrainStatus(rideScheduleEntity))
+                                    .findByTrainAndSectionIndexAndArrivalDate(
+                                            scheduleSection.getTrainEntity(),
+                                            scheduleSection.getIndexWithinTrainRoute(),
+                                            LocalDate.now());
+                            messageSender.sendMessage(StandUpdateDto.builder()
+                                    .stationName(stationEntity.getName())
+                                    .isStationClosed(false)
+                                    .trainNumber(scheduleSection.getTrainEntity().getId())
+                                    .isTrainCancelled(rideRepository
+                                            .findByTrainAndDate(scheduleSection.getTrainEntity(), LocalDate.now())
+                                            .isCancelled())
                                     .departureTime(rideScheduleEntity.getDeparture())
-                                    .departureStationName(scheduleSectionEntity.getSectionEntity()
-                                            .getStationEntityFrom().getName())
                                     .arrivalTime(rideScheduleEntity.getArrival())
-                                    .destinationStationName(scheduleSectionEntity.getSectionEntity()
-                                            .getStationEntityTo().getName())
-                                    .build();
+                                    .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
+                                    .build());
                         })
-                        .collect(Collectors.toList()))
-                .build())
-        );
+                );
     }
 
     private String defineTrainStatus(RideScheduleEntity rideScheduleEntity) {

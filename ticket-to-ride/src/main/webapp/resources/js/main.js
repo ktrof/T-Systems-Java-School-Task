@@ -61,7 +61,7 @@ let addScheduleSectionRow = function() {
             col.classList.add('col', 'col-md-2', 'form-group');
             let input = newInput(listName, rowIndex, fieldName);
             input.readOnly = true;
-            input.value = rowIndex.toString();
+            input.value = (rowIndex + 1).toString();
             col.appendChild(input);
         } else {
             col.classList.add('col-md-1', 'form-group');

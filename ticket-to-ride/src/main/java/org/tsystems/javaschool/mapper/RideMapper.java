@@ -2,7 +2,7 @@ package org.tsystems.javaschool.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.tsystems.javaschool.model.dto.RideDto;
+import org.tsystems.javaschool.model.dto.ride.RideDto;
 import org.tsystems.javaschool.model.entity.RideEntity;
 
 import java.util.List;

@@ -7,9 +7,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.tsystems.javaschool.model.dto.TicketDto;
-import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
-import org.tsystems.javaschool.model.dto.UserDto;
+import org.tsystems.javaschool.model.dto.ticket.TicketDto;
+import org.tsystems.javaschool.model.dto.user.UpdateUserFormDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 import org.tsystems.javaschool.service.TicketService;
 import org.tsystems.javaschool.service.UserService;
 

@@ -3,8 +3,8 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.AddTrainFormDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.train.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.util.List;

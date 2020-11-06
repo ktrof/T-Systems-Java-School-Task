@@ -15,8 +15,10 @@ services:
       POSTGRES_USER: 'postgres'
       POSTGRES_PASSWORD: 'password'
       POSTGRES_HOST: 'db'
+      ACTIVEMQ_HOST: 'activemq'
     depends_on:
       - db
+      - activemq
     networks:
       - main
     links:
@@ -54,6 +56,23 @@ services:
     restart: always
     networks:
       - main
+
+  activemq:
+    image: rmohr/activemq
+    container_name: activemq
+    restart: always
+    ports:
+      - 1883:1883
+      - 5672:5672
+      - 61613:61613
+      - 61614:61614
+      - 61616:61616
+      - 8161:8161
+    environment:
+      ACTIVEMQ_NAME: amq
+      ACTIVEMQ_REMOVE_DEFAULT_ACCOUNT: 'True'
+      ACTIVEMQ_ADMIN_LOGIN: admin
+      ACTIVEMQ_ADMIN_PASSWORD: admin
 
 volumes:
   pgdata:

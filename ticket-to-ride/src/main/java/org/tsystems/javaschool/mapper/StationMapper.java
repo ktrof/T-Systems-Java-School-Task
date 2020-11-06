@@ -3,8 +3,8 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.AddStationFormDto;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.station.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
 import java.time.ZoneId;

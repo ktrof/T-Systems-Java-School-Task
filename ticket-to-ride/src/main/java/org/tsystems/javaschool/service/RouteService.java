@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.SearchResultDto;
-import org.tsystems.javaschool.model.dto.SearchRouteFormDto;
+import org.tsystems.javaschool.model.dto.route.SearchResultDto;
+import org.tsystems.javaschool.model.dto.route.SearchRouteFormDto;
 
 /**
  * The interface Route service.

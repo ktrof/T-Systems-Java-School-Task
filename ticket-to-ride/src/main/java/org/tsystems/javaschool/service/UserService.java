@@ -1,8 +1,8 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.RegistrationFormDto;
-import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
-import org.tsystems.javaschool.model.dto.UserDto;
+import org.tsystems.javaschool.model.dto.user.RegistrationFormDto;
+import org.tsystems.javaschool.model.dto.user.UpdateUserFormDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 
 import java.util.List;
 

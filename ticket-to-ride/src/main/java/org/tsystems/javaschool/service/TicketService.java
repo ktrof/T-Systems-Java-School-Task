@@ -1,8 +1,7 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.PassengerFormDto;
-import org.tsystems.javaschool.model.dto.TicketDto;
-import org.tsystems.javaschool.model.dto.UserDto;
+import org.tsystems.javaschool.model.dto.passenger.PassengerFormDto;
+import org.tsystems.javaschool.model.dto.ticket.TicketDto;
 
 import java.util.List;
 

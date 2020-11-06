@@ -1,8 +1,8 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.AddTrainFormDto;
-import org.tsystems.javaschool.model.dto.RideScheduleDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.train.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.rideschedule.RideScheduleDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 
 import java.time.LocalDate;
 import java.util.List;

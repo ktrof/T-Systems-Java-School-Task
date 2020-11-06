@@ -3,8 +3,8 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import org.tsystems.javaschool.model.dto.StandDto;
-import org.tsystems.javaschool.model.dto.StandRowDto;
+import org.tsystems.javaschool.model.dto.stand.StandDto;
+import org.tsystems.javaschool.model.dto.stand.StandRowDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.model.entity.RideScheduleEntity;
 import org.tsystems.javaschool.repository.RideRepository;
@@ -36,7 +36,7 @@ public class StationStandServiceImpl implements StationStandService {
             StationEntity departureStationEntity = stationRepository.findById(stationId);
             standDto = StandDto.builder()
                     .stationName(departureStationEntity.getName())
-                    .stationStatus((departureStationEntity.isClosed()) ? "Station is closed!" : "Station is opened!")
+                    .isClosed(departureStationEntity.isClosed())
                     .rideDate(rideDate)
                     .standRowDtoList(scheduleSectionRepository
                             .findByStationAndRideDate(departureStationEntity, rideDate).stream()
@@ -52,7 +52,9 @@ public class StationStandServiceImpl implements StationStandService {
                                         .arrivalTime(rideScheduleEntity.getArrival())
                                         .destinationStationName(scheduleSectionEntity.getSectionEntity()
                                                 .getStationEntityTo().getName())
-                                        .trainStatus(defineTrainStatus(rideScheduleEntity))
+                                        .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
+                                        .isCancelled(rideRepository.findByTrainAndDate(rideScheduleEntity.getTrainEntity(),
+                                                rideScheduleEntity.getRideDate()).isCancelled())
                                         .build();
                             })
                             .collect(Collectors.toList())
@@ -64,13 +66,4 @@ public class StationStandServiceImpl implements StationStandService {
         return standDto;
     }
 
-    private String defineTrainStatus(RideScheduleEntity rideScheduleEntity) {
-        if (rideRepository.findByTrainAndDate(rideScheduleEntity.getTrainEntity(),
-                rideScheduleEntity.getRideDate()).isCancelled()) {
-            return "Cancelled!";
-        } else {
-            return (rideScheduleEntity.getMinutesDelayed() == 0) ? "On time."
-                    : "Delayed by " + rideScheduleEntity.getMinutesDelayed() + " minutes.";
-        }
-    }
 }

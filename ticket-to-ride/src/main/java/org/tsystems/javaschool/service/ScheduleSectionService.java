@@ -1,8 +1,8 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.StationDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 
 import java.time.LocalDate;
 import java.util.List;

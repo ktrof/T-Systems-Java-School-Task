@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.tsystems.javaschool.graph.railroad.RailroadGraph;
 import org.tsystems.javaschool.graph.railroad.SectionEdge;
 import org.tsystems.javaschool.graph.railroad.StationVertex;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 

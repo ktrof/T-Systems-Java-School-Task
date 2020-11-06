@@ -7,10 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.tsystems.javaschool.model.dto.RouteDto;
-import org.tsystems.javaschool.model.dto.SearchResultDto;
-import org.tsystems.javaschool.model.dto.SearchRouteFormDto;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.route.RouteDto;
+import org.tsystems.javaschool.model.dto.route.SearchResultDto;
+import org.tsystems.javaschool.model.dto.route.SearchRouteFormDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 import org.tsystems.javaschool.service.RouteService;
 import org.tsystems.javaschool.service.StationService;
 

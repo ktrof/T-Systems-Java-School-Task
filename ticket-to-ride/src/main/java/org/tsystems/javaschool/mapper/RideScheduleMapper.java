@@ -3,7 +3,7 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.RideScheduleDto;
+import org.tsystems.javaschool.model.dto.rideschedule.RideScheduleDto;
 import org.tsystems.javaschool.model.entity.RideScheduleEntity;
 
 import java.util.List;

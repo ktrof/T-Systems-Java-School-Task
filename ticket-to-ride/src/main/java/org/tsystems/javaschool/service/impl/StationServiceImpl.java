@@ -5,7 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.StationMapper;
-import org.tsystems.javaschool.model.dto.*;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
+import org.tsystems.javaschool.model.dto.stand.StandDto;
+import org.tsystems.javaschool.model.dto.stand.StandRowDto;
+import org.tsystems.javaschool.model.dto.stand.StandUpdateDto;
+import org.tsystems.javaschool.model.dto.station.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 import org.tsystems.javaschool.model.entity.RideScheduleEntity;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
@@ -137,14 +142,13 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void close(StationDto stationDto) {
+    public void close(int stationId) {
         try {
-            StationEntity stationEntity = stationRepository.findById(stationDto.getId());
+            StationEntity stationEntity = stationRepository.findById(stationId);
             stationRepository.close(stationEntity);
-            messageSender.sendMessage(StandDto.builder()
+            messageSender.sendMessage(StandUpdateDto.builder()
                     .stationName(stationEntity.getName())
-                    .rideDate(LocalDate.now())
-                    .stationStatus("Station is closed!")
+                    .isStationClosed(true)
                     .build());
         } catch (Exception e) {
             log.error("Error closing the station", e);
@@ -152,42 +156,31 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void open(StationDto stationDto) {
+    public void open(int stationId) {
         try {
-            StationEntity stationEntity = stationRepository.findById(stationDto.getId());
+            StationEntity stationEntity = stationRepository.findById(stationId);
             stationRepository.open(stationEntity);
-            messageSender.sendMessage(StandDto.builder()
-                    .stationName(stationEntity.getName())
-                    .rideDate(LocalDate.now())
-                    .stationStatus("Station is opened!")
-                    .standRowDtoList(scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
-                            .stream()
-                            .map(scheduleSectionEntity -> {
-                                RideScheduleEntity rideScheduleEntity = rideScheduleRepository
-                                        .findByTrainAndSectionIndexAndArrivalDate(scheduleSectionEntity.getTrainEntity(),
-                                                scheduleSectionEntity.getIndexWithinTrainRoute(), LocalDate.now());
-                                return StandRowDto.builder()
-                                        .trainNumber(scheduleSectionEntity.getTrainEntity().getId())
-                                        .trainStatus(defineTrainStatus(rideScheduleEntity))
-                                        .departureTime(rideScheduleEntity.getDeparture())
-                                        .arrivalTime(rideScheduleEntity.getArrival())
-                                        .build();
-                            })
-                            .collect(Collectors.toList())
-                    )
-                    .build());
+            scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
+                    .forEach(scheduleSection -> {
+                        RideScheduleEntity rideScheduleEntity = rideScheduleRepository
+                                .findByTrainAndSectionIndexAndArrivalDate(
+                                        scheduleSection.getTrainEntity(),
+                                        scheduleSection.getIndexWithinTrainRoute(),
+                                        LocalDate.now());
+                        messageSender.sendMessage(StandUpdateDto.builder()
+                                .stationName(stationEntity.getName())
+                                .isStationClosed(false)
+                                .trainNumber(scheduleSection.getTrainEntity().getId())
+                                .isTrainCancelled(rideRepository
+                                        .findByTrainAndDate(scheduleSection.getTrainEntity(), LocalDate.now())
+                                        .isCancelled())
+                                .departureTime(rideScheduleEntity.getDeparture())
+                                .arrivalTime(rideScheduleEntity.getArrival())
+                                .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
+                                .build());
+                    });
         } catch (Exception e) {
             log.error("Error opening the station", e);
-        }
-    }
-
-    private String defineTrainStatus(RideScheduleEntity rideScheduleEntity) {
-        if (rideRepository.findByTrainAndDate(rideScheduleEntity.getTrainEntity(),
-                rideScheduleEntity.getRideDate()).isCancelled()) {
-            return "Cancelled!";
-        } else {
-            return (rideScheduleEntity.getMinutesDelayed() == 0) ? "On time."
-                    : "Delayed by " + rideScheduleEntity.getMinutesDelayed() + " minutes.";
         }
     }
 

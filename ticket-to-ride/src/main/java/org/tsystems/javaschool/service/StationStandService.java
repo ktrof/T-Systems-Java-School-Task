@@ -1,6 +1,6 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.StandDto;
+import org.tsystems.javaschool.model.dto.stand.StandDto;
 
 import java.time.LocalDate;
 

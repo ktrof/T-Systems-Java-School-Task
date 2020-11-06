@@ -7,11 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.ScheduleSectionMapper;
 import org.tsystems.javaschool.mapper.StationMapper;
 import org.tsystems.javaschool.mapper.TrainMapper;
-import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.StationDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
-import org.tsystems.javaschool.model.entity.TrainEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 import org.tsystems.javaschool.service.ScheduleSectionService;
 

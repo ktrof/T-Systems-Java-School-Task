@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.tsystems.javaschool.model.dto.RegistrationFormDto;
-import org.tsystems.javaschool.model.dto.UserDto;
+import org.tsystems.javaschool.model.dto.user.RegistrationFormDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 import org.tsystems.javaschool.service.UserService;
 
 import javax.validation.Valid;

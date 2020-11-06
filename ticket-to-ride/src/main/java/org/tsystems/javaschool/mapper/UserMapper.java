@@ -3,8 +3,8 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
-import org.tsystems.javaschool.model.dto.UserDto;
+import org.tsystems.javaschool.model.dto.user.UpdateUserFormDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
 import java.util.List;

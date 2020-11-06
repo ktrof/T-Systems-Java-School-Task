@@ -4,7 +4,7 @@ import lombok.Builder;
 import org.tsystems.javaschool.graph.railroad.RailroadGraph;
 import org.tsystems.javaschool.graph.railroad.SectionEdge;
 import org.tsystems.javaschool.graph.railroad.StationVertex;
-import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
 import org.tsystems.javaschool.model.entity.RideEntity;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;

@@ -3,7 +3,7 @@ package org.tsystems.javaschool.controller;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.WebApplicationContext;
-import org.tsystems.javaschool.model.dto.RouteDto;
+import org.tsystems.javaschool.model.dto.route.RouteDto;
 
 import java.util.Collection;
 import java.util.HashMap;

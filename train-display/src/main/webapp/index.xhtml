@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html
+        PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="en" lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:jsf="http://xmlns.jcp.org/jsf"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xsi:schemaLocation="http://omnifaces.org/ui ">
+<h:head>
+    <title>Station stand</title>
+    <h:outputStylesheet library="webjars" name="bootstrap/4.5.2/css/bootstrap.min-jsf.css"/>
+</h:head>
+<h:body>
+    <f:view>
+        <div class="navbar navbar-expand-md navbar-light fixed-top bg-light">
+            <div class="navbar-brand">
+                <img src="resources/images/SBB-logo.png" width="40" height="40" class="d-inline-block align-top" alt=""/>
+                SBB App
+            </div>
+            <div class="nav-item select">
+                <h:form styleClass="form-group">
+                    <h:selectOneMenu styleClass="form-control selectOne" value="#{standJSFModel.currentStationName}"
+                                     rendered="#{not empty standJSFModel.stationNameList}">
+                        <f:selectItems value="#{standJSFModel.stationNameList}"/>
+                        <f:ajax listener="#{standJSFModel.changeStand}" render="deptTable arrTable"/>
+                    </h:selectOneMenu>
+                </h:form>
+            </div>
+        </div>
+        <div class="container-fluid mx-2">
+            <div class="row">
+                <div class="col-md-12 col-lg-6 rounded">
+                    <span class="text-right">
+                        #{standJSFModel.standDto.stationName}
+                    </span>
+                </div>
+                <div class="col-md-12 col-lg-6 rounded">
+                    <span class="text-left">
+                        #{standJSFModel.getStationStatus(standJSFModel.standDto)}
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12 col-lg-6 rounded">
+                    <h3 class="text-center">Departure</h3>
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Train</th>
+                            <th scope="col">Departure</th>
+                            <th scope="col">Arrival</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ui:repeat var="standRow" value="${standJSFModel.departureStandRowList}">
+                            <tr>
+                                <td>#{standRow.trainNumber}</td>
+                                <td>${standJSFModel.formatDate(standRow.departureTime)}</td>
+                                <td>${standJSFModel.formatDate(standRow.arrivalTime}</td>
+                                <td>
+                                    <h:outputText rendered="#{standJSFModel.isTrainOnTime(standRow)}"
+                                                  value="#{standJSFModel.getTrainStatus(standRow)}"/>
+                                    <span class="badge badge-danger"
+                                          jsf:rendered="#{not standJSFModel.isTrainOnTime(standRow)}">
+                                                    #{standJSFModel.getTrainStatus(standRow)}}
+                                        </span>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="col-md-12 col-lg-6 rounded">
+                    <h3 class="text-center">Arrival</h3>
+                    <table class="table">
+                        <thead class="thead-light">
+                        <tr>
+                            <th scope="col">Train</th>
+                            <th scope="col">Departure</th>
+                            <th scope="col">Arrival</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <ui:repeat var="standRow" value="${standJSFModel.arrivalStandRowList}">
+                            <tr>
+                                <td>#{standRow.trainNumber}</td>
+                                <td>${standJSFModel.formatDate(standRow.departureTime)}</td>
+                                <td>${standJSFModel.formatDate(standRow.arrivalTime}</td>
+                                <td>
+                                    <h:outputText rendered="#{standJSFModel.isTrainOnTime(standRow)}"
+                                                  value="#{standJSFModel.getTrainStatus(standRow)}"/>
+                                    <span class="badge badge-danger"
+                                          jsf:rendered="#{not standJSFModel.isTrainOnTime(standRow)}">
+                                                    #{standJSFModel.getTrainStatus(standRow)}}
+                                        </span>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <h:outputScript library="webjars" name="jquery/3.5.1/jquery.min.js"/>
+        <h:outputScript library="webjars" name="bootstrap/4.5.2/js/bootstrap.bundle.min.js"/>
+        <script src="resources/js/main.js" type="javascript"></script>
+        <f:websocket channel="standUpdate" onmessage="onStandUpdate()"/>
+    </f:view>
+</h:body>
+</html>
