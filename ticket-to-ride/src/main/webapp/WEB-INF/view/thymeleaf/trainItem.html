@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbb main page">
+    <meta name="author" content="Trofim Kremen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+    <title>Index</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
+            SBB App
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" th:href="@{/}">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
+                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
+            </div>
+        </div>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/profile}">
+            <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Profile
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
+                Sign out
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="!isAuthenticated()"
+              th:action="@{/login}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Sign in
+            </button>
+        </form>
+    </nav>
+</header>
+<main>
+    <main>
+        <div class="container container-fluid">
+            <h4 th:text="'Train number ' + ${trainItem.getId()}"></h4>
+            <hr>
+            <h5>Name</h5>
+            <p th:text="${trainItem.getName()}"></p>
+            <hr>
+            <h5>Speed</h5>
+            <p th:text="${trainItem.getAvgSpeed() + ' km/h'}"></p>
+            <hr>
+            <h5>Number of seats</h5>
+            <p th:text="${trainItem.getNumberOfSeats()}"></p>
+            <hr class="mt-2 mb-5"/>
+            <div class="container rounded-lg bg-light mt-3">
+                <div class="row">
+                    <div class="col-4 form-group h5">Train route</div>
+                </div>
+                <hr>
+                <div class="row item"
+                     th:each="section, status : ${scheduleSectionList}">
+                    <div class="col-4 form-group">
+                    <span class="text-center" th:text="${section.getSectionDto().getStationDtoFrom()}
+                     + ' &longrightarrow; ' + ${section.getSectionDto().getStationDtoTo()}"></span>
+                        <span class="row text-left ml-2" th:unless="${status.last}">&downarrow;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</main>
+<footer class="fixed-bottom page-footer bg-light">
+    <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
+</html>

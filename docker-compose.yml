@@ -1,0 +1,45 @@
+version: '3.3'
+
+services:
+  server:
+    build:
+      context: ./ticket-to-ride
+      dockerfile: Dockerfile
+    container_name: server
+    ports:
+      - 8080:8080
+      - 8000:8000
+    restart: on-failure
+    environment:
+      POSTGRES_DB: 'sbb'
+      POSTGRES_USER: 'postgres'
+      POSTGRES_PASSWORD: 'password'
+      POSTGRES_HOST: 'db'
+    depends_on:
+      - db
+    networks:
+      - main
+    links:
+      - db
+
+  db:
+    image: postgres:latest
+    container_name: postgresql
+    ports:
+      - 5432:5432
+    volumes:
+      - /pgdata:/var/lib/postgresql/data/pgdata
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data/pgdata
+      ALLOW_IP_RANGE: 0.0.0.0/0
+    restart: always
+    networks:
+      - main
+
+volumes:
+  pgdata:
+
+networks:
+  main:

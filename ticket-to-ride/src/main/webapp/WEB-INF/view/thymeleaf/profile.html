@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbb main page">
+    <meta name="author" content="Trofim Kremen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+    <title>Index</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
+            SBB App
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" th:href="@{/}">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
+                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
+            </div>
+        </div>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/profile}">
+            <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Profile
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
+                Sign out
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="!isAuthenticated()"
+              th:action="@{/login}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Sign in
+            </button>
+        </form>
+    </nav>
+</header>
+<main>
+    <div class="container container-fluid">
+        <h1 th:text="'Hello there, ' + ${userDetails.getLogin()} + '!'"></h1>
+        <div class="row">
+            <div class="col-md-4 col-md-offset-3">
+                <div class="container rounded-lg bg-light mt-3">
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong class="text-left">Login:</strong>
+                        </div>
+                        <div class="col">
+                            <span class="text-left" th:text="${userDetails.getLogin()}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong class="text-left">Email:</strong>
+                        </div>
+                        <div class="col">
+                            <span class="text-left" th:text="${userDetails.getEmail()}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong class="text-left">First name:</strong>
+                        </div>
+                        <div class="col">
+                            <span class="text-left" th:text="${userDetails.getFirstName()}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong class="text-left">Second name:</strong>
+                        </div>
+                        <div class="col">
+                            <span class="text-left" th:text="${userDetails.getSecondName()}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong class="text-left">Birth date:</strong>
+                        </div>
+                        <div class="col">
+                            <span class="text-left" th:text="${userDetails.getBirthDate()}"></span>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col">
+                            <strong class="text-left">Mobile number:</strong>
+                        </div>
+                        <div class="col">
+                            <span class="text-left" th:text="${userDetails.getMobileNumber()}"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-8 col-md-offset-3 rounded-lg bg-light mt-3">
+                <div class="container rounded-lg bg-light mt-3">
+                    <div class="row">
+                        <div class="col">Ticket id</div>
+                        <div class="col">Departure date</div>
+                        <div class="col">Departure time</div>
+                        <div class="col">Arrival date</div>
+                        <div class="col">Arrival time</div>
+                    </div>
+                    <hr>
+                    <div class="row" th:each="ticket, status : ${tickets}">
+                        <div class="col">
+                            <span class="text-center" th:text="${ticket.getId()}"></span>
+                        </div>
+                        <div class="col">
+                            <span class="text-center" th:text="${ticket.getFirstSection().getDepartureDate()}"></span>
+                        </div>
+                        <div class="col">
+                            <span class="text-center" th:text="${ticket.getFirstSection().getDepartureTime()}"></span>
+                        </div>
+                        <div class="col">
+                            <span class="text-center" th:text="${ticket.getFirstSection().getArrivalDate()}"></span>
+                        </div>
+                        <div class="col">
+                            <span class="text-center" th:text="${ticket.getFirstSection().getArrivalTime()}"></span>
+                        </div>
+                        <hr class="mr-2 ml-2" th:unless="${status.last}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <a class="btn btn-primary" role="button"
+               data-toggle="modal"
+               aria-expanded="true"
+               data-target="#profileModal">Edit profile</a>
+        </div>
+        <div class="modal fade" tabindex="1"
+             id="profileModal"
+             aria-labelledby="profileModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="profileModalLabel">Edit user details</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form th:action="@{/profile/edit}" th:object="${userToEdit}" method="post">
+                            <p class="error-message"
+                               th:if="${#fields.hasGlobalErrors()}"
+                               th:each="error : ${#fields.errors('global')}"
+                               th:text="${error}">Validation error</p>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('login')}? 'has-error':''">
+                                <label for="login" class="control-label">Login*</label>
+                                <input id="login"
+                                       class="form-control"
+                                       th:field="*{login}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('login')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('password')}? 'has-error':''">
+                                <label for="password" class="control-label">Password*</label>
+                                <input id="password"
+                                       class="form-control"
+                                       type="password"
+                                       th:field="*{password}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('password')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('confirmPassword')}? 'has-error':''">
+                                <label for="confirmPassword" class="control-label">Confirm password*</label>
+                                <input id="confirmPassword"
+                                       class="form-control"
+                                       type="password"
+                                       th:field="*{confirmPassword}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('confirmPassword')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('firstName')}? 'has-error':''">
+                                <label for="firstName" class="control-label">First name*</label>
+                                <input id="firstName"
+                                       class="form-control"
+                                       th:field="*{firstName}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('firstName')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('secondName')}? 'has-error':''">
+                                <label for="secondName" class="control-label">Second name*</label>
+                                <input id="secondName"
+                                       class="form-control"
+                                       th:field="*{secondName}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('secondName')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('birthDate')}? 'has-error':''">
+                                <label for="birthDate" class="control-label">Birth date*</label>
+                                <input id="birthDate"
+                                       class="form-control"
+                                       type="date"
+                                       th:field="*{birthDate}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('birthDate')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('email')}? 'has-error':''">
+                                <label for="email" class="control-label">Email*</label>
+                                <input id="email"
+                                       class="form-control"
+                                       th:field="*{email}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('email')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('confirmEmail')}? 'has-error':''">
+                                <label for="confirmEmail" class="control-label">Confirm email*</label>
+                                <input id="confirmEmail"
+                                       class="form-control"
+                                       th:field="*{confirmEmail}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('confirmEmail')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group"
+                                 th:classappend="${#fields.hasErrors('mobileNumber')}? 'has-error':''">
+                                <label for="mobileNumber" class="control-label">Mobile number*</label>
+                                <input id="mobileNumber"
+                                       class="form-control"
+                                       th:field="*{mobileNumber}"/>
+                                <p class="error-message"
+                                   th:each="error: ${#fields.errors('mobileNumber')}"
+                                   th:text="${error}">Validation error</p>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary" disabled>Apply changes</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="fixed-bottom page-footer bg-light">
+    <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
+</html>

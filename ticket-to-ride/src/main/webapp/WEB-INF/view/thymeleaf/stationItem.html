@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbb main page">
+    <meta name="author" content="Trofim Kremen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+    <title>Index</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-light bg-light">
+        <a class="navbar-brand" href="/">
+            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
+            SBB App
+        </a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" th:href="@{/}">Home<span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
+                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
+            </div>
+        </div>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/profile}">
+            <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Profile
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
+                Sign out
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="!isAuthenticated()"
+              th:action="@{/login}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                Sign in
+            </button>
+        </form>
+    </nav>
+</header>
+<main>
+    <div class="container container-fluid">
+        <h4 th:text="'Station ' + ${stationItem.getName()}"></h4>
+        <hr>
+        <h5>Latitude</h5>
+        <p th:text="${stationItem.getLatitude()+'°'}"></p>
+        <hr>
+        <h5>Longitude</h5>
+        <p th:text="${stationItem.getLongitude()+'°'}"></p>
+        <hr>
+        <h5>Timezone</h5>
+        <p th:text="${stationItem.getTimezone()}"></p>
+        <hr class="mt-2 mb-5"/>
+        <div class="row">
+            <div class="col">
+                <a class="btn btn-primary" role="button"
+                   data-toggle="modal"
+                   aria-expanded="true"
+                   data-target="#arrivalModal">Inspect arrival</a>
+            </div>
+            <div class="col">
+                <a class="btn btn-primary" role="button"
+                   data-toggle="modal"
+                   aria-expanded="true"
+                   data-target="#departureModal">Inspect departure</a>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="1"
+             id="arrivalModal"
+             aria-labelledby="arrivalModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="arrivalModalLabel">Station arrival</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container container-fluid">
+                            <div class="row">
+                                <div class="col form-group">Train</div>
+                                <div class="col form-group">Arrival</div>
+                            </div>
+                            <hr>
+                            <div class="row" th:each="section, status : ${destinationSectionDtoList}">
+                                <div class="col-md-6">
+                                    <span th:text="${section.getTrainDto().getId()} + ' ' + ${section.getTrainDto().getName()}"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <span th:text="${#temporals.format(section.getArrival(), 'HH:mm')}"></span>
+                                </div>
+                                <hr class="mr-1 ml-1" th:unless="${status.last}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a role="button" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" tabindex="1"
+             id="departureModal"
+             aria-labelledby="departureModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="departureModalLabel">Station departure</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container container-fluid">
+                            <div class="row">
+                                <div class="col">Train</div>
+                                <div class="col">Departure</div>
+                            </div>
+                            <hr>
+                            <div class="row" th:each="section, status : ${departureSectionDtoList}">
+                                <div class="col-md-6">
+                                    <span th:text="${section.getTrainDto().getId()} + ' ' + ${section.getTrainDto().getName()}"></span>
+                                </div>
+                                <div class="col-md-6">
+                                    <span th:text="${#temporals.format(section.getDeparture(), 'HH:mm')}"></span>
+                                </div>
+                                <hr class="mr-1 ml-1" th:unless="${status.last}"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <a role="button" class="btn btn-secondary" data-dismiss="modal">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<footer class="fixed-bottom page-footer bg-light">
+    <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
+</html>
