@@ -21,6 +21,6 @@ public class TrainDto implements Serializable {
     private String name;
     private int avgSpeed;
     private int numberOfSeats;
-    private String type;
+    private TrainType type;
 
 }

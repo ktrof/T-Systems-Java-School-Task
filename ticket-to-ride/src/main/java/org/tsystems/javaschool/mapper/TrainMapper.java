@@ -1,12 +1,15 @@
 package org.tsystems.javaschool.mapper;
 
 import org.mapstruct.Mapper;
+import org.mapstruct.MapperConfig;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
 import org.tsystems.javaschool.model.dto.train.AddTrainFormDto;
 import org.tsystems.javaschool.model.dto.train.TrainDto;
+import org.tsystems.javaschool.model.dto.train.TrainType;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -23,6 +26,9 @@ public interface TrainMapper {
      * @param trainEntity the train entity
      * @return the train dto
      */
+    @Mappings({
+            @Mapping(target = "type", source = "trainEntity.type")
+    })
     TrainDto toDto(TrainEntity trainEntity);
 
     /**
@@ -32,13 +38,21 @@ public interface TrainMapper {
      * @return the train entity
      */
     @Mappings({
+            @Mapping(target = "type", source = "trainDto.type.typeOfString"),
             @Mapping(target = "rideEntityList", ignore = true),
             @Mapping(target = "scheduleSectionEntityList", ignore = true),
             @Mapping(target = "rideScheduleEntityList", ignore = true)
     })
     TrainEntity toEntity(TrainDto trainDto);
 
+    /**
+     * To entity train entity.
+     *
+     * @param trainFormDto the train form dto
+     * @return the train entity
+     */
     @Mappings({
+            @Mapping(target = "type", source = "trainFormDto.type.typeOfString"),
             @Mapping(target = "rideEntityList", ignore = true),
             @Mapping(target = "scheduleSectionEntityList", ignore = true),
             @Mapping(target = "rideScheduleEntityList", ignore = true)

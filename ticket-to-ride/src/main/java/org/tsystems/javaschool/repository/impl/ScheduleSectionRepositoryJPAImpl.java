@@ -10,10 +10,8 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * The type Schedule section repository jpa.
@@ -40,17 +38,25 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
     }
 
     @Override
-    public List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity) {
+    public List<ScheduleSectionEntity> findByTrainAndRideDate(TrainEntity trainEntity, LocalDate rideDate) {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);
 
+        Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = root.join(ScheduleSectionEntity_.trainEntity);
+        Join<TrainEntity, RideEntity> rideEntityJoin = trainEntityJoin.join(TrainEntity_.rideEntityList);
+
+        Predicate trainEquality = criteriaBuilder.equal(root.get(ScheduleSectionEntity_.trainEntity), trainEntity);
+        Predicate rideDateEquality = criteriaBuilder.equal(rideEntityJoin.get(RideEntity_.rideDate), rideDate);
+
         criteriaQuery
                 .select(root)
-                .where(criteriaBuilder.equal(root.get(ScheduleSectionEntity_.trainEntity), trainEntity));
+                .where(criteriaBuilder.and(trainEquality, rideDateEquality));
         TypedQuery<ScheduleSectionEntity> selectByTrain = entityManager.createQuery(criteriaQuery);
 
-        return selectByTrain.getResultList();
+        return selectByTrain.getResultStream()
+                .sorted(Comparator.comparingInt(ScheduleSectionEntity::getIndexWithinTrainRoute))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -103,14 +109,14 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
         Join<ScheduleSectionEntity, SectionEntity> sectionEntityJoin = root.join(ScheduleSectionEntity_.sectionEntity);
         Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = root.join(ScheduleSectionEntity_.trainEntity);
-        Join<TrainEntity, RideEntity> calendarEntityJoin = trainEntityJoin.join(TrainEntity_.rideEntityList);
+        Join<TrainEntity, RideEntity> rideEntityJoin = trainEntityJoin.join(TrainEntity_.rideEntityList);
 
         Predicate departureStationEquality = criteriaBuilder
                 .equal(sectionEntityJoin.get(SectionEntity_.stationEntityFrom), stationEntity);
         Predicate destinationStationEquality = criteriaBuilder
                 .equal(sectionEntityJoin.get(SectionEntity_.stationEntityTo), stationEntity);
         Predicate rideDateEquality = criteriaBuilder.
-                equal(calendarEntityJoin.get(RideEntity_.rideDate), rideDate);
+                equal(rideEntityJoin.get(RideEntity_.rideDate), rideDate);
         Predicate departureAndRideDate = criteriaBuilder.and(departureStationEquality, rideDateEquality);
         Predicate destinationAndRideDate = criteriaBuilder.and(destinationStationEquality, rideDateEquality);
 

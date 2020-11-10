@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionDto;
 import org.tsystems.javaschool.model.dto.section.SectionDto;
 import org.tsystems.javaschool.model.dto.station.StationDto;
+import org.tsystems.javaschool.util.PriceCalculator;
 
 import java.io.Serializable;
 import java.math.RoundingMode;
@@ -14,6 +15,7 @@ import java.text.DecimalFormat;
 import java.time.Duration;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -54,6 +56,15 @@ public class RoutePartDto implements Serializable {
                 .map(SectionDto::getLength)
                 .reduce(0d, Double::sum);
         return Double.parseDouble(decimalFormat.format(distance));
+    }
+
+    public double getPrice() {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setRoundingMode(RoundingMode.DOWN);
+        double price = scheduleSectionDtoList.stream()
+                .map(PriceCalculator::computePrice)
+                .reduce(0d, Double::sum);
+        return Double.parseDouble(decimalFormat.format(price));
     }
 
 }

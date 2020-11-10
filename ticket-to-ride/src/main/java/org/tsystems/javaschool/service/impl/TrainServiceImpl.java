@@ -12,6 +12,7 @@ import org.tsystems.javaschool.model.dto.stand.StandDto;
 import org.tsystems.javaschool.model.dto.stand.StandRowDto;
 import org.tsystems.javaschool.model.dto.stand.StandUpdateDto;
 import org.tsystems.javaschool.model.dto.train.AddTrainFormDto;
+import org.tsystems.javaschool.model.dto.train.DelayFormDto;
 import org.tsystems.javaschool.model.dto.train.TrainDto;
 import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.*;
@@ -19,6 +20,7 @@ import org.tsystems.javaschool.service.TrainService;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -82,8 +84,8 @@ public class TrainServiceImpl implements TrainService {
                     .map(date -> LocalDate.parse(date, DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .collect(Collectors.toList());
 
+            List<RideEntity> rideEntityList = new ArrayList<>();
             try {
-                List<RideEntity> rideEntityList = new ArrayList<>();
                 for (LocalDate rideDate : rideDates) {
                     RideEntity rideEntity = new RideEntity();
                     rideEntity.setTrainEntity(trainEntity);
@@ -99,8 +101,8 @@ public class TrainServiceImpl implements TrainService {
 
             ScheduleSectionFormDto[] scheduleSectionForms = trainFormDto.getScheduleSectionFormDtoArray();
             if (scheduleSectionForms.length != 0) {
+                List<ScheduleSectionEntity> scheduleSectionEntityList = new ArrayList<>();
                 try {
-                    List<ScheduleSectionEntity> scheduleSectionEntityList = new ArrayList<>();
                     for (int i = 0; i < scheduleSectionForms.length; i++) {
                         ScheduleSectionEntity scheduleSectionEntity = new ScheduleSectionEntity();
                         scheduleSectionEntity.setTrainEntity(trainEntity);
@@ -132,6 +134,57 @@ public class TrainServiceImpl implements TrainService {
                 } catch (Exception e) {
                     log.error("Error creating schedule sections", e);
                 }
+
+                List<RideScheduleEntity> rideScheduleEntityList = new ArrayList<>();
+                List<StationEntity> stationEntityList = stationRepository.findAllByTrain(trainEntity);
+                try {
+                    for (RideEntity rideEntity : rideEntityList) {
+                        for (int i = 0; i < scheduleSectionEntityList.size(); i++) {
+                            RideScheduleEntity rideScheduleEntity = new RideScheduleEntity();
+                            rideScheduleEntity.setTrainEntity(trainEntity);
+                            rideScheduleEntity.setRideDate(rideEntity.getRideDate());
+                            rideScheduleEntity.setIndexWithinTrainRoute(scheduleSectionEntityList
+                                    .get(i)
+                                    .getIndexWithinTrainRoute()
+                            );
+                            rideScheduleEntity.setMinutesDelayed(0);
+                            if (i == 0) {
+                                rideScheduleEntity.setDepartureDatePlan(rideEntity.getRideDate());
+                                rideScheduleEntity.setDepartureDateFact(rideEntity.getRideDate());
+                                rideScheduleEntity.setDeparture(ZonedDateTime.of(
+                                        rideEntity.getRideDate(),
+                                        scheduleSectionEntityList.get(i).getDeparture(),
+                                        getDepartureZoneId(stationEntityList, sectionRepository
+                                                .findByScheduleSectionId(scheduleSectionEntityList.get(i).getId()))
+                                        )
+                                );
+                            } else {
+                                rideScheduleEntity.setDeparture(rideScheduleEntityList.get(rideScheduleEntityList.size() - 1)
+                                        .getArrival()
+                                        .toLocalDateTime()
+                                        .atZone(getArrivalZoneId(stationEntityList, sectionRepository
+                                                .findByScheduleSectionId(scheduleSectionEntityList.get(i).getId()))
+                                        )
+                                        .plusMinutes(scheduleSectionEntityList.get(i).getStopDuration())
+                                );
+                                rideScheduleEntity.setDepartureDatePlan(rideScheduleEntity.getDeparture().toLocalDate());
+                                rideScheduleEntity.setDepartureDateFact(rideScheduleEntity.getDeparture().toLocalDate());
+                            }
+                            rideScheduleEntity.setArrival(rideScheduleEntity.getDeparture()
+                                    .plusMinutes(timeBetweenTwoStations(trainEntity, sectionRepository
+                                            .findByScheduleSectionId(scheduleSectionEntityList.get(i).getId()))
+                                    )
+                            );
+                            rideScheduleEntity.setArrivalDatePlan(rideScheduleEntity.getArrival().toLocalDate());
+                            rideScheduleEntity.setArrivalDateFact(rideScheduleEntity.getArrival().toLocalDate());
+
+                            rideScheduleEntityList.add(rideScheduleEntity);
+                        }
+                    }
+                    rideScheduleRepository.add(rideScheduleEntityList);
+                } catch (Exception e) {
+                    log.error("Error creating ride schedule", e);
+                }
             }
         } catch (Exception e) {
             log.error("Error creating a train", e);
@@ -141,6 +194,22 @@ public class TrainServiceImpl implements TrainService {
 
     private long timeBetweenTwoStations(TrainEntity trainEntity, SectionEntity sectionEntity) {
         return Double.valueOf(60 * sectionEntity.getLength() / trainEntity.getAvgSpeed()).longValue();
+    }
+
+    private ZoneId getDepartureZoneId(List<StationEntity> stationEntityList, SectionEntity sectionEntity) {
+        return stationEntityList.stream()
+                .filter(stationEntity -> stationEntity.getSectionEntityListFrom().contains(sectionEntity))
+                .map(StationEntity::getTimezone)
+                .findFirst()
+                .orElse(ZoneId.of("UTC"));
+    }
+
+    private ZoneId getArrivalZoneId(List<StationEntity> stationEntityList, SectionEntity sectionEntity) {
+        return stationEntityList.stream()
+                .filter(stationEntity -> stationEntity.getSectionEntityListTo().contains(sectionEntity))
+                .map(StationEntity::getTimezone)
+                .findFirst()
+                .orElse(ZoneId.of("UTC"));
     }
 
     @Override
@@ -154,9 +223,9 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public void cancelTrain(TrainDto trainDto) {
+    public void cancelTrain(String trainId) {
         try {
-            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.cancelAllRides(rideRepository.findAllByTrain(trainEntity));
             sendMessage(trainEntity);
         } catch (Exception e) {
@@ -165,9 +234,9 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public void cancelRide(TrainDto trainDto, LocalDate rideDate) {
+    public void cancelRide(String trainId, LocalDate rideDate) {
         try {
-            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.cancelRide(rideRepository.findByTrainAndDate(trainEntity, rideDate));
             sendMessage(trainEntity);
         } catch (Exception e) {
@@ -176,9 +245,9 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public void restartTrain(TrainDto trainDto) {
+    public void restartTrain(String trainId) {
         try {
-            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.restartAllRides(rideRepository.findAllByTrain(trainEntity));
             sendMessage(trainEntity);
         } catch (Exception e) {
@@ -187,9 +256,9 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public void restartRide(TrainDto trainDto, LocalDate rideDate) {
+    public void restartRide(String trainId, LocalDate rideDate) {
         try {
-            TrainEntity trainEntity = trainMapper.toEntity(trainDto);
+            TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.restartRide(rideRepository.findByTrainAndDate(trainEntity, rideDate));
             sendMessage(trainEntity);
         } catch (Exception e) {
@@ -198,10 +267,14 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
-    public void delayTrain(String trainId, RideScheduleDto rideScheduleDto, int minutesDelayed) {
+    public void delayTrain(String trainId, DelayFormDto delayFormDto) {
         try {
             TrainEntity trainEntity = trainRepository.findById(trainId);
-            RideScheduleEntity rideScheduleEntity = rideScheduleMapper.toEntity(rideScheduleDto);
+            RideScheduleEntity rideScheduleEntity = rideScheduleRepository
+                    .findByTrainAndSectionIndexAndArrivalDate(trainEntity,
+                            delayFormDto.getIndexWithinTrainRoute(),
+                            delayFormDto.getArrivalDate()
+                    );
             ScheduleSectionEntity scheduleSectionEntity = scheduleSectionRepository.findByTrainAndSectionIndex(trainEntity,
                     rideScheduleEntity.getIndexWithinTrainRoute());
 
@@ -210,8 +283,8 @@ public class TrainServiceImpl implements TrainService {
                     ZonedDateTime.of(
                             rideScheduleEntity.getArrivalDatePlan(),
                             scheduleSectionEntity.getArrival(),
-                            rideScheduleEntity.getArrival().getZone()).plusMinutes(minutesDelayed),
-                    minutesDelayed);
+                            rideScheduleEntity.getArrival().getZone()).plusMinutes(delayFormDto.getMinutesDelayed()),
+                    delayFormDto.getMinutesDelayed());
             //delay rest sections
             rideScheduleRepository.findByTrainAndRideDate(trainEntity, LocalDate.now()).stream()
                     .skip(rideScheduleEntity.getIndexWithinTrainRoute())
@@ -222,14 +295,14 @@ public class TrainServiceImpl implements TrainService {
                                 ZonedDateTime.of(
                                         rideSchedule.getDepartureDatePlan(),
                                         scheduleSectionEntity1.getDeparture(),
-                                        rideSchedule.getDeparture().getZone()).plusMinutes(minutesDelayed),
-                                minutesDelayed);
+                                        rideSchedule.getDeparture().getZone()).plusMinutes(delayFormDto.getMinutesDelayed()),
+                                delayFormDto.getMinutesDelayed());
                         rideScheduleRepository.delayArrival(rideSchedule,
                                 ZonedDateTime.of(
                                         rideSchedule.getArrivalDatePlan(),
                                         scheduleSectionEntity1.getArrival(),
-                                        rideSchedule.getArrival().getZone()).plusMinutes(minutesDelayed),
-                                minutesDelayed);
+                                        rideSchedule.getArrival().getZone()).plusMinutes(delayFormDto.getMinutesDelayed()),
+                                delayFormDto.getMinutesDelayed());
                     });
             sendMessage(trainEntity);
         } catch (Exception e) {
@@ -254,21 +327,14 @@ public class TrainServiceImpl implements TrainService {
                                     .isTrainCancelled(rideRepository
                                             .findByTrainAndDate(scheduleSection.getTrainEntity(), LocalDate.now())
                                             .isCancelled())
-                                    .departureTime(rideScheduleEntity.getDeparture())
-                                    .arrivalTime(rideScheduleEntity.getArrival())
+                                    .departureTime(rideScheduleEntity.getDeparture()
+                                            .format(DateTimeFormatter.ofPattern("HH:mm")))
+                                    .arrivalTime(rideScheduleEntity.getArrival()
+                                            .format(DateTimeFormatter.ofPattern("HH:mm")))
                                     .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
                                     .build());
                         })
                 );
     }
 
-    private String defineTrainStatus(RideScheduleEntity rideScheduleEntity) {
-        if (rideRepository.findByTrainAndDate(rideScheduleEntity.getTrainEntity(),
-                rideScheduleEntity.getRideDate()).isCancelled()) {
-            return "Cancelled!";
-        } else {
-            return (rideScheduleEntity.getMinutesDelayed() == 0) ? "On time."
-                    : "Delayed by " + rideScheduleEntity.getMinutesDelayed() + " minutes.";
-        }
-    }
 }

@@ -27,9 +27,10 @@ public interface ScheduleSectionRepository {
      * Find by train list.
      *
      * @param trainEntity the train entity
+     * @param rideDate    the ride date
      * @return the list
      */
-    List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity);
+    List<ScheduleSectionEntity> findByTrainAndRideDate(TrainEntity trainEntity, LocalDate rideDate);
 
     /**
      * Find by train and section index.

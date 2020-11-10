@@ -30,7 +30,7 @@ public class TicketEntity {
     private PassengerEntity passengerEntity;
 
     @Column(name = "total_price")
-    private int totalPrice;
+    private double totalPrice;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "ticketEntity", fetch = FetchType.LAZY)

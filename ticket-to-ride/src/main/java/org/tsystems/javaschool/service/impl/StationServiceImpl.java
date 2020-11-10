@@ -18,6 +18,7 @@ import org.tsystems.javaschool.repository.*;
 import org.tsystems.javaschool.service.StationService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -142,6 +143,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
+    @Transactional
     public void close(int stationId) {
         try {
             StationEntity stationEntity = stationRepository.findById(stationId);
@@ -156,6 +158,7 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
+    @Transactional
     public void open(int stationId) {
         try {
             StationEntity stationEntity = stationRepository.findById(stationId);
@@ -174,8 +177,10 @@ public class StationServiceImpl implements StationService {
                                 .isTrainCancelled(rideRepository
                                         .findByTrainAndDate(scheduleSection.getTrainEntity(), LocalDate.now())
                                         .isCancelled())
-                                .departureTime(rideScheduleEntity.getDeparture())
-                                .arrivalTime(rideScheduleEntity.getArrival())
+                                .departureTime(rideScheduleEntity.getDeparture()
+                                        .format(DateTimeFormatter.ofPattern("HH:mm")))
+                                .arrivalTime(rideScheduleEntity.getArrival()
+                                        .format(DateTimeFormatter.ofPattern("HH:mm")))
                                 .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
                                 .build());
                     });

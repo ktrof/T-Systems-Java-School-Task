@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
  * @author Trofim Kremen
  */
 @Repository
-public class RideScheduleRepositoryImpl implements RideScheduleRepository {
+public class RideScheduleRepositoryJPAImpl implements RideScheduleRepository {
 
     @PersistenceContext
     private EntityManager entityManager;

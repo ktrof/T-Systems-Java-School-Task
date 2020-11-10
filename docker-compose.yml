@@ -23,6 +23,7 @@ services:
       - main
     links:
       - db
+      - activemq
 
   stand:
     build:
@@ -32,14 +33,18 @@ services:
     ports:
     - 8081:8080
     - 9990:9990
-    - 8001:8001
+    - 8787:8787
     restart: on-failure
+    environment:
+      ACTIVEMQ_HOST: 'activemq'
     depends_on:
       - server
+      - activemq
     networks:
       - main
     links:
       - server
+      - activemq
 
   db:
     image: postgres:latest

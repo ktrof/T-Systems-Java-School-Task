@@ -40,6 +40,7 @@
         <jakarta.ejb.version>3.2.6</jakarta.ejb.version>
         <jakarta.inject.version>1.0.3</jakarta.inject.version>
         <jakarta.jms.version>2.0.3</jakarta.jms.version>
+        <resteasy.version>4.5.8.Final</resteasy.version>
         <activemq.version>5.16.0</activemq.version>
         <jakarta.faces.version>2.3.2</jakarta.faces.version>
         <jsf.version>2.2.20</jsf.version>
@@ -206,6 +207,21 @@
                 <artifactId>jakarta.faces-api</artifactId>
                 <version>${jakarta.faces.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-core</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${resteasy.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-jackson2-provider</artifactId>
+                <version>${resteasy.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.sun.faces</groupId>

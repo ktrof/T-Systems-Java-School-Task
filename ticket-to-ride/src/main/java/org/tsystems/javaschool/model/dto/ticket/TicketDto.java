@@ -19,7 +19,7 @@ public class TicketDto implements Serializable {
 
     private int id;
     private PassengerDto passengerDto;
-    private int totalPrice;
+    private double totalPrice;
     private List<TicketScheduleSectionDto> ticketScheduleSectionDtoList;
 
     public TicketScheduleSectionDto getFirstSection() {

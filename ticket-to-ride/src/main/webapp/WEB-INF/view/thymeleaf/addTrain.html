@@ -96,6 +96,18 @@
                            th:text="${error}">Validation error</p>
                     </div>
                     <div class="form-group"
+                         th:classappend="${#fields.hasErrors('type')}? 'has-error':''">
+                        <label for="trainName" class="control-label">Train type</label>
+                        <select th:field="*{type}" name="type">
+                            <option th:each="type : ${trainTypes}"
+                                    th:value="${type}"
+                                    th:text="${type.getTypeOfString()}"></option>
+                        </select>
+                        <p class="error-message"
+                           th:each="error: ${#fields.errors('type')}"
+                           th:text="${error}">Validation error</p>
+                    </div>
+                    <div class="form-group"
                          th:classappend="${#fields.hasErrors('avgSpeed')}? 'has-error':''">
                         <label for="trainAvgSpeed" class="control-label">Average speed</label>
                         <input id="trainAvgSpeed"

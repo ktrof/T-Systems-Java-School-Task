@@ -20,9 +20,9 @@ public class StandRowDto implements Serializable {
     private String trainNumber;
     private boolean isCancelled;
     private int minutesDelayed;
-    private ZonedDateTime departureTime;
+    private String departureTime;
     private String departureStationName;
-    private ZonedDateTime arrivalTime;
+    private String arrivalTime;
     private String destinationStationName;
 
 }

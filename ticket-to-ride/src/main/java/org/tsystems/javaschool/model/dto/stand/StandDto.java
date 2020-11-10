@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -20,7 +19,7 @@ public class StandDto implements Serializable {
 
     private String stationName;
     private boolean isClosed;
-    private LocalDate rideDate;
+    private String rideDate;
     private List<StandRowDto> standRowDtoList;
 
 }

@@ -7,8 +7,8 @@ import org.tsystems.javaschool.dto.StandDto;
 import org.tsystems.javaschool.dto.StationDto;
 
 import javax.annotation.PostConstruct;
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import javax.inject.Inject;
 import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.Map;
 @Slf4j
 public class StandService {
 
-    @Inject
+    @EJB
     private RestClientService restClientService;
 
     private LocalDate rideDate = LocalDate.now();
@@ -34,7 +34,7 @@ public class StandService {
     public void init() {
         standDtoMap = new HashMap<>();
         updateStationDtoList();
-        updateStandInfo();
+        updateStandMap();
     }
 
     public void updateStationDtoList() {
@@ -46,11 +46,16 @@ public class StandService {
         }
     }
 
-    public void updateStandInfo() {
+    public void updateStandMap() {
         stationDtoList.forEach(stationDto -> standDtoMap.put(
                 stationDto.getName(),
                 restClientService.getStandByStationIdAndRideDate(stationDto.getId(), rideDate))
         );
+        if (standDtoMap.isEmpty()) {
+            log.error("Error getting stand info");
+        } else {
+            log.info("Stand info has been put to map");
+        }
     }
 
 }

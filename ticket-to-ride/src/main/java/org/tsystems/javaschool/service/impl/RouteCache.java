@@ -1,4 +1,4 @@
-package org.tsystems.javaschool.controller;
+package org.tsystems.javaschool.service.impl;
 
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

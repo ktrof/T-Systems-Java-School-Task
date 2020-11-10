@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.repository;
 
 import org.tsystems.javaschool.model.entity.SectionEntity;
-import org.tsystems.javaschool.model.entity.StationEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,6 +26,14 @@ public interface SectionRepository {
      * @return the section entity
      */
     SectionEntity findById(int id);
+
+    /**
+     * Find by schedule section section entity id.
+     *
+     * @param id the id
+     * @return the section entity
+     */
+    SectionEntity findByScheduleSectionId(int id);
 
     /**
      * Add section entity.

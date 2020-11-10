@@ -3,8 +3,8 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.tsystems.javaschool.controller.RouteCache;
 import org.tsystems.javaschool.mapper.PassengerMapper;
 import org.tsystems.javaschool.mapper.TicketMapper;
 import org.tsystems.javaschool.model.dto.passenger.PassengerFormDto;
@@ -111,7 +111,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public TicketDto buyTicket(PassengerFormDto passengerFormDto) {
         PassengerEntity passengerEntity = passengerRepository
                 .findByNameAndBirthDate(
@@ -127,6 +127,7 @@ public class TicketServiceImpl implements TicketService {
         TicketDto newTicket = TicketDto.builder()
                 .ticketScheduleSectionDtoList(mapRouteToTicketSections(getRouteDto(passengerFormDto)))
                 .passengerDto(passengerMapper.toDto(passengerEntity))
+                .totalPrice(getRouteDto(passengerFormDto).getTotalPrice())
                 .build();
 
         createTicket(newTicket);

@@ -39,7 +39,7 @@ public class AddTrainFormDto implements Serializable {
     @Pattern(regexp = "^([2][0-3]|[0-1][0-9]|[1-9]):[0-5][0-9]$", message = "pattern {HH:mm}")
     private String departure;
 
-    private String type;
+    private TrainType type;
 
     @NotBlank(message = "Choose ride dates")
     private String dates;

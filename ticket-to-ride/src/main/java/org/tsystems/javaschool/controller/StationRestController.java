@@ -17,7 +17,7 @@ import java.util.List;
  * @author Trofim Kremen
  */
 @RestController
-@RequestMapping(value = "api/")
+@RequestMapping(value = "/api")
 @RequiredArgsConstructor
 public class StationRestController {
 

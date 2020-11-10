@@ -74,11 +74,11 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ScheduleSectionDto> getByTrain(TrainDto trainDto) {
+    public List<ScheduleSectionDto> getByTrainAndRideDate(TrainDto trainDto, LocalDate rideDate) {
         List<ScheduleSectionDto> scheduleSectionDtoList = null;
         try {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
-                    .findByTrain(trainMapper.toEntity(trainDto));
+                    .findByTrainAndRideDate(trainMapper.toEntity(trainDto), rideDate);
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
         } catch (Exception e) {
             log.error("Error getting schedule section by train" ,e);

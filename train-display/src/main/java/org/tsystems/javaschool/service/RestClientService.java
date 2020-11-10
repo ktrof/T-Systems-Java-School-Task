@@ -2,13 +2,16 @@ package org.tsystems.javaschool.service;
 
 import org.tsystems.javaschool.dto.StandDto;
 import org.tsystems.javaschool.dto.StationDto;
+import org.tsystems.javaschool.util.JsonParser;
 
+import javax.ejb.EJB;
 import javax.ejb.Singleton;
-import javax.enterprise.context.Dependent;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.io.Serializable;
 import java.net.URI;
 import java.time.LocalDate;
@@ -19,7 +22,7 @@ import java.util.Objects;
 /**
  * @author Trofim Kremen
  */
-@Dependent
+@Singleton
 public class RestClientService implements Serializable {
 
     private Client client;
@@ -32,6 +35,7 @@ public class RestClientService implements Serializable {
                 .path(String.valueOf(stationId))
                 .path("stand")
                 .queryParam("rideDate", rideDate);
+        System.out.println(endpointTarget.getUri().toString());
         return endpointTarget.request(MediaType.APPLICATION_JSON_TYPE).get(StandDto.class);
     }
 
@@ -40,6 +44,7 @@ public class RestClientService implements Serializable {
         WebTarget uriTarget = getUriTarget(client);
         WebTarget endpointTarget = uriTarget
                 .path("stations");
+        System.out.println(endpointTarget.getUri().toString());
         return Arrays.asList(endpointTarget.request(MediaType.APPLICATION_JSON_TYPE).get(StationDto[].class));
     }
 
@@ -51,6 +56,6 @@ public class RestClientService implements Serializable {
     }
 
     private WebTarget getUriTarget(Client client) {
-        return client.target(URI.create("http://localhost:8080/api/"));
+        return client.target(URI.create("http://172.17.0.1:8080/api/"));
     }
 }

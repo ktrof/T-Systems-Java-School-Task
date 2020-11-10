@@ -35,4 +35,24 @@ public interface RideScheduleMapper {
      */
     List<RideScheduleEntity> toEntityList(List<RideScheduleDto> rideScheduleDtoList);
 
+    /**
+     * To dto ride schedule dto.
+     *
+     * @param rideScheduleEntity the ride schedule entity
+     * @return the ride schedule dto
+     */
+    @Mappings({
+
+            @Mapping(target = "trainDto", source = "rideScheduleEntity.trainEntity")
+    })
+    RideScheduleDto toDto(RideScheduleEntity rideScheduleEntity);
+
+    /**
+     * To dto list list.
+     *
+     * @param rideScheduleEntityList the ride schedule entity list
+     * @return the list
+     */
+    List<RideScheduleDto> toDtoList(List<RideScheduleEntity> rideScheduleEntityList);
+
 }

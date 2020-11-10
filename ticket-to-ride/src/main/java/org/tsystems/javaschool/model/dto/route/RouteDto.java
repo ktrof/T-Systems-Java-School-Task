@@ -50,6 +50,15 @@ public class RouteDto implements Serializable {
         return Double.parseDouble(decimalFormat.format(totalDistance));
     }
 
+    public double getTotalPrice() {
+        DecimalFormat decimalFormat = new DecimalFormat("#.##");
+        decimalFormat.setRoundingMode(RoundingMode.DOWN);
+        double totalPrice = routePartDtoList.stream()
+                .map(RoutePartDto::getPrice)
+                .reduce(0d, Double::sum);
+        return Double.parseDouble(decimalFormat.format(totalPrice));
+    }
+
     private int getTransferCount() {
         return routePartDtoList.size() - 1;
     }

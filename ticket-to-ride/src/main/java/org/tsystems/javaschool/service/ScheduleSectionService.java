@@ -36,8 +36,9 @@ public interface ScheduleSectionService {
      * Gets by train and ride date.
      *
      * @param trainDto the train dto
+     * @param rideDate the ride date
      * @return the by train and ride date
      */
-    List<ScheduleSectionDto> getByTrain(TrainDto trainDto);
+    List<ScheduleSectionDto> getByTrainAndRideDate(TrainDto trainDto, LocalDate rideDate);
 
 }

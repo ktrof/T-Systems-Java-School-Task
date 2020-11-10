@@ -7,6 +7,7 @@
       xmlns:jsf="http://xmlns.jcp.org/jsf"
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:o="http://omnifaces.org/ui"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xmlns:ui="http://java.sun.com/jsf/facelets"
       xsi:schemaLocation="http://omnifaces.org/ui ">
@@ -23,94 +24,95 @@
             </div>
             <div class="nav-item select">
                 <h:form styleClass="form-group">
-                    <h:selectOneMenu styleClass="form-control selectOne" value="#{standJSFModel.currentStationName}"
-                                     rendered="#{not empty standJSFModel.stationNameList}">
-                        <f:selectItems value="#{standJSFModel.stationNameList}"/>
-                        <f:ajax listener="#{standJSFModel.changeStand}" render="deptTable arrTable"/>
+                    <h:selectOneMenu styleClass="form-control selectOne" value="#{standNamedBean.currentStationName}"
+                                     rendered="#{not empty standNamedBean.stationNameList}">
+                        <f:selectItems value="#{standNamedBean.stationNameList}"/>
+                        <f:ajax listener="#{standNamedBean.reloadStand}" render="stand"/>
                     </h:selectOneMenu>
                 </h:form>
             </div>
         </div>
         <div class="container-fluid mx-2">
-            <div class="row">
-                <div class="col-md-12 col-lg-6 rounded">
-                    <span class="text-right">
-                        #{standJSFModel.standDto.stationName}
-                    </span>
+            <h:panelGroup id="stand">
+                <div class="row">
+                    <div class="col-md-12 col-lg-6 rounded">
+                    <h:outputText styleClass="text-right"
+                                  value="#{standNamedBean.standDto.stationName}"/>
+                    </div>
+                    <div class="col-md-12 col-lg-6 rounded">
+                    <h:outputText styleClass="text-left"
+                                  value="#{standNamedBean.getStationStatus(standNamedBean.standDto)}"/>
+                    </div>
                 </div>
-                <div class="col-md-12 col-lg-6 rounded">
-                    <span class="text-left">
-                        #{standJSFModel.getStationStatus(standJSFModel.standDto)}
-                    </span>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-12 col-lg-6 rounded">
-                    <h3 class="text-center">Departure</h3>
-                    <table class="table">
-                        <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Train</th>
-                            <th scope="col">Departure</th>
-                            <th scope="col">Arrival</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <ui:repeat var="standRow" value="${standJSFModel.departureStandRowList}">
+                <div class="row">
+                    <div class="col-md-12 col-lg-6 rounded">
+                        <h3 class="text-center">Departure</h3>
+                        <table class="table">
+                            <thead class="thead-light">
                             <tr>
-                                <td>#{standRow.trainNumber}</td>
-                                <td>${standJSFModel.formatDate(standRow.departureTime)}</td>
-                                <td>${standJSFModel.formatDate(standRow.arrivalTime}</td>
-                                <td>
-                                    <h:outputText rendered="#{standJSFModel.isTrainOnTime(standRow)}"
-                                                  value="#{standJSFModel.getTrainStatus(standRow)}"/>
-                                    <span class="badge badge-danger"
-                                          jsf:rendered="#{not standJSFModel.isTrainOnTime(standRow)}">
-                                                    #{standJSFModel.getTrainStatus(standRow)}}
-                                        </span>
-                                </td>
+                                <th scope="col">Train</th>
+                                <th scope="col">Departure</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        </ui:repeat>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-md-12 col-lg-6 rounded">
-                    <h3 class="text-center">Arrival</h3>
-                    <table class="table">
-                        <thead class="thead-light">
-                        <tr>
-                            <th scope="col">Train</th>
-                            <th scope="col">Departure</th>
-                            <th scope="col">Arrival</th>
-                            <th scope="col">Status</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <ui:repeat var="standRow" value="${standJSFModel.arrivalStandRowList}">
+                            </thead>
+                            <tbody>
+                            <ui:repeat var="standRow" value="#{standNamedBean.departureStandRowList}">
+                                <tr>
+                                    <td>#{standRow.trainNumber}</td>
+                                    <td>#{standRow.departureTime}</td>
+                                    <td>
+                                        <h:outputText rendered="#{standNamedBean.isTrainOnTime(standRow)}"
+                                                      value="#{standNamedBean.getTrainStatus(standRow)}"/>
+                                        <span class="badge badge-danger"
+                                              jsf:rendered="#{not standNamedBean.isTrainOnTime(standRow)}">
+                                                    #{standNamedBean.getTrainStatus(standRow)}
+                                    </span>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="col-md-12 col-lg-6 rounded">
+                        <h3 class="text-center">Arrival</h3>
+                        <table class="table">
+                            <thead class="thead-light">
                             <tr>
-                                <td>#{standRow.trainNumber}</td>
-                                <td>${standJSFModel.formatDate(standRow.departureTime)}</td>
-                                <td>${standJSFModel.formatDate(standRow.arrivalTime}</td>
-                                <td>
-                                    <h:outputText rendered="#{standJSFModel.isTrainOnTime(standRow)}"
-                                                  value="#{standJSFModel.getTrainStatus(standRow)}"/>
-                                    <span class="badge badge-danger"
-                                          jsf:rendered="#{not standJSFModel.isTrainOnTime(standRow)}">
-                                                    #{standJSFModel.getTrainStatus(standRow)}}
-                                        </span>
-                                </td>
+                                <th scope="col">Train</th>
+                                <th scope="col">Arrival</th>
+                                <th scope="col">Status</th>
                             </tr>
-                        </ui:repeat>
-                        </tbody>
-                    </table>
+                            </thead>
+                            <tbody>
+                            <ui:repeat var="standRow" value="#{standNamedBean.arrivalStandRowList}">
+                                <tr>
+                                    <td>#{standRow.trainNumber}</td>
+                                    <td>#{standRow.arrivalTime}</td>
+                                    <td>
+                                        <h:outputText rendered="#{standNamedBean.isTrainOnTime(standRow)}"
+                                                      value="#{standNamedBean.getTrainStatus(standRow)}"/>
+                                        <span class="badge badge-danger"
+                                              jsf:rendered="#{not standNamedBean.isTrainOnTime(standRow)}">
+                                                    #{standNamedBean.getTrainStatus(standRow)}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-            </div>
+            </h:panelGroup>
         </div>
+        <o:socket channel="standUpdate" onmessage="onStandUpdate"/>
+        <script type="text/javascript">
+            function onStandUpdate(message, channel, event) {
+                console.log(message);
+                window.location.reload();
+            }
+        </script>
         <h:outputScript library="webjars" name="jquery/3.5.1/jquery.min.js"/>
         <h:outputScript library="webjars" name="bootstrap/4.5.2/js/bootstrap.bundle.min.js"/>
-        <script src="resources/js/main.js" type="javascript"></script>
-        <f:websocket channel="standUpdate" onmessage="onStandUpdate()"/>
     </f:view>
 </h:body>
 </html>

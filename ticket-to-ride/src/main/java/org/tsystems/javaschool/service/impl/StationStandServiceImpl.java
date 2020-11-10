@@ -3,6 +3,7 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.model.dto.stand.StandDto;
 import org.tsystems.javaschool.model.dto.stand.StandRowDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
@@ -14,6 +15,7 @@ import org.tsystems.javaschool.repository.RideScheduleRepository;
 import org.tsystems.javaschool.service.StationStandService;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.stream.Collectors;
 
 /**
@@ -30,6 +32,7 @@ public class StationStandServiceImpl implements StationStandService {
     private final RideRepository rideRepository;
 
     @Override
+    @Transactional
     public StandDto getByStationIdAndRideDate(int stationId, LocalDate rideDate) {
         StandDto standDto = null;
         try {
@@ -37,7 +40,7 @@ public class StationStandServiceImpl implements StationStandService {
             standDto = StandDto.builder()
                     .stationName(departureStationEntity.getName())
                     .isClosed(departureStationEntity.isClosed())
-                    .rideDate(rideDate)
+                    .rideDate(rideDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")))
                     .standRowDtoList(scheduleSectionRepository
                             .findByStationAndRideDate(departureStationEntity, rideDate).stream()
                             .map(scheduleSectionEntity -> {
@@ -46,10 +49,12 @@ public class StationStandServiceImpl implements StationStandService {
                                                 scheduleSectionEntity.getIndexWithinTrainRoute(), rideDate);
                                 return StandRowDto.builder()
                                         .trainNumber(scheduleSectionEntity.getTrainEntity().getId())
-                                        .departureTime(rideScheduleEntity.getDeparture())
+                                        .departureTime(rideScheduleEntity.getDeparture()
+                                                .format(DateTimeFormatter.ofPattern("HH:mm")))
                                         .departureStationName(scheduleSectionEntity.getSectionEntity()
                                                 .getStationEntityFrom().getName())
-                                        .arrivalTime(rideScheduleEntity.getArrival())
+                                        .arrivalTime(rideScheduleEntity.getArrival()
+                                                .format(DateTimeFormatter.ofPattern("HH:mm")))
                                         .destinationStationName(scheduleSectionEntity.getSectionEntity()
                                                 .getStationEntityTo().getName())
                                         .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
