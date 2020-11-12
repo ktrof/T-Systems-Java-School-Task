@@ -84,7 +84,8 @@ public class StationServiceImpl implements StationService {
             StationEntity newStationEntity = stationMapper.toEntity(stationFormDto);
             stationRepository.add(newStationEntity);
 
-            if (stationFormDto.getCorrespondingSectionList().length != 0) {
+            if (stationFormDto.getCorrespondingSectionList() != null
+                    && stationFormDto.getCorrespondingSectionList().length > 0) {
                 try {
                     List<SectionEntity> sectionEntityList = new ArrayList<>();
                     for (SectionDto sectionDto : stationFormDto.getCorrespondingSectionList()) {

@@ -47,17 +47,15 @@ public interface StationRepository {
      * Add station entity.
      *
      * @param stationEntity the station entity
-     * @return the station entity
      */
-    StationEntity add(StationEntity stationEntity);
+    void add(StationEntity stationEntity);
 
     /**
      * Update name station entity.
      *
      * @param stationEntity the station entity
-     * @return the station entity
      */
-    StationEntity update(StationEntity stationEntity);
+    void update(StationEntity stationEntity);
 
     /**
      * Close.

@@ -43,17 +43,15 @@ public interface RideRepository {
      * Add calendar entity.
      *
      * @param rideEntity the calendar entity
-     * @return the calendar entity
      */
-    RideEntity add(RideEntity rideEntity);
+    void add(RideEntity rideEntity);
 
     /**
      * Add iterable.
      *
      * @param rideEntityCollection the calendar entity collection
-     * @return the iterable
      */
-    Iterable<RideEntity> add(Collection<RideEntity> rideEntityCollection);
+    void add(Collection<RideEntity> rideEntityCollection);
 
     /**
      * Cancel ride.

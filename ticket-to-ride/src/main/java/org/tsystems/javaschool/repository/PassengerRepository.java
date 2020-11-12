@@ -59,9 +59,8 @@ public interface PassengerRepository {
      * Add passenger entity.
      *
      * @param passengerEntity the passenger entity
-     * @return the passenger entity
      */
-    PassengerEntity add(PassengerEntity passengerEntity);
+    void add(PassengerEntity passengerEntity);
 
     /**
      * Update name passenger entity.

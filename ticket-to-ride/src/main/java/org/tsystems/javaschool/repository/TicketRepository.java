@@ -50,8 +50,7 @@ public interface TicketRepository {
      * Add ticket entity.
      *
      * @param ticketEntity the ticket entity
-     * @return the ticket entity
      */
-    TicketEntity add(TicketEntity ticketEntity);
+    void add(TicketEntity ticketEntity);
 
 }

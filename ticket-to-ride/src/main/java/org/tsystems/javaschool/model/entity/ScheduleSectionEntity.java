@@ -1,9 +1,6 @@
 package org.tsystems.javaschool.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -14,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 @NamedEntityGraphs({
         @NamedEntityGraph(
                 name = "schedule-calendar-graph",

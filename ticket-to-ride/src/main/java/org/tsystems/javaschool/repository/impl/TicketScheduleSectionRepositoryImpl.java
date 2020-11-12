@@ -55,15 +55,13 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
     }
 
     @Override
-    public TicketScheduleSectionEntity add(TicketScheduleSectionEntity ticketScheduleSectionEntity) {
+    public void add(TicketScheduleSectionEntity ticketScheduleSectionEntity) {
         entityManager.persist(ticketScheduleSectionEntity);
-        return ticketScheduleSectionEntity;
     }
 
     @Override
-    public Iterable<TicketScheduleSectionEntity> add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection) {
+    public void add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection) {
         ticketScheduleSectionEntityCollection.forEach(this::add);
-        return ticketScheduleSectionEntityCollection;
     }
 
 }

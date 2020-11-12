@@ -30,16 +30,14 @@ public interface TrainRepository {
      * Add train entity.
      *
      * @param trainEntity the train entity
-     * @return the train entity
      */
-    TrainEntity add(TrainEntity trainEntity);
+    void add(TrainEntity trainEntity);
 
     /**
      * Update avg speed train entity.
      *
      * @param trainEntity the train entity
-     * @return the train entity
      */
-    TrainEntity update(TrainEntity trainEntity);
+    void update(TrainEntity trainEntity);
 
 }

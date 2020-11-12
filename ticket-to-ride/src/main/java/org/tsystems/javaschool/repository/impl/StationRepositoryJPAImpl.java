@@ -83,14 +83,13 @@ public class StationRepositoryJPAImpl implements StationRepository {
     }
 
     @Override
-    public StationEntity add(StationEntity stationEntity) {
+    public void add(StationEntity stationEntity) {
         entityManager.persist(stationEntity);
-        return stationEntity;
     }
 
     @Override
-    public StationEntity update(StationEntity stationEntity) {
-        return entityManager.merge(stationEntity);
+    public void update(StationEntity stationEntity) {
+        entityManager.merge(stationEntity);
     }
 
     private void updateClosedAttribute(StationEntity stationEntity, boolean isClosed) {

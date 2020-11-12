@@ -120,8 +120,7 @@ public class TicketServiceImpl implements TicketService {
         if (Objects.isNull(passengerEntity)) {
             passengerEntity = passengerMapper.toEntity(passengerFormDto);
             passengerEntity.setUserEntity(userRepository.findByLogin(passengerFormDto.getUserLogin()));
-            PassengerEntity newPassengerEntity = passengerRepository.add(passengerEntity);
-            System.out.println(newPassengerEntity.toString());
+            passengerRepository.add(passengerEntity);
         }
 
         TicketDto newTicket = TicketDto.builder()
@@ -137,7 +136,8 @@ public class TicketServiceImpl implements TicketService {
 
     private void createTicket(TicketDto newTicket) {
         try {
-            TicketEntity ticketEntity = ticketRepository.add(ticketMapper.toEntity(newTicket));
+            TicketEntity ticketEntity = ticketMapper.toEntity(newTicket);
+            ticketRepository.add(ticketEntity);
             newTicket.getTicketScheduleSectionDtoList()
                     .forEach(ticketScheduleSectionDto ->
                             ticketScheduleSectionRepository.add(TicketScheduleSectionEntity.builder()

@@ -46,7 +46,6 @@ public class TrainServiceImpl implements TrainService {
     private final SectionRepository sectionRepository;
     private final StationRepository stationRepository;
     private final TrainMapper trainMapper;
-    private final RideScheduleMapper rideScheduleMapper;
     private final MessageSender messageSender;
 
     @Override
@@ -54,7 +53,8 @@ public class TrainServiceImpl implements TrainService {
     public List<TrainDto> getAll() {
         List<TrainDto> trainDtoList  = null;
         try {
-            trainDtoList = trainMapper.toDtoList(trainRepository.findAll());
+            List<TrainEntity> trainEntityList = trainRepository.findAll();
+            trainDtoList = trainMapper.toDtoList(trainEntityList);
         } catch (Exception e) {
             log.error("Error getting all the trains", e);
         }
@@ -77,7 +77,8 @@ public class TrainServiceImpl implements TrainService {
     @Transactional
     public AddTrainFormDto save(AddTrainFormDto trainFormDto) {
         try {
-            TrainEntity trainEntity = trainRepository.add(trainMapper.toEntity(trainFormDto));
+            TrainEntity trainEntity = trainMapper.toEntity(trainFormDto);
+            trainRepository.add(trainEntity);
 
             List<LocalDate> rideDates = Arrays
                     .stream(trainFormDto.getDates().split(","))
@@ -130,7 +131,7 @@ public class TrainServiceImpl implements TrainService {
                         );
                         scheduleSectionEntityList.add(scheduleSectionEntity);
                     }
-                scheduleSectionRepository.add(scheduleSectionEntityList);
+                    scheduleSectionRepository.add(scheduleSectionEntityList);
                 } catch (Exception e) {
                     log.error("Error creating schedule sections", e);
                 }

@@ -65,15 +65,13 @@ public class SectionRepositoryJPAImpl implements SectionRepository {
     }
 
     @Override
-    public SectionEntity add(SectionEntity sectionEntity) {
+    public void add(SectionEntity sectionEntity) {
         entityManager.persist(entityManager);
-        return sectionEntity;
     }
 
     @Override
-    public Iterable<SectionEntity> add(Collection<SectionEntity> sectionEntityCollection) {
+    public void add(Collection<SectionEntity> sectionEntityCollection) {
         sectionEntityCollection.forEach(this::add);
-        return sectionEntityCollection;
     }
 
 }

@@ -77,9 +77,8 @@ public class TicketRepositoryJPAImpl implements TicketRepository {
     }
 
     @Override
-    public TicketEntity add(TicketEntity ticketEntity) {
+    public void add(TicketEntity ticketEntity) {
         entityManager.persist(ticketEntity);
-        return ticketEntity;
     }
 
 }

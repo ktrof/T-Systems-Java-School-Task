@@ -40,17 +40,15 @@ public interface RideScheduleRepository {
      * Add train schedule entity.
      *
      * @param rideScheduleEntity the train schedule entity
-     * @return the train schedule entity
      */
-    RideScheduleEntity add(RideScheduleEntity rideScheduleEntity);
+    void add(RideScheduleEntity rideScheduleEntity);
 
     /**
      * Add iterable.
      *
      * @param rideScheduleEntityCollection the train schedule entity collection
-     * @return the iterable
      */
-    Iterable<RideScheduleEntity> add(Collection<RideScheduleEntity> rideScheduleEntityCollection);
+    void add(Collection<RideScheduleEntity> rideScheduleEntityCollection);
 
     /**
      * Delay.

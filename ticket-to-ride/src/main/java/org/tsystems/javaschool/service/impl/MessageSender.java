@@ -12,6 +12,8 @@ import org.tsystems.javaschool.util.JsonParser;
 import javax.jms.*;
 
 /**
+ * The type Message sender.
+ *
  * @author Trofim Kremen
  */
 @Component
@@ -23,6 +25,11 @@ public class MessageSender {
     private final Environment environment;
     private final JsonParser jsonParser;
 
+    /**
+     * Send message.
+     *
+     * @param standDto the stand dto
+     */
     public void sendMessage(StandUpdateDto standDto) {
         try {
             Connection connection = connectionFactory.createQueueConnection();

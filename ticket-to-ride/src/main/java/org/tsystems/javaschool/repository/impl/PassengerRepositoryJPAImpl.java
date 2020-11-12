@@ -95,9 +95,8 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
     }
 
     @Override
-    public PassengerEntity add(PassengerEntity passengerEntity) {
+    public void add(PassengerEntity passengerEntity) {
         entityManager.persist(passengerEntity);
-        return passengerEntity;
     }
 
     @Override

@@ -40,14 +40,13 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     }
 
     @Override
-    public TrainEntity add(TrainEntity trainEntity) {
+    public void add(TrainEntity trainEntity) {
         entityManager.persist(trainEntity);
-        return trainEntity;
     }
 
     @Override
-    public TrainEntity update(TrainEntity trainEntity) {
-        return entityManager.merge(trainEntity);
+    public void update(TrainEntity trainEntity) {
+        entityManager.merge(trainEntity);
     }
 
 }

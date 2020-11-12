@@ -26,16 +26,14 @@ public interface TicketScheduleSectionRepository {
      * Add ticket schedule section entity.
      *
      * @param ticketScheduleSectionEntity the ticket schedule section entity
-     * @return the ticket schedule section entity
      */
-    TicketScheduleSectionEntity add(TicketScheduleSectionEntity ticketScheduleSectionEntity);
+    void add(TicketScheduleSectionEntity ticketScheduleSectionEntity);
 
     /**
      * Add iterable.
      *
      * @param ticketScheduleSectionEntityCollection the ticket schedule section entity collection
-     * @return the iterable
      */
-    Iterable<TicketScheduleSectionEntity> add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection);
+    void add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection);
 
 }

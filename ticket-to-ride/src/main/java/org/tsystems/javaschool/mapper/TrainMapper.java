@@ -26,9 +26,6 @@ public interface TrainMapper {
      * @param trainEntity the train entity
      * @return the train dto
      */
-    @Mappings({
-            @Mapping(target = "type", source = "trainEntity.type")
-    })
     TrainDto toDto(TrainEntity trainEntity);
 
     /**
@@ -38,7 +35,6 @@ public interface TrainMapper {
      * @return the train entity
      */
     @Mappings({
-            @Mapping(target = "type", source = "trainDto.type.typeOfString"),
             @Mapping(target = "rideEntityList", ignore = true),
             @Mapping(target = "scheduleSectionEntityList", ignore = true),
             @Mapping(target = "rideScheduleEntityList", ignore = true)
@@ -52,7 +48,6 @@ public interface TrainMapper {
      * @return the train entity
      */
     @Mappings({
-            @Mapping(target = "type", source = "trainFormDto.type.typeOfString"),
             @Mapping(target = "rideEntityList", ignore = true),
             @Mapping(target = "scheduleSectionEntityList", ignore = true),
             @Mapping(target = "rideScheduleEntityList", ignore = true)
@@ -74,5 +69,25 @@ public interface TrainMapper {
      * @return the list
      */
     List<TrainEntity> toEntityList(List<TrainDto> trainDtoList);
+
+    /**
+     * From enum string.
+     *
+     * @param trainType the train type
+     * @return the string
+     */
+    default String fromEnum(TrainType trainType) {
+        return trainType == null ? null : trainType.getTypeOfString();
+    }
+
+    /**
+     * From string train type.
+     *
+     * @param trainType the train type
+     * @return the train type
+     */
+    default TrainType fromString(String trainType) {
+        return trainType == null ? null :TrainType.getTypeOfEnum(trainType);
+    }
 
 }

@@ -68,15 +68,13 @@ public class RideRepositoryJPAImpl implements RideRepository {
     }
 
     @Override
-    public RideEntity add(RideEntity rideEntity) {
+    public void add(RideEntity rideEntity) {
         entityManager.persist(rideEntity);
-        return rideEntity;
     }
 
     @Override
-    public Iterable<RideEntity> add(Collection<RideEntity> rideEntityCollection) {
+    public void add(Collection<RideEntity> rideEntityCollection) {
         rideEntityCollection.forEach(this::add);
-        return rideEntityCollection;
     }
 
     private void updateTrainCancellation(RideEntity rideEntity, boolean attributeValue) {

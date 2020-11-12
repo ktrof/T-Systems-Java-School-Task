@@ -70,16 +70,14 @@ public interface ScheduleSectionRepository {
      * Add schedule section entity.
      *
      * @param scheduleSectionEntity the schedule section entity
-     * @return the schedule section entity
      */
-    ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity);
+    void add(ScheduleSectionEntity scheduleSectionEntity);
 
     /**
      * Add iterable.
      *
      * @param scheduleSectionEntityCollection the schedule section entity collection
-     * @return the iterable
      */
-    Iterable<ScheduleSectionEntity> add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection);
+    void add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection);
 
 }

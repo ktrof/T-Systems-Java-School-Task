@@ -39,16 +39,14 @@ public interface SectionRepository {
      * Add section entity.
      *
      * @param sectionEntity the section entity
-     * @return the section entity
      */
-    SectionEntity add(SectionEntity sectionEntity);
+    void add(SectionEntity sectionEntity);
 
     /**
      * Add iterable.
      *
      * @param sectionEntityCollection the section entity collection
-     * @return the iterable
      */
-    Iterable<SectionEntity> add(Collection<SectionEntity> sectionEntityCollection);
+    void add(Collection<SectionEntity> sectionEntityCollection);
 
 }

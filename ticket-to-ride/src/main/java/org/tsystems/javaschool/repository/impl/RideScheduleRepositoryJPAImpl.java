@@ -77,15 +77,13 @@ public class RideScheduleRepositoryJPAImpl implements RideScheduleRepository {
     }
 
     @Override
-    public RideScheduleEntity add(RideScheduleEntity rideScheduleEntity) {
+    public void add(RideScheduleEntity rideScheduleEntity) {
         entityManager.persist(rideScheduleEntity);
-        return rideScheduleEntity;
     }
 
     @Override
-    public Iterable<RideScheduleEntity> add(Collection<RideScheduleEntity> rideScheduleEntityCollection) {
+    public void add(Collection<RideScheduleEntity> rideScheduleEntityCollection) {
         rideScheduleEntityCollection.forEach(this::add);
-        return rideScheduleEntityCollection;
     }
 
     @Override
