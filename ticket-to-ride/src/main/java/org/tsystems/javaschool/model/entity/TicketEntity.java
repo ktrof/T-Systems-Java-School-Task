@@ -4,6 +4,7 @@ package org.tsystems.javaschool.model.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -29,6 +30,9 @@ public class TicketEntity {
 
     @Column(name = "total_price")
     private double totalPrice;
+
+    @Column(name = "ride_date")
+    private LocalDate rideDate;
 
     @ToString.Exclude
     @OneToMany(mappedBy = "ticketEntity", fetch = FetchType.LAZY)

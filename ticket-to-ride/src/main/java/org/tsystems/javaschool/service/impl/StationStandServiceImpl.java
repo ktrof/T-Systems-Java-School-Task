@@ -65,6 +65,7 @@ public class StationStandServiceImpl implements StationStandService {
                             .collect(Collectors.toList())
                     )
                     .build();
+            System.out.println(scheduleSectionRepository.findByStationAndRideDate(departureStationEntity, rideDate));
         } catch (Exception e) {
             log.error("Error getting station stand by departure station", e);
         }

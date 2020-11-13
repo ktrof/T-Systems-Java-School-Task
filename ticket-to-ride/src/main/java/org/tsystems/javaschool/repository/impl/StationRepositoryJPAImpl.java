@@ -98,7 +98,7 @@ public class StationRepositoryJPAImpl implements StationRepository {
         Root<StationEntity> root = criteriaUpdate.from(StationEntity.class);
 
         criteriaUpdate
-                .set(root.get(StationEntity_.CLOSED), isClosed)
+                .set(root.get(StationEntity_.closed), isClosed)
                 .where(criteriaBuilder.equal(root.get(StationEntity_.id), stationEntity.getId()));
 
         entityManager.createQuery(criteriaUpdate).executeUpdate();

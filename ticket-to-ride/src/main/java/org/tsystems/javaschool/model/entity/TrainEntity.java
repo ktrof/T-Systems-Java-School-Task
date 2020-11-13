@@ -29,6 +29,9 @@ public class TrainEntity {
     @Column(name = "type")
     private String type;
 
+    @Column(name = "cancelled")
+    private boolean cancelled;
+
     @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<RideEntity> rideEntityList;

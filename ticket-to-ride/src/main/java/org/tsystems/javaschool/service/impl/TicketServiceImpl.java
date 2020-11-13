@@ -127,6 +127,7 @@ public class TicketServiceImpl implements TicketService {
                 .ticketScheduleSectionDtoList(mapRouteToTicketSections(getRouteDto(passengerFormDto)))
                 .passengerDto(passengerMapper.toDto(passengerEntity))
                 .totalPrice(getRouteDto(passengerFormDto).getTotalPrice())
+                .rideDate(getRouteDto(passengerFormDto).getDepartureTime().toLocalDate())
                 .build();
 
         createTicket(newTicket);
@@ -142,6 +143,7 @@ public class TicketServiceImpl implements TicketService {
                     .forEach(ticketScheduleSectionDto ->
                             ticketScheduleSectionRepository.add(TicketScheduleSectionEntity.builder()
                                     .ticketEntity(ticketEntity)
+                                    .indexWithinTicket(ticketScheduleSectionDto.getIndexWithinTicket())
                                     .departureDate(ticketScheduleSectionDto.getDepartureDate())
                                     .departureTime(ticketScheduleSectionDto.getDepartureTime())
                                     .arrivalDate(ticketScheduleSectionDto.getArrivalDate())

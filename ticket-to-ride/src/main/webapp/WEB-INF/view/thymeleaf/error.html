@@ -6,14 +6,14 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbb train page">
+    <meta name="description" content="sbb error page">
     <meta name="author" content="Trofim Kremen">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
-    <title>Train item</title>
+    <title>Error</title>
 </head>
 <body>
 <header>
@@ -55,35 +55,12 @@
     </nav>
 </header>
 <main>
-    <main>
-        <div class="container container-fluid">
-            <h4 th:text="'Train number ' + ${trainItem.getId()}"></h4>
-            <hr>
-            <h5>Name</h5>
-            <p th:text="${trainItem.getName()}"></p>
-            <hr>
-            <h5>Speed</h5>
-            <p th:text="${trainItem.getAvgSpeed() + ' km/h'}"></p>
-            <hr>
-            <h5>Number of seats</h5>
-            <p th:text="${trainItem.getNumberOfSeats()}"></p>
-            <hr class="mt-2 mb-5"/>
-            <div class="container rounded-lg bg-light mt-3">
-                <div class="row">
-                    <div class="col-4 form-group h5">Train route</div>
-                </div>
-                <hr>
-                <div class="row item"
-                     th:each="section, status : ${scheduleSectionList}">
-                    <div class="col-4 form-group">
-                    <span class="text-center" th:text="${section.getSectionDto().getStationDtoFrom()}
-                     + ' &longrightarrow; ' + ${section.getSectionDto().getStationDtoTo()}"></span>
-                        <span class="row text-left ml-2" th:unless="${status.last}">&downarrow;</span>
-                    </div>
-                </div>
-            </div>
+    <div class="container mt-4">
+        <div class="alert alert-danger" role="alert">
+            <h2 th:text="'Application threw the exception: ' + ${exception}"></h2>
+            <h3 th:text="'With message: ' + ${errorMessage}"></h3>
         </div>
-    </main>
+    </div>
 </main>
 <footer class="fixed-bottom page-footer bg-light">
     <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>

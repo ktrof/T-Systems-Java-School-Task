@@ -165,7 +165,7 @@ public class TrainServiceImplTest {
     @Test
     public void testCancelTrain() {
         when(trainRepository.findById(anyString())).thenReturn(getTestTrainEntity());
-        when(rideRepository.findAllByTrain(any(TrainEntity.class))).thenReturn(Collections.singletonList(getTestRideEntity()));
+        lenient().when(rideRepository.findAllByTrain(any(TrainEntity.class))).thenReturn(Collections.singletonList(getTestRideEntity()));
         trainService.cancelTrain(getTestTrainEntity().getId());
         verify(rideRepository, atMostOnce()).cancelAllRides(anyCollection());
     }
@@ -173,7 +173,7 @@ public class TrainServiceImplTest {
     @Test
     public void testCancelRide() {
         when(trainRepository.findById(anyString())).thenReturn(getTestTrainEntity());
-        when(rideRepository.findByTrainAndDate(any(TrainEntity.class), any(LocalDate.class)))
+        lenient().when(rideRepository.findByTrainAndDate(any(TrainEntity.class), any(LocalDate.class)))
                 .thenReturn(getTestRideEntity());
         trainService.cancelRide(getTestTrainEntity().getId(), getTestRideEntity().getRideDate());
         verify(rideRepository, atMostOnce()).cancelRide(any(RideEntity.class));
@@ -182,7 +182,7 @@ public class TrainServiceImplTest {
     @Test
     public void testRestartTrain() {
         when(trainRepository.findById(anyString())).thenReturn(getTestTrainEntity());
-        when(rideRepository.findAllByTrain(any(TrainEntity.class))).thenReturn(Collections.singletonList(getTestRideEntity()));
+        lenient().when(rideRepository.findAllByTrain(any(TrainEntity.class))).thenReturn(Collections.singletonList(getTestRideEntity()));
         trainService.restartTrain(getTestTrainEntity().getId());
         verify(rideRepository, atMostOnce()).restartAllRides(anyCollection());
     }
@@ -190,7 +190,7 @@ public class TrainServiceImplTest {
     @Test
     public void testRestartRide() {
         when(trainRepository.findById(anyString())).thenReturn(getTestTrainEntity());
-        when(rideRepository.findByTrainAndDate(any(TrainEntity.class), any(LocalDate.class)))
+        lenient().when(rideRepository.findByTrainAndDate(any(TrainEntity.class), any(LocalDate.class)))
                 .thenReturn(getTestRideEntity());
         trainService.restartRide(getTestTrainEntity().getId(), getTestRideEntity().getRideDate());
         verify(rideRepository, atMostOnce()).restartRide(any(RideEntity.class));

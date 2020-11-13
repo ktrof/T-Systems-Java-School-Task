@@ -66,7 +66,7 @@ public class SectionRepositoryJPAImpl implements SectionRepository {
 
     @Override
     public void add(SectionEntity sectionEntity) {
-        entityManager.persist(entityManager);
+        entityManager.persist(sectionEntity);
     }
 
     @Override

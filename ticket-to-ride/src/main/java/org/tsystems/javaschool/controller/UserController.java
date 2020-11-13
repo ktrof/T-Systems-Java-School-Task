@@ -40,6 +40,7 @@ public class UserController {
     public String getUserProfile(Model model, Principal principal) {
         UserDto userDto = userService.getByLogin(principal.getName());
         UpdateUserFormDto updateUserFormDto = UpdateUserFormDto.builder()
+                .id(userDto.getId())
                 .login(userDto.getLogin())
                 .birthDate(userDto.getBirthDate())
                 .email(userDto.getEmail())
@@ -68,7 +69,7 @@ public class UserController {
             return "profile";
         }
         userService.editUser(updateUserFormDto);
-        return "profile";
+        return "redirect:/login";
     }
 
 }

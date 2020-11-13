@@ -102,6 +102,8 @@ public class StationServiceImplTest {
 
     private RideScheduleEntity getTestRideScheduleEntity() {
         return RideScheduleEntity.builder()
+                .trainEntity(new TrainEntity())
+                .rideDate(LocalDate.now())
                 .departure(ZonedDateTime.now())
                 .arrival(ZonedDateTime.now().plusDays(1))
                 .minutesDelayed(0)

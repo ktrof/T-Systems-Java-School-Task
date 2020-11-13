@@ -72,14 +72,13 @@ public class UserRepositoryJPAImpl implements UserRepository {
 
 
     @Override
-    public UserEntity add(UserEntity userEntity) {
+    public void add(UserEntity userEntity) {
         entityManager.persist(userEntity);
-        return userEntity;
     }
 
     @Override
-    public UserEntity update(UserEntity userEntity) {
-        return entityManager.merge(userEntity);
+    public void update(UserEntity userEntity) {
+        entityManager.merge(userEntity);
     }
 
 }

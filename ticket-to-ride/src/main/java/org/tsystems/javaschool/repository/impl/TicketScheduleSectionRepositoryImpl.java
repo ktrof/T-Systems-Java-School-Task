@@ -34,15 +34,13 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
 
         Join<TicketScheduleSectionEntity, ScheduleSectionEntity> scheduleSectionEntityJoin = root
                 .join(TicketScheduleSectionEntity_.scheduleSectionEntity);
-        Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = scheduleSectionEntityJoin
-                .join(ScheduleSectionEntity_.trainEntity);
-        Join<TrainEntity, RideEntity> calendarEntityJoin = trainEntityJoin
-                .join(TrainEntity_.rideEntityList);
+        Join<TicketScheduleSectionEntity, TicketEntity> ticketEntityJoin = root
+                .join(TicketScheduleSectionEntity_.ticketEntity);
 
         Predicate scheduleSectionIdEquality = criteriaBuilder
                 .equal(scheduleSectionEntityJoin.get(ScheduleSectionEntity_.id), id);
         Predicate departureDateEquality = criteriaBuilder
-                .equal(calendarEntityJoin.get(RideEntity_.rideDate), rideDate);
+                .equal(ticketEntityJoin.get(TicketEntity_.rideDate), rideDate);
 
         criteriaQuery
                 .select(root)

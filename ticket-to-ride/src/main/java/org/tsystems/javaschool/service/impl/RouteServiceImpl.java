@@ -108,6 +108,7 @@ public class RouteServiceImpl implements RouteService {
                                 routePartDto.getStationDtoTo().isClosed())
                 )
                 .sorted(Comparator.comparing(RouteDto::getTotalDuration))
+                .limit(10)
                 .collect(Collectors.toList());
     }
 

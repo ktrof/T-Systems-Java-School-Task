@@ -92,7 +92,15 @@ public class UserServiceImpl implements UserService {
     public UserDto editUser(UpdateUserFormDto userDto) {
         UserDto updatedUserDto = null;
         try {
-            UserEntity updatedUserEntity = userRepository.update(userMapper.toEntity(userDto));
+            UserEntity updatedUserEntity = userRepository.findById(userDto.getId());
+            updatedUserEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            updatedUserEntity.setLogin(userDto.getLogin());
+            updatedUserEntity.setEmail(userDto.getEmail());
+            updatedUserEntity.setFirstName(userDto.getFirstName());
+            updatedUserEntity.setSecondName(userDto.getSecondName());
+            updatedUserEntity.setBirthDate(userDto.getBirthDate());
+            updatedUserEntity.setMobileNumber(userDto.getMobileNumber());
+            userRepository.update(updatedUserEntity);
             updatedUserDto = userMapper.toDto(updatedUserEntity);
         } catch (Exception e) {
             log.error("Error updating user", e);

@@ -38,7 +38,7 @@ public class StationController {
 
     @GetMapping(value = "/admin/stations")
     public String getAllStations() {
-        return "stations";
+        return "stationsAdmin";
     }
 
     @PostMapping(value = "/admin/stations/add")
@@ -52,7 +52,7 @@ public class StationController {
             return "addStation";
         }
         stationService.save(stationFormDto);
-        return "redirect:/stations";
+        return "stationsAdmin";
     }
 
     @GetMapping(value = "admin/stations/add")
@@ -60,12 +60,14 @@ public class StationController {
         return "addStation";
     }
 
-    @GetMapping(value = "/stations/{id}")
+    @GetMapping(value = "/stations/{id}", params = "rideDate")
     public String getStationById(@PathVariable("id") int id, Model model,
-                                 @RequestParam("rideDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+                                 @RequestParam(name = "rideDate")
+                                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         StationDto stationDto = stationService.getById(id);
+        System.out.println(date.toString());
         List<ScheduleSectionDto> departureSectionDtoList = scheduleSectionService
-                .getByDepartureStationAndRideDate(stationDto, LocalDate.now());
+                .getByDepartureStationAndRideDate(stationDto, date);
 
         List<ScheduleSectionDto> destinationSectionDtoList = scheduleSectionService
                 .getByDestinationStationAndRideDate(stationDto, date);
@@ -76,23 +78,41 @@ public class StationController {
         return "stationItem";
     }
 
+    @GetMapping(value = "admin/stations/{id}", params = "rideDate")
+    public String getStationByIdAdmin(@PathVariable("id") int id, Model model,
+                                      @RequestParam(name = "rideDate")
+                                      @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
+        StationDto stationDto = stationService.getById(id);
+        System.out.println(date.toString());
+        List<ScheduleSectionDto> departureSectionDtoList = scheduleSectionService
+                .getByDepartureStationAndRideDate(stationDto, date);
+
+        List<ScheduleSectionDto> destinationSectionDtoList = scheduleSectionService
+                .getByDestinationStationAndRideDate(stationDto, date);
+
+        model.addAttribute("stationItem", stationDto);
+        model.addAttribute("departureSectionDtoList", departureSectionDtoList);
+        model.addAttribute("destinationSectionDtoList", destinationSectionDtoList);
+        return "stationItemAdmin";
+    }
+
     @PostMapping(value = "/admin/stations")
     public String editStation(@Valid @ModelAttribute StationDto stationDto, Model model) {
         stationService.edit(stationDto);
         List<StationDto> result = stationService.getAll();
         model.addAttribute("stations", result);
-        return "stations";
+        return "stationsAdmin";
     }
 
     @PostMapping(value = "/admin/stations/{id}/close")
     public String closeStation(@PathVariable int id) {
         stationService.close(id);
-        return "redirect:/stations/{id}?closed";
+        return "redirect:/admin/stations/{id}?closed";
     }
 
     @PostMapping(value = "/admin/stations/{id}/open")
     public String openStation(@PathVariable int id) {
         stationService.open(id);
-        return "redirect:/stations/{id}?opened";
+        return "redirect:/admin/stations/{id}?opened";
     }
 }

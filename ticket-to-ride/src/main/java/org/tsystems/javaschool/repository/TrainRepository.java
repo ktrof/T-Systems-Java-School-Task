@@ -40,4 +40,18 @@ public interface TrainRepository {
      */
     void update(TrainEntity trainEntity);
 
+    /**
+     * Cancel.
+     *
+     * @param trainEntity the train entity
+     */
+    void cancel(TrainEntity trainEntity);
+
+    /**
+     * Restart.
+     *
+     * @param trainEntity the train entity
+     */
+    void restart(TrainEntity trainEntity);
+
 }

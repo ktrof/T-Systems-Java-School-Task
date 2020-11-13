@@ -78,7 +78,7 @@ public class ScheduleSectionRepositoryJPAImpl implements ScheduleSectionReposito
 
     @Override
     public List<ScheduleSectionEntity> findBySection(SectionEntity sectionEntity) {
-        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-calendar-graph");
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("schedule-ride-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ScheduleSectionEntity> criteriaQuery = criteriaBuilder.createQuery(ScheduleSectionEntity.class);
         Root<ScheduleSectionEntity> root = criteriaQuery.from(ScheduleSectionEntity.class);

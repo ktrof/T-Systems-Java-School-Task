@@ -3,6 +3,7 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.TrainMapper;
 import org.tsystems.javaschool.mapper.RideScheduleMapper;
@@ -120,8 +121,8 @@ public class TrainServiceImpl implements TrainService {
                         }
                         else {
                             scheduleSectionEntity.setDeparture(
-                                    scheduleSectionEntityList.get(i-1).getArrival()
-                                            .plusMinutes(scheduleSectionEntityList.get(i-1).getStopDuration())
+                                    scheduleSectionEntityList.get(i - 1).getArrival()
+                                            .plusMinutes(scheduleSectionEntityList.get(i - 1).getStopDuration())
                             );
                         }
                         scheduleSectionEntity.setArrival(
@@ -162,11 +163,7 @@ public class TrainServiceImpl implements TrainService {
                             } else {
                                 rideScheduleEntity.setDeparture(rideScheduleEntityList.get(rideScheduleEntityList.size() - 1)
                                         .getArrival()
-                                        .toLocalDateTime()
-                                        .atZone(getArrivalZoneId(stationEntityList, sectionRepository
-                                                .findByScheduleSectionId(scheduleSectionEntityList.get(i).getId()))
-                                        )
-                                        .plusMinutes(scheduleSectionEntityList.get(i).getStopDuration())
+                                        .plusMinutes(scheduleSectionEntityList.get(i - 1).getStopDuration())
                                 );
                                 rideScheduleEntity.setDepartureDatePlan(rideScheduleEntity.getDeparture().toLocalDate());
                                 rideScheduleEntity.setDepartureDateFact(rideScheduleEntity.getDeparture().toLocalDate());
@@ -205,13 +202,6 @@ public class TrainServiceImpl implements TrainService {
                 .orElse(ZoneId.of("UTC"));
     }
 
-    private ZoneId getArrivalZoneId(List<StationEntity> stationEntityList, SectionEntity sectionEntity) {
-        return stationEntityList.stream()
-                .filter(stationEntity -> stationEntity.getSectionEntityListTo().contains(sectionEntity))
-                .map(StationEntity::getTimezone)
-                .findFirst()
-                .orElse(ZoneId.of("UTC"));
-    }
 
     @Override
     public TrainDto edit(TrainDto trainDto) {
@@ -224,50 +214,63 @@ public class TrainServiceImpl implements TrainService {
     }
 
     @Override
+    @Transactional
     public void cancelTrain(String trainId) {
         try {
             TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.cancelAllRides(rideRepository.findAllByTrain(trainEntity));
-            sendMessage(trainEntity);
+            trainRepository.cancel(trainEntity);
+            sendMessage(trainEntity, true, 0);
         } catch (Exception e) {
             log.error("Error canceling the train", e);
         }
     }
 
     @Override
+    @Transactional
     public void cancelRide(String trainId, LocalDate rideDate) {
         try {
             TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.cancelRide(rideRepository.findByTrainAndDate(trainEntity, rideDate));
-            sendMessage(trainEntity);
+            if (rideRepository.findAllByTrain(trainEntity).stream().allMatch(RideEntity::isCancelled)) {
+                trainRepository.cancel(trainEntity);
+            }
+            sendMessage(trainEntity, true, 0);
         } catch (Exception e) {
             log.error("Error cancelling the ride", e);
         }
     }
 
     @Override
+    @Transactional
     public void restartTrain(String trainId) {
         try {
             TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.restartAllRides(rideRepository.findAllByTrain(trainEntity));
-            sendMessage(trainEntity);
+            trainRepository.restart(trainEntity);
+            sendMessage(trainEntity, false, 0);
         } catch (Exception e) {
             log.error("Error restarting the train", e);
         }
     }
 
     @Override
+    @Transactional
     public void restartRide(String trainId, LocalDate rideDate) {
         try {
             TrainEntity trainEntity = trainRepository.findById(trainId);
             rideRepository.restartRide(rideRepository.findByTrainAndDate(trainEntity, rideDate));
-            sendMessage(trainEntity);
+            if (rideRepository.findAllByTrain(trainEntity).stream().noneMatch(RideEntity::isCancelled)) {
+                trainRepository.restart(trainEntity);
+            }
+            sendMessage(trainEntity, false, 0);
         } catch (Exception e) {
             log.error("Error restarting the ride", e);
         }
     }
 
     @Override
+    @Transactional
     public void delayTrain(String trainId, DelayFormDto delayFormDto) {
         try {
             TrainEntity trainEntity = trainRepository.findById(trainId);
@@ -305,13 +308,13 @@ public class TrainServiceImpl implements TrainService {
                                         rideSchedule.getArrival().getZone()).plusMinutes(delayFormDto.getMinutesDelayed()),
                                 delayFormDto.getMinutesDelayed());
                     });
-            sendMessage(trainEntity);
+            sendMessage(trainEntity, false, delayFormDto.getMinutesDelayed());
         } catch (Exception e) {
             log.error("Error delaying the train", e);
         }
     }
 
-    private void sendMessage(TrainEntity trainEntity) {
+    private void sendMessage(TrainEntity trainEntity, boolean isRideCancelled, int minutesDelayed) {
         List<StationEntity> stationEntityList = stationRepository.findAllByTrain(trainEntity);
         stationEntityList
                 .forEach(stationEntity -> scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
@@ -325,14 +328,12 @@ public class TrainServiceImpl implements TrainService {
                                     .stationName(stationEntity.getName())
                                     .isStationClosed(false)
                                     .trainNumber(scheduleSection.getTrainEntity().getId())
-                                    .isTrainCancelled(rideRepository
-                                            .findByTrainAndDate(scheduleSection.getTrainEntity(), LocalDate.now())
-                                            .isCancelled())
+                                    .isTrainCancelled(isRideCancelled)
                                     .departureTime(rideScheduleEntity.getDeparture()
                                             .format(DateTimeFormatter.ofPattern("HH:mm")))
                                     .arrivalTime(rideScheduleEntity.getArrival()
                                             .format(DateTimeFormatter.ofPattern("HH:mm")))
-                                    .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
+                                    .minutesDelayed(minutesDelayed)
                                     .build());
                         })
                 );

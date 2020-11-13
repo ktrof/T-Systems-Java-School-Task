@@ -100,7 +100,7 @@ public class StationStandServiceImplTest {
         assertEquals(getTestStationEntity().isClosed(), result.isClosed());
         assertEquals(LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")), result.getRideDate());
         assertEquals(1, Collections.singletonList(getTestScheduleSectionEntity()).size());
-        verify(scheduleSectionRepository, times(Collections.singletonList(getTestScheduleSectionEntity()).size()))
+        verify(scheduleSectionRepository, times(Collections.singletonList(getTestScheduleSectionEntity()).size() + 1))
                 .findByStationAndRideDate(any(StationEntity.class), any(LocalDate.class));
     }
 

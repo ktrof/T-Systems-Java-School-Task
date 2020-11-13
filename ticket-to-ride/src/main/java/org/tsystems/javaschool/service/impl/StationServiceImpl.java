@@ -3,6 +3,7 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.StationMapper;
 import org.tsystems.javaschool.model.dto.section.SectionDto;
@@ -176,7 +177,10 @@ public class StationServiceImpl implements StationService {
                                 .isStationClosed(false)
                                 .trainNumber(scheduleSection.getTrainEntity().getId())
                                 .isTrainCancelled(rideRepository
-                                        .findByTrainAndDate(scheduleSection.getTrainEntity(), LocalDate.now())
+                                        .findByTrainAndDate(
+                                                rideScheduleEntity.getTrainEntity(),
+                                                rideScheduleEntity.getRideDate()
+                                        )
                                         .isCancelled())
                                 .departureTime(rideScheduleEntity.getDeparture()
                                         .format(DateTimeFormatter.ofPattern("HH:mm")))

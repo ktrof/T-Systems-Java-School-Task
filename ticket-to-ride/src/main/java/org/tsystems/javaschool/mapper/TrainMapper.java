@@ -37,7 +37,7 @@ public interface TrainMapper {
     @Mappings({
             @Mapping(target = "rideEntityList", ignore = true),
             @Mapping(target = "scheduleSectionEntityList", ignore = true),
-            @Mapping(target = "rideScheduleEntityList", ignore = true)
+            @Mapping(target = "rideScheduleEntityList", ignore = true),
     })
     TrainEntity toEntity(TrainDto trainDto);
 
@@ -50,7 +50,8 @@ public interface TrainMapper {
     @Mappings({
             @Mapping(target = "rideEntityList", ignore = true),
             @Mapping(target = "scheduleSectionEntityList", ignore = true),
-            @Mapping(target = "rideScheduleEntityList", ignore = true)
+            @Mapping(target = "rideScheduleEntityList", ignore = true),
+            @Mapping(target = "cancelled", ignore = true)
     })
     TrainEntity toEntity(AddTrainFormDto trainFormDto);
 

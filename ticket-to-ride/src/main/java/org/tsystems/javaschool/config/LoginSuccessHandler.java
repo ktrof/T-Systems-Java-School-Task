@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.config;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
 import org.springframework.security.web.savedrequest.RequestCache;
@@ -17,41 +18,27 @@ import java.util.Objects;
 /**
  * @author Trofim Kremen
  */
-public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
+public class LoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
 
-    private RequestCache requestCache = new HttpSessionRequestCache();
+    public LoginSuccessHandler(String defaultUrl) {
+        setDefaultTargetUrl(defaultUrl);
+    }
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
                                         Authentication authentication) throws IOException, ServletException {
-
-        SavedRequest savedRequest = requestCache.getRequest(request, response);
-
-        if (savedRequest == null) {
-            HttpSession session = request.getSession();
-            if (session != null) {
-                String redirectUrl = (String) session.getAttribute("previousUrl");
-                if (redirectUrl != null) {
-                    session.removeAttribute("previousUrl");
-                    getRedirectStrategy().sendRedirect(request, response, redirectUrl);
-                } else {
-                    super.onAuthenticationSuccess(request, response, authentication);
-                }
+        HttpSession session = request.getSession();
+        if (session == null) {
+            String redirectUrl = (String) session.getAttribute("previousUrl");
+            if (redirectUrl != null) {
+                session.removeAttribute("previousUrl");
+                getRedirectStrategy().sendRedirect(request, response, redirectUrl);
             } else {
                 super.onAuthenticationSuccess(request, response, authentication);
             }
-        }
-
-        String targetUrlParameter = getTargetUrlParameter();
-        if (isAlwaysUseDefaultTargetUrl()
-                || (targetUrlParameter != null && StringUtils.hasText(request.getParameter(targetUrlParameter)))) {
-            requestCache.removeRequest(request, response);
+        } else {
             super.onAuthenticationSuccess(request, response, authentication);
         }
 
-        clearAuthenticationAttributes(request);
-
-        String targetUrl = Objects.requireNonNull(savedRequest).getRedirectUrl();
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 }

@@ -40,6 +40,7 @@ public class StandUpdateListener implements MessageListener {
             TextMessage textMessage = (TextMessage) message;
             String text = textMessage.getText();
             StandUpdateDto standUpdateDto = jsonParser.readStandDtoJSON(text);
+            System.out.println(standUpdateDto);
             standNamedBean.updateStand(standUpdateDto);
             log.info("Message " + message.getJMSMessageID() + " has been processed");
         }

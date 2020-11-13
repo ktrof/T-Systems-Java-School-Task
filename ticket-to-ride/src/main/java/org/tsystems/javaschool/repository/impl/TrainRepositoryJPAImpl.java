@@ -49,4 +49,26 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
         entityManager.merge(trainEntity);
     }
 
+    private void updateCancelledAttribute(TrainEntity trainEntity, boolean isCancelled) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<TrainEntity> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(TrainEntity.class);
+        Root<TrainEntity> root = criteriaUpdate.from(TrainEntity.class);
+
+        criteriaUpdate
+                .set(root.get(TrainEntity_.cancelled), isCancelled)
+                .where(criteriaBuilder.equal(root.get(TrainEntity_.id), trainEntity.getId()));
+
+        entityManager.createQuery(criteriaUpdate).executeUpdate();
+    }
+
+    @Override
+    public void cancel(TrainEntity trainEntity) {
+        updateCancelledAttribute(trainEntity, true);
+    }
+
+    @Override
+    public void restart(TrainEntity trainEntity) {
+        updateCancelledAttribute(trainEntity, false);
+    }
+
 }

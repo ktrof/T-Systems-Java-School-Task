@@ -155,7 +155,7 @@ public class TicketServiceImplTest {
     }
 
 //    TODO: Different result in github CI
-//    
+//
 //    @Test
 //    public void testHasPassenger() {
 //        when(ticketRepository.findByPassengerNameAndBirthDate(anyString(), anyString(), any(LocalDate.class)))

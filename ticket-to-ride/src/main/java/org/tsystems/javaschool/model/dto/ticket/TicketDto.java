@@ -8,6 +8,7 @@ import org.tsystems.javaschool.model.dto.ticketschedule.TicketScheduleSectionDto
 import org.tsystems.javaschool.model.dto.passenger.PassengerDto;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 
@@ -20,6 +21,7 @@ public class TicketDto implements Serializable {
     private int id;
     private PassengerDto passengerDto;
     private double totalPrice;
+    private LocalDate rideDate;
     private List<TicketScheduleSectionDto> ticketScheduleSectionDtoList;
 
     public TicketScheduleSectionDto getFirstSection() {

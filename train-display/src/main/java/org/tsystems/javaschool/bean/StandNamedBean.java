@@ -64,44 +64,40 @@ public class StandNamedBean implements Serializable {
     }
 
     public void updateStand(StandUpdateDto updatedStandDto) {
-        if (updatedStandDto.getStationName().equals(currentStationName)) {
-            if (updatedStandDto.isStationClosed()) {
-                standDto.setClosed(true);
-                standDto.setStandRowDtoList(Collections.emptyList());
-            } else {
-                standDto.setClosed(false);
-                if (standDto.getStandRowDtoList().isEmpty()) {
-                    standService.getStandDtoMap().get(currentStationName).getStandRowDtoList()
-                            .forEach(standRowDto -> {
-                                standRowDto.setCancelled(updatedStandDto.isTrainCancelled());
-                                standRowDto.setTrainNumber(updatedStandDto.getTrainNumber());
-                                standRowDto.setDepartureTime(updatedStandDto.getDepartureTime());
-                                standRowDto.setArrivalTime(updatedStandDto.getArrivalTime());
-                                standRowDto.setMinutesDelayed(updatedStandDto.getMinutesDelayed());
-                                standRowDto.setCancelled(updatedStandDto.isTrainCancelled());
-                                standDto.getStandRowDtoList().add(standRowDto);
-                            });
-                } else {
-                    standDto.getStandRowDtoList().stream()
-                            .filter(standRowDto -> Objects.equals(
-                                    updatedStandDto.getTrainNumber(),
-                                    standRowDto.getTrainNumber()))
-                            .forEach(standRowDto -> {
-                                standRowDto.setCancelled(updatedStandDto.isTrainCancelled());
-                                standRowDto.setTrainNumber(updatedStandDto.getTrainNumber());
-                                standRowDto.setDepartureTime(updatedStandDto.getDepartureTime());
-                                standRowDto.setArrivalTime(updatedStandDto.getArrivalTime());
-                                standRowDto.setMinutesDelayed(updatedStandDto.getMinutesDelayed());
-                                standRowDto.setCancelled(updatedStandDto.isTrainCancelled());
-                            });
-                }
-            }
-        }
+        stationNameList.stream()
+                .filter(station -> updatedStandDto.getStationName().equals(station))
+                .forEach(station -> {
+                    if (updatedStandDto.isStationClosed()) {
+                        standDto.setClosed(true);
+                        standDto.setStandRowDtoList(Collections.emptyList());
+                    } else {
+                        standDto.setClosed(false);
+                        if (standDto.getStandRowDtoList().isEmpty()) {
+                            standService.getStandDtoMap().get(station).getStandRowDtoList()
+                                    .forEach(standRowDto -> {
+                                        standRowDto.setCancelled(updatedStandDto.isTrainCancelled());
+                                        standRowDto.setTrainNumber(updatedStandDto.getTrainNumber());
+                                        standRowDto.setDepartureTime(updatedStandDto.getDepartureTime());
+                                        standRowDto.setArrivalTime(updatedStandDto.getArrivalTime());
+                                        standRowDto.setMinutesDelayed(updatedStandDto.getMinutesDelayed());
+                                        standDto.getStandRowDtoList().add(standRowDto);
+                                    });
+                        } else {
+                            standDto.getStandRowDtoList().stream()
+                                    .filter(standRowDto -> Objects.equals(
+                                            updatedStandDto.getTrainNumber(),
+                                            standRowDto.getTrainNumber()))
+                                    .forEach(standRowDto -> {
+                                        standRowDto.setCancelled(updatedStandDto.isTrainCancelled());
+                                        standRowDto.setTrainNumber(updatedStandDto.getTrainNumber());
+                                        standRowDto.setDepartureTime(updatedStandDto.getDepartureTime());
+                                        standRowDto.setArrivalTime(updatedStandDto.getArrivalTime());
+                                        standRowDto.setMinutesDelayed(updatedStandDto.getMinutesDelayed());
+                                    });
+                        }
+                    }
+                });
         context.send("Stand updated, nice!");
-    }
-
-    private void updateStandRow(StandRowDto standRowDto, StandUpdateDto updatedStandDto) {
-
     }
 
     public List<StandRowDto> getDepartureStandRowList() {

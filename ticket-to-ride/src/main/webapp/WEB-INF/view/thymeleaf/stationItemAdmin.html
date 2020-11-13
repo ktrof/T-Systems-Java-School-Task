@@ -55,6 +55,22 @@
     </nav>
 </header>
 <main>
+    <div th:if="${param.closed}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Station is closed now!
+        </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div th:if="${param.opened}">
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            Station is opened now!
+        </div>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     <div class="container container-fluid">
         <h4 th:text="'Station ' + ${stationItem.getName()}"></h4>
         <hr>
@@ -81,6 +97,20 @@
                    data-toggle="modal"
                    aria-expanded="true"
                    data-target="#arrivalModal">Inspect arrival</a>
+            </div>
+            <div class="col" sec:authorize="hasRole('ROLE_ADMIN')">
+                <form class="form-inline mt-2 mt-md-0" method="post"
+                      th:action="@{/stations/{id}/close(id=${stationItem.getId()})}"
+                      th:unless="${stationItem.isClosed()}">
+                    <button type="submit" name="submit" th:value="${stationItem.getId()}"
+                            class="btn btn-warning">Close station</button>
+                </form>
+                <form class="form-inline mt-2 mt-md-0" method="post"
+                      th:action="@{/stations/{id}/open(id=${stationItem.getId()})}"
+                      th:if="${stationItem.isClosed()}">
+                    <button type="submit" name="submit" th:value="${stationItem.getId()}"
+                            class="btn btn-warning">Open station</button>
+                </form>
             </div>
             <div class="col">
                 <a class="btn btn-danger" role="button"
