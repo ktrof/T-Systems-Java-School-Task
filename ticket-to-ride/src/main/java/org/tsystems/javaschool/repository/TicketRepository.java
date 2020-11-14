@@ -1,7 +1,5 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.exception.SBBException;
-import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.TicketEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 
@@ -45,25 +43,14 @@ public interface TicketRepository {
      *
      * @param id the id
      * @return the ticket entity
-     * @throws SBBException the repository exception
      */
-    TicketEntity findById(int id) throws SBBException;
+    TicketEntity findById(int id);
 
     /**
      * Add ticket entity.
      *
      * @param ticketEntity the ticket entity
-     * @return the ticket entity
-     * @throws SBBException the repository exception
      */
-    TicketEntity add(TicketEntity ticketEntity) throws SBBException;
-
-    /**
-     * Remove.
-     *
-     * @param ticketEntity the ticket entity
-     * @throws SBBException the repository exception
-     */
-    void remove(TicketEntity ticketEntity) throws SBBException;
+    void add(TicketEntity ticketEntity);
 
 }

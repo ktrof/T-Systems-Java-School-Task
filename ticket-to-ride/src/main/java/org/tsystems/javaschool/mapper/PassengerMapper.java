@@ -3,8 +3,8 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.PassengerDto;
-import org.tsystems.javaschool.model.dto.PassengerFormDto;
+import org.tsystems.javaschool.model.dto.passenger.PassengerDto;
+import org.tsystems.javaschool.model.dto.passenger.PassengerFormDto;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 
 import java.util.List;

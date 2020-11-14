@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="sbb error page">
+    <meta name="author" content="Trofim Kremen">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}"/>
+    <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
+    <title>Error</title>
+</head>
+<body>
+<header>
+    <nav class="navbar navbar-expand navbar-dark" style="background-color: crimson" sec:authorize="hasRole('ROLE_ADMIN')">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/}">Home</a>
+                <a class="nav-item nav-link" th:href="@{/admin/trains}">Trains</a>
+                <a class="nav-item nav-link" th:href="@{/admin/stations}">Stations</a>
+            </div>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand navbar-light" style="background-color: whitesmoke">
+        <a class="navbar-brand" href="/">
+            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
+            SBB App
+        </a>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/profile}">
+            <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                <i class="far fa-address-card"></i>
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="isAuthenticated()"
+              th:action="@{/logout}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </form>
+        <form class="form-inline mt-2 mt-md-0" method="get"
+              sec:authorize="!isAuthenticated()"
+              th:action="@{/login}">
+            <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
+                <i class="fas fa-sign-in-alt"></i>
+            </button>
+        </form>
+    </nav>
+</header>
+<main>
+    <div class="container mt-4">
+        <div class="alert alert-danger" role="alert">
+            <h2 th:text="'Application threw the exception: ' + ${exception}"></h2>
+            <h3 th:text="'With message: ' + ${errorMessage}"></h3>
+        </div>
+    </div>
+</main>
+<footer class="fixed-bottom page-footer bg-light">
+    <p class="text-center footer-text">&copy; 2020 Java School &middot; Trofim Kremen </p>
+</footer>
+<script type="text/javascript" th:src="@{/webjars/jquery/3.5.1/jquery.min.js/}"></script>
+<script type="text/javascript" th:src="@{/webjars/bootstrap/4.5.2/js/bootstrap.min.js}"></script>
+</body>
+</html>

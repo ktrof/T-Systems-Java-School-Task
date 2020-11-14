@@ -3,7 +3,7 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.TicketScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.ticketschedule.TicketScheduleSectionDto;
 import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
 
 import java.util.List;

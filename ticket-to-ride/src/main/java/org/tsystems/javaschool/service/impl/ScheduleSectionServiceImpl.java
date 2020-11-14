@@ -7,11 +7,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.ScheduleSectionMapper;
 import org.tsystems.javaschool.mapper.StationMapper;
 import org.tsystems.javaschool.mapper.TrainMapper;
-import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.StationDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
-import org.tsystems.javaschool.model.entity.TrainEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 import org.tsystems.javaschool.service.ScheduleSectionService;
 
@@ -41,10 +40,10 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
                     .findByStationAndRideDate(stationMapper.toEntity(departureStation), rideDate)
                     .stream()
-                    .filter(section ->
-                                    Objects.equals(section.getSectionEntity().getStationEntityFrom().getId(),
-                                            departureStation.getId())
-                            )
+                    .filter(section -> Objects.equals(
+                            section.getSectionEntity().getStationEntityFrom().getId(),
+                            departureStation.getId())
+                    )
                     .collect(Collectors.toList());
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
         } catch (Exception e) {
@@ -61,9 +60,9 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
                     .findByStationAndRideDate(stationMapper.toEntity(destinationStation), rideDate)
                     .stream()
-                    .filter(section ->
-                            Objects.equals(section.getSectionEntity().getStationEntityTo().getId(),
-                                    destinationStation.getId())
+                    .filter(section -> Objects.equals(
+                            section.getSectionEntity().getStationEntityTo().getId(),
+                            destinationStation.getId())
                     )
                     .collect(Collectors.toList());
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
@@ -75,11 +74,11 @@ public class ScheduleSectionServiceImpl implements ScheduleSectionService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ScheduleSectionDto> getByTrain(TrainDto trainDto) {
+    public List<ScheduleSectionDto> getByTrainAndRideDate(TrainDto trainDto, LocalDate rideDate) {
         List<ScheduleSectionDto> scheduleSectionDtoList = null;
         try {
             List<ScheduleSectionEntity> scheduleSectionEntityList = scheduleSectionRepository
-                    .findByTrain(trainMapper.toEntity(trainDto));
+                    .findByTrainAndRideDate(trainMapper.toEntity(trainDto), rideDate);
             scheduleSectionDtoList = scheduleSectionMapper.toDtoList(scheduleSectionEntityList);
         } catch (Exception e) {
             log.error("Error getting schedule section by train" ,e);

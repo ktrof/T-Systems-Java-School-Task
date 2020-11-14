@@ -4,8 +4,8 @@ import lombok.Builder;
 import org.tsystems.javaschool.graph.railroad.RailroadGraph;
 import org.tsystems.javaschool.graph.railroad.SectionEdge;
 import org.tsystems.javaschool.graph.railroad.StationVertex;
-import org.tsystems.javaschool.model.dto.SectionDto;
-import org.tsystems.javaschool.model.entity.CalendarEntity;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
+import org.tsystems.javaschool.model.entity.RideEntity;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
@@ -20,7 +20,7 @@ public class DatabaseSectionEdge implements SectionEdge {
     private final RailroadGraph railroadGraph;
     private final StationVertex sourceStationVertex;
     private final ScheduleSectionEntity scheduleSectionEntity;
-    private final CalendarEntity calendarEntity;
+    private final RideEntity rideEntity;
 
     @Override
     public int getId() {
@@ -34,13 +34,13 @@ public class DatabaseSectionEdge implements SectionEdge {
 
     @Override
     public LocalDate getRideDate() {
-        return calendarEntity.getRideDate();
+        return rideEntity.getRideDate();
     }
 
     @Override
     public int getTicketCountAvailable() {
-        int ticketsBought = railroadGraph.countBoughtTickets(scheduleSectionEntity, calendarEntity.getRideDate());
-        return calendarEntity.getTicketsAvailable() - ticketsBought;
+        int ticketsBought = railroadGraph.countBoughtTickets(scheduleSectionEntity, rideEntity.getRideDate());
+        return rideEntity.getTicketsAvailable() - ticketsBought;
     }
 
     @Override

@@ -3,8 +3,8 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.AddStationFormDto;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.station.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 import org.tsystems.javaschool.model.entity.StationEntity;
 
 import java.time.ZoneId;
@@ -33,7 +33,9 @@ public interface StationMapper {
      * @return the station entity
      */
     @Mappings({
-            @Mapping(target = "sectionEntityListFrom", ignore = true)
+            @Mapping(target = "sectionEntityListFrom", ignore = true),
+            @Mapping(target = "closed", ignore = true),
+            @Mapping(target = "sectionEntityListTo", ignore = true)
     })
     StationEntity toEntity(AddStationFormDto stationDto);
 
@@ -44,7 +46,8 @@ public interface StationMapper {
      * @return the station entity
      */
     @Mappings({
-            @Mapping(target = "sectionEntityListFrom", ignore = true)
+            @Mapping(target = "sectionEntityListFrom", ignore = true),
+            @Mapping(target = "sectionEntityListTo", ignore = true)
     })
     StationEntity toEntity(StationDto stationDto);
 
@@ -64,10 +67,22 @@ public interface StationMapper {
      */
     List<StationEntity> toEntityList(List<StationDto> stationDtoList);
 
+    /**
+     * From zone id string.
+     *
+     * @param zoneId the zone id
+     * @return the string
+     */
     default String fromZoneId(ZoneId zoneId) {
         return zoneId == null ? null : zoneId.getId();
     }
 
+    /**
+     * From string zone id.
+     *
+     * @param string the string
+     * @return the zone id
+     */
     default ZoneId fromString(String string) {
         return string == null ? null : ZoneId.of(string);
     }

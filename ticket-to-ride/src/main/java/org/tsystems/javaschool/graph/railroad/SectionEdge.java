@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.graph.railroad;
 
 import org.tsystems.javaschool.graph.Edge;
-import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
 import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.time.LocalDate;

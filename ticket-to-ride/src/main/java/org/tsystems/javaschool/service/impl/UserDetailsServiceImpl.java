@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
@@ -14,6 +15,7 @@ import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.repository.RoleRepository;
 import org.tsystems.javaschool.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
@@ -23,22 +25,26 @@ import java.util.stream.Collectors;
  * @author Trofim Kremen
  */
 @Service
+@Slf4j
+@RequiredArgsConstructor
 public class UserDetailsServiceImpl implements UserDetailsService {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private RoleRepository roleRepository;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
 
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String login) throws UsernameNotFoundException {
-        UserEntity userEntity = userRepository.findByLogin(login);
+        UserEntity userEntity = new UserEntity();
+        try {
+            userEntity = userRepository.findByLogin(login);
+        } catch (Exception e) {
+            log.error("Error getting user by login", e);
+        }
+
         if (userEntity.getLogin() == null) {
             throw new UsernameNotFoundException("Not found: " + login);
         }
-
         return new User(
                 userEntity.getLogin(),
                 userEntity.getPassword(),
@@ -47,7 +53,12 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     }
 
     private Collection<? extends GrantedAuthority> mapRolesToAuthorities(String login) {
-        Collection<RoleEntity> roleEntityCollection = roleRepository.findRolesByUserLogin(login);
+        Collection<RoleEntity> roleEntityCollection = new ArrayList<>();
+        try {
+            roleEntityCollection = roleRepository.findRolesByUserLogin(login);
+        } catch (Exception e) {
+            log.error("Error getting user roles");
+        }
         return roleEntityCollection.stream()
                 .map(roleEntity -> new SimpleGrantedAuthority(roleEntity.getName()))
                 .collect(Collectors.toList());

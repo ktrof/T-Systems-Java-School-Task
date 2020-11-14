@@ -1,9 +1,9 @@
 package org.tsystems.javaschool.repository;
 
-import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
 
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -17,25 +17,23 @@ public interface TicketScheduleSectionRepository {
      * Find by schedule section and departure date ticket schedule section entity.
      *
      * @param id            the id
-     * @param departureDate the departure date
+     * @param rideDate the departure date
      * @return the ticket schedule section entity
      */
-    List<TicketScheduleSectionEntity> findByScheduleSectionIdAndDepartureDate(int id, LocalDate departureDate);
+    List<TicketScheduleSectionEntity> findByScheduleSectionIdAndRideDate(int id, LocalDate rideDate);
 
     /**
      * Add ticket schedule section entity.
      *
      * @param ticketScheduleSectionEntity the ticket schedule section entity
-     * @return the ticket schedule section entity
      */
-    TicketScheduleSectionEntity add(TicketScheduleSectionEntity ticketScheduleSectionEntity);
+    void add(TicketScheduleSectionEntity ticketScheduleSectionEntity);
 
     /**
-     * Add all list.
+     * Add iterable.
      *
-     * @param ticketScheduleSectionEntityList the ticket schedule section entity list
-     * @return the list
+     * @param ticketScheduleSectionEntityCollection the ticket schedule section entity collection
      */
-    List<TicketScheduleSectionEntity> addAll(List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList);
+    void add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection);
 
 }

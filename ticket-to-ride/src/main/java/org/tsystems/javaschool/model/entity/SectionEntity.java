@@ -1,8 +1,6 @@
 package org.tsystems.javaschool.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class SectionEntity {
 
     @Id
@@ -30,7 +29,8 @@ public class SectionEntity {
     @Column(name = "length")
     private double length;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "sectionEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<ScheduleSectionEntity> scheduleSectionEntityList;
+    private List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

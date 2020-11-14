@@ -1,7 +1,6 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.PassengerEntity_;
 import org.tsystems.javaschool.model.entity.UserEntity;
@@ -96,9 +95,8 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
     }
 
     @Override
-    public PassengerEntity add(PassengerEntity passengerEntity) {
+    public void add(PassengerEntity passengerEntity) {
         entityManager.persist(passengerEntity);
-        return passengerEntity;
     }
 
     @Override
@@ -120,8 +118,4 @@ public class PassengerRepositoryJPAImpl implements PassengerRepository {
         return entityManager.merge(passengerEntity);
     }
 
-    @Override
-    public void remove(PassengerEntity passengerEntity) {
-        entityManager.remove(passengerEntity);
-    }
 }

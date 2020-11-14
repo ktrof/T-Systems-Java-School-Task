@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class PassengerEntity {
 
     @Id
@@ -40,6 +42,6 @@ public class PassengerEntity {
     private String email;
 
     @OneToMany(mappedBy = "passengerEntity", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    List<TicketEntity> ticketEntityList;
+    private List<TicketEntity> ticketEntityList;
 
 }

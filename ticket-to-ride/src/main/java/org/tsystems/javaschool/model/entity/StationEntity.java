@@ -1,8 +1,8 @@
 package org.tsystems.javaschool.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.tsystems.javaschool.mapper.ZoneIdConverter;
 
 import javax.persistence.*;
@@ -14,6 +14,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class StationEntity {
 
     @Id
@@ -34,7 +35,17 @@ public class StationEntity {
     @Convert(converter = ZoneIdConverter.class)
     private ZoneId timezone;
 
+    @Column(name = "closed")
+    private boolean closed;
+
+    @ToString.Exclude
     @OneToMany(mappedBy = "stationEntityFrom", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    List<SectionEntity> sectionEntityListFrom;
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<SectionEntity> sectionEntityListFrom;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "stationEntityTo", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @Fetch(value = FetchMode.SUBSELECT)
+    private List<SectionEntity> sectionEntityListTo;
 
 }

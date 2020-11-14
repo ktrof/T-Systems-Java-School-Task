@@ -48,7 +48,7 @@ public interface UserRepository {
      * @param userEntity the user entity
      * @return the user entity
      */
-    UserEntity add(UserEntity userEntity);
+    void add(UserEntity userEntity);
 
     /**
      * Update user entity.
@@ -56,12 +56,6 @@ public interface UserRepository {
      * @param userEntity the user entity
      * @return the user entity
      */
-    UserEntity update(UserEntity userEntity);
+    void update(UserEntity userEntity);
 
-    /**
-     * Remove.
-     *
-     * @param userEntity the user entity
-     */
-    void remove(UserEntity userEntity);
 }

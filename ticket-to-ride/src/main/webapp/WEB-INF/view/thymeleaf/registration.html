@@ -10,29 +10,17 @@
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
-    <title>Login</title>
+    <title>Registration</title>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-expand navbar-light" style="background-color: whitesmoke">
         <a class="navbar-brand" href="/">
-            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40"
-                 class="d-inline-block align-top" alt="">
+            <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
             SBB App
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse"
-                data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup"
-                aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link" th:href="@{/}">Home</a>
-                <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
-                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
-            </div>
-        </div>
     </nav>
 </header>
 <main>
@@ -100,7 +88,7 @@
                            th:text="${error}">Validation error</p>
                     </div>
                     <div class="form-group">
-                        <button type="submit" class="btn btn-success">Register</button>
+                        <button type="submit" class="btn btn-danger">Register</button>
                         <span>Already registered? <a href="/" th:href="@{/login}">Login here</a></span>
                     </div>
                 </form>

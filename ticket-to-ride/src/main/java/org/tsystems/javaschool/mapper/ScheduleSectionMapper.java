@@ -3,11 +3,10 @@ package org.tsystems.javaschool.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
-import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.ScheduleSectionFormDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionFormDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 
-import java.time.Instant;
 import java.util.List;
 
 /**

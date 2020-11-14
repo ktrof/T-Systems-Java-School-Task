@@ -3,19 +3,26 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.StationMapper;
-import org.tsystems.javaschool.model.dto.AddStationFormDto;
-import org.tsystems.javaschool.model.dto.SectionDto;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
+import org.tsystems.javaschool.model.dto.stand.StandDto;
+import org.tsystems.javaschool.model.dto.stand.StandRowDto;
+import org.tsystems.javaschool.model.dto.stand.StandUpdateDto;
+import org.tsystems.javaschool.model.dto.station.AddStationFormDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
+import org.tsystems.javaschool.model.entity.RideScheduleEntity;
 import org.tsystems.javaschool.model.entity.SectionEntity;
 import org.tsystems.javaschool.model.entity.StationEntity;
-import org.tsystems.javaschool.repository.SectionRepository;
-import org.tsystems.javaschool.repository.StationRepository;
+import org.tsystems.javaschool.repository.*;
 import org.tsystems.javaschool.service.StationService;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The type Station service.
@@ -29,7 +36,11 @@ public class StationServiceImpl implements StationService {
 
     private final StationRepository stationRepository;
     private final SectionRepository sectionRepository;
+    private final ScheduleSectionRepository scheduleSectionRepository;
+    private final RideRepository rideRepository;
+    private final RideScheduleRepository rideScheduleRepository;
     private final StationMapper stationMapper;
+    private final MessageSender messageSender;
 
     @Override
     @Transactional
@@ -74,7 +85,8 @@ public class StationServiceImpl implements StationService {
             StationEntity newStationEntity = stationMapper.toEntity(stationFormDto);
             stationRepository.add(newStationEntity);
 
-            if (stationFormDto.getCorrespondingSectionList().length != 0) {
+            if (stationFormDto.getCorrespondingSectionList() != null
+                    && stationFormDto.getCorrespondingSectionList().length > 0) {
                 try {
                     List<SectionEntity> sectionEntityList = new ArrayList<>();
                     for (SectionDto sectionDto : stationFormDto.getCorrespondingSectionList()) {
@@ -82,12 +94,17 @@ public class StationServiceImpl implements StationService {
                         StationEntity stationEntityFrom = stationRepository.findByName(sectionDto.getStationDtoFrom());
                         StationEntity stationEntityTo = stationRepository.findByName(sectionDto.getStationDtoTo());
 
-                        SectionEntity sectionEntity = new SectionEntity();
-                        sectionEntity.setStationEntityFrom(stationEntityFrom);
-                        sectionEntity.setStationEntityTo(stationEntityTo);
-                        sectionEntity.setLength(calculateDistance(stationEntityFrom, stationEntityTo));
+                        SectionEntity forwardSectionEntity = new SectionEntity();
+                        forwardSectionEntity.setStationEntityFrom(stationEntityFrom);
+                        forwardSectionEntity.setStationEntityTo(stationEntityTo);
+                        forwardSectionEntity.setLength(calculateDistance(stationEntityFrom, stationEntityTo));
+                        sectionEntityList.add(forwardSectionEntity);
 
-                        sectionEntityList.add(sectionEntity);
+                        SectionEntity backwardSectionEntity = new SectionEntity();
+                        backwardSectionEntity.setStationEntityFrom(stationEntityTo);
+                        backwardSectionEntity.setStationEntityTo(stationEntityFrom);
+                        backwardSectionEntity.setLength(calculateDistance(stationEntityTo, stationEntityFrom));
+                        sectionEntityList.add(backwardSectionEntity);
                     }
                     sectionRepository.add(sectionEntityList);
                 } catch (Exception e) {
@@ -128,11 +145,52 @@ public class StationServiceImpl implements StationService {
     }
 
     @Override
-    public void delete(StationDto stationDto) {
+    @Transactional
+    public void close(int stationId) {
         try {
-            stationRepository.remove(stationMapper.toEntity(stationDto));
+            StationEntity stationEntity = stationRepository.findById(stationId);
+            stationRepository.close(stationEntity);
+            messageSender.sendMessage(StandUpdateDto.builder()
+                    .stationName(stationEntity.getName())
+                    .isStationClosed(true)
+                    .build());
         } catch (Exception e) {
-            log.error("Error deleting station", e);
+            log.error("Error closing the station", e);
+        }
+    }
+
+    @Override
+    @Transactional
+    public void open(int stationId) {
+        try {
+            StationEntity stationEntity = stationRepository.findById(stationId);
+            stationRepository.open(stationEntity);
+            scheduleSectionRepository.findByStationAndRideDate(stationEntity, LocalDate.now())
+                    .forEach(scheduleSection -> {
+                        RideScheduleEntity rideScheduleEntity = rideScheduleRepository
+                                .findByTrainAndSectionIndexAndArrivalDate(
+                                        scheduleSection.getTrainEntity(),
+                                        scheduleSection.getIndexWithinTrainRoute(),
+                                        LocalDate.now());
+                        messageSender.sendMessage(StandUpdateDto.builder()
+                                .stationName(stationEntity.getName())
+                                .isStationClosed(false)
+                                .trainNumber(scheduleSection.getTrainEntity().getId())
+                                .isTrainCancelled(rideRepository
+                                        .findByTrainAndDate(
+                                                rideScheduleEntity.getTrainEntity(),
+                                                rideScheduleEntity.getRideDate()
+                                        )
+                                        .isCancelled())
+                                .departureTime(rideScheduleEntity.getDeparture()
+                                        .format(DateTimeFormatter.ofPattern("HH:mm")))
+                                .arrivalTime(rideScheduleEntity.getArrival()
+                                        .format(DateTimeFormatter.ofPattern("HH:mm")))
+                                .minutesDelayed(rideScheduleEntity.getMinutesDelayed())
+                                .build());
+                    });
+        } catch (Exception e) {
+            log.error("Error opening the station", e);
         }
     }
 

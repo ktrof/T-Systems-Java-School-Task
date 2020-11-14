@@ -5,7 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.SectionMapper;
-import org.tsystems.javaschool.model.dto.SectionDto;
+import org.tsystems.javaschool.model.dto.section.SectionDto;
 import org.tsystems.javaschool.repository.SectionRepository;
 import org.tsystems.javaschool.service.SectionService;
 

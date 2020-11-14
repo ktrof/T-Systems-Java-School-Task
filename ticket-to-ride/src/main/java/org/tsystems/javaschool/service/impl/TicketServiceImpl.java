@@ -3,12 +3,14 @@ package org.tsystems.javaschool.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.tsystems.javaschool.controller.RouteCache;
 import org.tsystems.javaschool.mapper.PassengerMapper;
-import org.tsystems.javaschool.mapper.PassengerMapperImpl;
 import org.tsystems.javaschool.mapper.TicketMapper;
-import org.tsystems.javaschool.model.dto.*;
+import org.tsystems.javaschool.model.dto.passenger.PassengerFormDto;
+import org.tsystems.javaschool.model.dto.route.RouteDto;
+import org.tsystems.javaschool.model.dto.ticket.TicketDto;
+import org.tsystems.javaschool.model.dto.ticketschedule.TicketScheduleSectionDto;
 import org.tsystems.javaschool.model.entity.PassengerEntity;
 import org.tsystems.javaschool.model.entity.TicketEntity;
 import org.tsystems.javaschool.model.entity.TicketScheduleSectionEntity;
@@ -109,7 +111,7 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    @Transactional
+    @Transactional(isolation = Isolation.SERIALIZABLE)
     public TicketDto buyTicket(PassengerFormDto passengerFormDto) {
         PassengerEntity passengerEntity = passengerRepository
                 .findByNameAndBirthDate(
@@ -118,13 +120,14 @@ public class TicketServiceImpl implements TicketService {
         if (Objects.isNull(passengerEntity)) {
             passengerEntity = passengerMapper.toEntity(passengerFormDto);
             passengerEntity.setUserEntity(userRepository.findByLogin(passengerFormDto.getUserLogin()));
-            PassengerEntity newPassengerEntity = passengerRepository.add(passengerEntity);
-            System.out.println(newPassengerEntity.toString());
+            passengerRepository.add(passengerEntity);
         }
 
         TicketDto newTicket = TicketDto.builder()
                 .ticketScheduleSectionDtoList(mapRouteToTicketSections(getRouteDto(passengerFormDto)))
                 .passengerDto(passengerMapper.toDto(passengerEntity))
+                .totalPrice(getRouteDto(passengerFormDto).getTotalPrice())
+                .rideDate(getRouteDto(passengerFormDto).getDepartureTime().toLocalDate())
                 .build();
 
         createTicket(newTicket);
@@ -134,11 +137,13 @@ public class TicketServiceImpl implements TicketService {
 
     private void createTicket(TicketDto newTicket) {
         try {
-            TicketEntity ticketEntity = ticketRepository.add(ticketMapper.toEntity(newTicket));
+            TicketEntity ticketEntity = ticketMapper.toEntity(newTicket);
+            ticketRepository.add(ticketEntity);
             newTicket.getTicketScheduleSectionDtoList()
                     .forEach(ticketScheduleSectionDto ->
                             ticketScheduleSectionRepository.add(TicketScheduleSectionEntity.builder()
                                     .ticketEntity(ticketEntity)
+                                    .indexWithinTicket(ticketScheduleSectionDto.getIndexWithinTicket())
                                     .departureDate(ticketScheduleSectionDto.getDepartureDate())
                                     .departureTime(ticketScheduleSectionDto.getDepartureTime())
                                     .arrivalDate(ticketScheduleSectionDto.getArrivalDate())

@@ -1,8 +1,6 @@
 package org.tsystems.javaschool.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalTime;
@@ -13,13 +11,16 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 @NamedEntityGraphs({
         @NamedEntityGraph(
-                name = "schedule-calendar-graph",
+                name = "schedule-ride-graph",
                 attributeNodes = @NamedAttributeNode(value = "trainEntity", subgraph = "train-subgraph"),
                 subgraphs = @NamedSubgraph(
                         name = "train-subgraph",
-                        attributeNodes = @NamedAttributeNode(value = "calendarEntityList")
+                        attributeNodes = {
+                                @NamedAttributeNode(value = "rideEntityList"),
+                        }
                 )
         ),
         @NamedEntityGraph(
@@ -61,6 +62,7 @@ public class ScheduleSectionEntity {
     @Column(name = "arrival")
     private LocalTime arrival;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "scheduleSectionEntity", fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList;

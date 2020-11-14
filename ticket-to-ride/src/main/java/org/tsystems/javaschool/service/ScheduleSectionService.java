@@ -1,8 +1,8 @@
 package org.tsystems.javaschool.service;
 
-import org.tsystems.javaschool.model.dto.ScheduleSectionDto;
-import org.tsystems.javaschool.model.dto.StationDto;
-import org.tsystems.javaschool.model.dto.TrainDto;
+import org.tsystems.javaschool.model.dto.schedulesection.ScheduleSectionDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
+import org.tsystems.javaschool.model.dto.train.TrainDto;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -36,8 +36,9 @@ public interface ScheduleSectionService {
      * Gets by train and ride date.
      *
      * @param trainDto the train dto
+     * @param rideDate the ride date
      * @return the by train and ride date
      */
-    List<ScheduleSectionDto> getByTrain(TrainDto trainDto);
+    List<ScheduleSectionDto> getByTrainAndRideDate(TrainDto trainDto, LocalDate rideDate);
 
 }

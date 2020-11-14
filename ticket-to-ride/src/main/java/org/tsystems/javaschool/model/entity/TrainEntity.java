@@ -1,8 +1,6 @@
 package org.tsystems.javaschool.model.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -12,6 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class TrainEntity {
 
     @Id
@@ -30,10 +29,19 @@ public class TrainEntity {
     @Column(name = "type")
     private String type;
 
-    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<CalendarEntity> calendarEntityList;
+    @Column(name = "cancelled")
+    private boolean cancelled;
 
+    @ToString.Exclude
     @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    List<ScheduleSectionEntity> scheduleSectionEntityList;
+    private List<RideEntity> rideEntityList;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<RideScheduleEntity> rideScheduleEntityList;
+
+    @ToString.Exclude
+    @OneToMany(mappedBy = "trainEntity", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ScheduleSectionEntity> scheduleSectionEntityList;
 
 }

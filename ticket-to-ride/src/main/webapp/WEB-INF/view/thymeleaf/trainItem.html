@@ -6,50 +6,50 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="sbb main page">
+    <meta name="description" content="sbb train page">
     <meta name="author" content="Trofim Kremen">
 
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/4.5.2/css/bootstrap.min.css}"/>
+    <link rel="stylesheet" th:href="@{/webjars/font-awesome/5.15.1/css/all.min.css}"/>
     <link rel="stylesheet" th:href="@{/resources/css/main.css}"/>
-    <title>Index</title>
+    <title>Train item</title>
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-light bg-light">
+    <nav class="navbar navbar-expand navbar-dark" style="background-color: crimson" sec:authorize="hasRole('ROLE_ADMIN')">
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link" th:href="@{/}">Home</a>
+                <a class="nav-item nav-link" th:href="@{/admin/trains}">Trains</a>
+                <a class="nav-item nav-link" th:href="@{/admin/stations}">Stations</a>
+            </div>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand navbar-light" style="background-color: whitesmoke">
         <a class="navbar-brand" href="/">
             <img th:src="@{/resources/images/SBB-logo.png}" width="40" height="40" class="d-inline-block align-top" alt="">
             SBB App
         </a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-            <div class="navbar-nav">
-                <a class="nav-item nav-link active" th:href="@{/}">Home<span class="sr-only">(current)</span></a>
-                <a class="nav-item nav-link" th:href="@{/trains}">Trains</a>
-                <a class="nav-item nav-link" th:href="@{/stations}">Stations</a>
-            </div>
-        </div>
         <form class="form-inline mt-2 mt-md-0" method="get"
               sec:authorize="isAuthenticated()"
               th:action="@{/profile}">
             <button class="btn btn-outline-info my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
-                Profile
+                <i class="far fa-address-card"></i>
             </button>
         </form>
         <form class="form-inline mt-2 mt-md-0" method="get"
               sec:authorize="isAuthenticated()"
               th:action="@{/logout}">
             <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-out-button" type="submit">
-                Sign out
+                <i class="fas fa-sign-out-alt"></i>
             </button>
         </form>
         <form class="form-inline mt-2 mt-md-0" method="get"
               sec:authorize="!isAuthenticated()"
               th:action="@{/login}">
             <button class="btn btn-outline-success my-2 my-sm-0" data-test-id="sign-in-button" type="submit">
-                Sign in
+                <i class="fas fa-sign-in-alt"></i>
             </button>
         </form>
     </nav>

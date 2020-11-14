@@ -4,11 +4,13 @@ import org.springframework.stereotype.Repository;
 import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.TicketScheduleSectionRepository;
 
+import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.time.LocalDate;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -23,7 +25,8 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
     private EntityManager entityManager;
 
     @Override
-    public List<TicketScheduleSectionEntity> findByScheduleSectionIdAndDepartureDate(int id, LocalDate departureDate) {
+    public List<TicketScheduleSectionEntity> findByScheduleSectionIdAndRideDate(int id, LocalDate rideDate) {
+        EntityGraph<?> entityGraph = entityManager.getEntityGraph("ticket-schedule-section-graph");
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<TicketScheduleSectionEntity> criteriaQuery = criteriaBuilder
                 .createQuery(TicketScheduleSectionEntity.class);
@@ -31,36 +34,32 @@ public class TicketScheduleSectionRepositoryImpl implements TicketScheduleSectio
 
         Join<TicketScheduleSectionEntity, ScheduleSectionEntity> scheduleSectionEntityJoin = root
                 .join(TicketScheduleSectionEntity_.scheduleSectionEntity);
-        Join<ScheduleSectionEntity, TrainEntity> trainEntityJoin = scheduleSectionEntityJoin
-                .join(ScheduleSectionEntity_.trainEntity);
-        Join<TrainEntity, CalendarEntity> calendarEntityJoin = trainEntityJoin
-                .join(TrainEntity_.calendarEntityList);
+        Join<TicketScheduleSectionEntity, TicketEntity> ticketEntityJoin = root
+                .join(TicketScheduleSectionEntity_.ticketEntity);
 
         Predicate scheduleSectionIdEquality = criteriaBuilder
                 .equal(scheduleSectionEntityJoin.get(ScheduleSectionEntity_.id), id);
         Predicate departureDateEquality = criteriaBuilder
-                .equal(calendarEntityJoin.get(CalendarEntity_.rideDate), departureDate);
+                .equal(ticketEntityJoin.get(TicketEntity_.rideDate), rideDate);
 
         criteriaQuery
                 .select(root)
                 .where(criteriaBuilder.and(scheduleSectionIdEquality, departureDateEquality));
         TypedQuery<TicketScheduleSectionEntity> selectByScheduleSectionIdAndDepartureDate = entityManager
                 .createQuery(criteriaQuery);
+        selectByScheduleSectionIdAndDepartureDate.setHint("javax.persistence.loadgraph", entityGraph);
 
         return selectByScheduleSectionIdAndDepartureDate.getResultList();
     }
 
     @Override
-    public TicketScheduleSectionEntity add(TicketScheduleSectionEntity ticketScheduleSectionEntity) {
+    public void add(TicketScheduleSectionEntity ticketScheduleSectionEntity) {
         entityManager.persist(ticketScheduleSectionEntity);
-        return ticketScheduleSectionEntity;
     }
 
     @Override
-    public List<TicketScheduleSectionEntity> addAll(List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList) {
-        for (TicketScheduleSectionEntity ticketScheduleSectionEntity : ticketScheduleSectionEntityList) {
-            entityManager.persist(ticketScheduleSectionEntity);
-        }
-        return ticketScheduleSectionEntityList;
+    public void add(Collection<TicketScheduleSectionEntity> ticketScheduleSectionEntityCollection) {
+        ticketScheduleSectionEntityCollection.forEach(this::add);
     }
+
 }

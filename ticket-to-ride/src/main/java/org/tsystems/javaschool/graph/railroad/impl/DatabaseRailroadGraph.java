@@ -47,7 +47,7 @@ public class DatabaseRailroadGraph implements RailroadGraph {
     @Override
     public int countBoughtTickets(ScheduleSectionEntity scheduleSectionEntity, LocalDate rideDate) {
         List<TicketScheduleSectionEntity> ticketScheduleSectionEntityList = ticketScheduleSectionRepository
-                .findByScheduleSectionIdAndDepartureDate(scheduleSectionEntity.getId(), rideDate);
+                .findByScheduleSectionIdAndRideDate(scheduleSectionEntity.getId(), rideDate);
         return ticketScheduleSectionEntityList.size();
     }
 

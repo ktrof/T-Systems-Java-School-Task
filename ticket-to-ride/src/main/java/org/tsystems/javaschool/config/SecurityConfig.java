@@ -25,7 +25,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @Configuration
 @EnableWebSecurity
 @ComponentScan(basePackages = {"org.tsystems.javaschool"})
-@EnableGlobalMethodSecurity(securedEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
     public AuthenticationSuccessHandler successHandler() {
-        return new LoginSuccessHandler();
+        return new LoginSuccessHandler("/");
     }
 
     @Override
@@ -59,10 +59,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .csrf().disable()
                 .authorizeRequests()
                     .antMatchers("/").permitAll()
                     .antMatchers("/routes/{id}/**", "/routes/{id}").hasAnyRole("USER", "ADMIN")
-                    .antMatchers("/trains/add", "stations/add").hasRole("ADMIN")
+                    .antMatchers("/admin/**").hasRole("ADMIN")
                 .and().formLogin()
                     .loginPage("/login")
                     .permitAll()
@@ -71,8 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .invalidateHttpSession(true)
                     .permitAll()
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                    .logoutSuccessUrl("/")
-                .and().csrf().disable();
+                    .logoutSuccessUrl("/");
     }
 
 }

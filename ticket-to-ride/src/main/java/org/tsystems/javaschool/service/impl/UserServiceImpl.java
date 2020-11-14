@@ -2,23 +2,19 @@ package org.tsystems.javaschool.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.tsystems.javaschool.mapper.UserMapper;
-import org.tsystems.javaschool.model.dto.RegistrationFormDto;
-import org.tsystems.javaschool.model.dto.UpdateUserFormDto;
-import org.tsystems.javaschool.model.dto.UserDto;
-import org.tsystems.javaschool.model.entity.RoleEntity;
+import org.tsystems.javaschool.model.dto.user.RegistrationFormDto;
+import org.tsystems.javaschool.model.dto.user.UpdateUserFormDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.repository.RoleRepository;
 import org.tsystems.javaschool.repository.UserRepository;
 import org.tsystems.javaschool.service.UserService;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Trofim Kremen
@@ -96,7 +92,15 @@ public class UserServiceImpl implements UserService {
     public UserDto editUser(UpdateUserFormDto userDto) {
         UserDto updatedUserDto = null;
         try {
-            UserEntity updatedUserEntity = userRepository.update(userMapper.toEntity(userDto));
+            UserEntity updatedUserEntity = userRepository.findById(userDto.getId());
+            updatedUserEntity.setPassword(passwordEncoder.encode(userDto.getPassword()));
+            updatedUserEntity.setLogin(userDto.getLogin());
+            updatedUserEntity.setEmail(userDto.getEmail());
+            updatedUserEntity.setFirstName(userDto.getFirstName());
+            updatedUserEntity.setSecondName(userDto.getSecondName());
+            updatedUserEntity.setBirthDate(userDto.getBirthDate());
+            updatedUserEntity.setMobileNumber(userDto.getMobileNumber());
+            userRepository.update(updatedUserEntity);
             updatedUserDto = userMapper.toDto(updatedUserEntity);
         } catch (Exception e) {
             log.error("Error updating user", e);

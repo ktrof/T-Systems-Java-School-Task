@@ -1,8 +1,6 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.exception.SBBException;
-import org.tsystems.javaschool.model.entity.RoleEntity;
 import org.tsystems.javaschool.model.entity.UserEntity;
 import org.tsystems.javaschool.model.entity.UserEntity_;
 import org.tsystems.javaschool.repository.UserRepository;
@@ -14,7 +12,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Root;
 import java.util.List;
-import java.util.Set;
 
 /**
  * The type User repository jpa.
@@ -75,19 +72,13 @@ public class UserRepositoryJPAImpl implements UserRepository {
 
 
     @Override
-    public UserEntity add(UserEntity userEntity) {
+    public void add(UserEntity userEntity) {
         entityManager.persist(userEntity);
-        return userEntity;
     }
 
     @Override
-    public UserEntity update(UserEntity userEntity) {
-        return entityManager.merge(userEntity);
-    }
-
-    @Override
-    public void remove(UserEntity userEntity) {
-        entityManager.remove(userEntity);
+    public void update(UserEntity userEntity) {
+        entityManager.merge(userEntity);
     }
 
 }

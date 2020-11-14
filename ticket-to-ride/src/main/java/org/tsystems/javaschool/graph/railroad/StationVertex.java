@@ -1,7 +1,7 @@
 package org.tsystems.javaschool.graph.railroad;
 
 import org.tsystems.javaschool.graph.Vertex;
-import org.tsystems.javaschool.model.dto.StationDto;
+import org.tsystems.javaschool.model.dto.station.StationDto;
 
 import java.time.ZoneId;
 

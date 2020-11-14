@@ -13,6 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
+@Builder
 public class RoleEntity {
 
     @Id
@@ -26,5 +27,5 @@ public class RoleEntity {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "roleEntitySet", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    Set<UserEntity> userEntitySet;
+    private Set<UserEntity> userEntitySet;
 }

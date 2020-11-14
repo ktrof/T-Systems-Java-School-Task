@@ -27,9 +27,19 @@ public interface ScheduleSectionRepository {
      * Find by train list.
      *
      * @param trainEntity the train entity
+     * @param rideDate    the ride date
      * @return the list
      */
-    List<ScheduleSectionEntity> findByTrain(TrainEntity trainEntity);
+    List<ScheduleSectionEntity> findByTrainAndRideDate(TrainEntity trainEntity, LocalDate rideDate);
+
+    /**
+     * Find by train and section index.
+     *
+     * @param trainEntity  the train entity
+     * @param sectionIndex the section index
+     * @return the list
+     */
+    ScheduleSectionEntity findByTrainAndSectionIndex(TrainEntity trainEntity, int sectionIndex);
 
     /**
      * Find by section list.
@@ -60,16 +70,14 @@ public interface ScheduleSectionRepository {
      * Add schedule section entity.
      *
      * @param scheduleSectionEntity the schedule section entity
-     * @return the schedule section entity
      */
-    ScheduleSectionEntity add(ScheduleSectionEntity scheduleSectionEntity);
+    void add(ScheduleSectionEntity scheduleSectionEntity);
 
     /**
      * Add iterable.
      *
      * @param scheduleSectionEntityCollection the schedule section entity collection
-     * @return the iterable
      */
-    Iterable<ScheduleSectionEntity> add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection);
+    void add(Collection<ScheduleSectionEntity> scheduleSectionEntityCollection);
 
 }

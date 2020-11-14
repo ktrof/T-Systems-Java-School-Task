@@ -1,19 +1,14 @@
 package org.tsystems.javaschool.repository.impl;
 
 import org.springframework.stereotype.Repository;
-import org.tsystems.javaschool.model.entity.TrainEntity;
+import org.tsystems.javaschool.model.entity.*;
 import org.tsystems.javaschool.repository.TrainRepository;
 
-import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-import java.util.HashMap;
+import javax.persistence.criteria.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * The type Train repository jpa.
@@ -29,12 +24,14 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     @Override
     public List<TrainEntity> findAll() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-        CriteriaQuery<TrainEntity> selectAllTrains = criteriaBuilder.createQuery(TrainEntity.class);
-        Root<TrainEntity> trainEntityRoot = selectAllTrains.from(TrainEntity.class);
-        selectAllTrains.select(trainEntityRoot);
-        TypedQuery<TrainEntity> selectAllQuery = entityManager.createQuery(selectAllTrains);
+        CriteriaQuery<TrainEntity> criteriaQuery = criteriaBuilder.createQuery(TrainEntity.class);
+        Root<TrainEntity> trainEntityRoot = criteriaQuery.from(TrainEntity.class);
 
-        return selectAllQuery.getResultList();
+        criteriaQuery
+                .select(trainEntityRoot);
+        TypedQuery<TrainEntity> selectAll = entityManager.createQuery(criteriaQuery);
+
+        return selectAll.getResultList();
     }
 
     @Override
@@ -43,19 +40,35 @@ public class TrainRepositoryJPAImpl implements TrainRepository {
     }
 
     @Override
-    public TrainEntity add(TrainEntity trainEntity) {
+    public void add(TrainEntity trainEntity) {
         entityManager.persist(trainEntity);
-        return trainEntity;
     }
 
     @Override
-    public TrainEntity update(TrainEntity trainEntity) {
-        return entityManager.merge(trainEntity);
+    public void update(TrainEntity trainEntity) {
+        entityManager.merge(trainEntity);
+    }
+
+    private void updateCancelledAttribute(TrainEntity trainEntity, boolean isCancelled) {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaUpdate<TrainEntity> criteriaUpdate = criteriaBuilder.createCriteriaUpdate(TrainEntity.class);
+        Root<TrainEntity> root = criteriaUpdate.from(TrainEntity.class);
+
+        criteriaUpdate
+                .set(root.get(TrainEntity_.cancelled), isCancelled)
+                .where(criteriaBuilder.equal(root.get(TrainEntity_.id), trainEntity.getId()));
+
+        entityManager.createQuery(criteriaUpdate).executeUpdate();
     }
 
     @Override
-    public void remove(TrainEntity trainEntity) {
-        entityManager.remove(trainEntity);
+    public void cancel(TrainEntity trainEntity) {
+        updateCancelledAttribute(trainEntity, true);
+    }
+
+    @Override
+    public void restart(TrainEntity trainEntity) {
+        updateCancelledAttribute(trainEntity, false);
     }
 
 }

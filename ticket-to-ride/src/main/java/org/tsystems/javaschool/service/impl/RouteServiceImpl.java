@@ -11,10 +11,10 @@ import org.tsystems.javaschool.graph.railroad.RailroadGraph;
 import org.tsystems.javaschool.graph.railroad.SectionEdge;
 import org.tsystems.javaschool.graph.railroad.StationVertex;
 import org.tsystems.javaschool.mapper.ScheduleSectionMapper;
-import org.tsystems.javaschool.model.dto.RouteDto;
-import org.tsystems.javaschool.model.dto.RoutePartDto;
-import org.tsystems.javaschool.model.dto.SearchResultDto;
-import org.tsystems.javaschool.model.dto.SearchRouteFormDto;
+import org.tsystems.javaschool.model.dto.route.RouteDto;
+import org.tsystems.javaschool.model.dto.route.RoutePartDto;
+import org.tsystems.javaschool.model.dto.route.SearchResultDto;
+import org.tsystems.javaschool.model.dto.route.SearchRouteFormDto;
 import org.tsystems.javaschool.model.entity.ScheduleSectionEntity;
 import org.tsystems.javaschool.repository.ScheduleSectionRepository;
 import org.tsystems.javaschool.service.RouteService;
@@ -102,7 +102,13 @@ public class RouteServiceImpl implements RouteService {
     private List<RouteDto> mapPathsToRouteGroups(Collection<Path<StationVertex, SectionEdge>> discoveredPath) {
         return discoveredPath.stream()
                 .map(this::mapPathToRoute)
+                .filter(routeDto -> routeDto.getRoutePartDtoList().stream()
+                        .noneMatch(routePartDto ->
+                                routePartDto.getStationDtoFrom().isClosed() ||
+                                routePartDto.getStationDtoTo().isClosed())
+                )
                 .sorted(Comparator.comparing(RouteDto::getTotalDuration))
+                .limit(10)
                 .collect(Collectors.toList());
     }
 

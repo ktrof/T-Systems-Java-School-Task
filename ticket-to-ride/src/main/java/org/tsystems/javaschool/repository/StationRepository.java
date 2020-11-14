@@ -1,6 +1,7 @@
 package org.tsystems.javaschool.repository;
 
 import org.tsystems.javaschool.model.entity.StationEntity;
+import org.tsystems.javaschool.model.entity.TrainEntity;
 
 import java.util.List;
 
@@ -17,6 +18,14 @@ public interface StationRepository {
      * @return the list
      */
     List<StationEntity> findAll();
+
+    /**
+     * Find all by train list.
+     *
+     * @param trainEntity the train entity
+     * @return the list
+     */
+    List<StationEntity> findAllByTrain(TrainEntity trainEntity);
 
     /**
      * Find by id station entity.
@@ -38,23 +47,28 @@ public interface StationRepository {
      * Add station entity.
      *
      * @param stationEntity the station entity
-     * @return the station entity
      */
-    StationEntity add(StationEntity stationEntity);
+    void add(StationEntity stationEntity);
 
     /**
      * Update name station entity.
      *
      * @param stationEntity the station entity
-     * @return the station entity
      */
-    StationEntity update(StationEntity stationEntity);
+    void update(StationEntity stationEntity);
 
     /**
-     * Remove.
+     * Close.
      *
      * @param stationEntity the station entity
      */
-    void remove(StationEntity stationEntity);
+    void close(StationEntity stationEntity);
+
+    /**
+     * Open.
+     *
+     * @param stationEntity the station entity
+     */
+    void open(StationEntity stationEntity);
 
 }

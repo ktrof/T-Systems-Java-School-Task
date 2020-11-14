@@ -1,6 +1,8 @@
 package org.tsystems.javaschool.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -8,12 +10,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.tsystems.javaschool.model.dto.PassengerFormDto;
-import org.tsystems.javaschool.model.dto.RouteDto;
-import org.tsystems.javaschool.model.dto.TicketDto;
-import org.tsystems.javaschool.model.dto.UserDto;
+import org.tsystems.javaschool.model.dto.passenger.PassengerFormDto;
+import org.tsystems.javaschool.model.dto.route.RouteDto;
+import org.tsystems.javaschool.model.dto.ticket.TicketDto;
+import org.tsystems.javaschool.model.dto.user.UserDto;
 import org.tsystems.javaschool.service.TicketService;
 import org.tsystems.javaschool.service.UserService;
+import org.tsystems.javaschool.service.impl.RouteCache;
 
 import javax.inject.Provider;
 import javax.validation.Valid;
